@@ -1,30 +1,23 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.database_helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-
-
 /**
- * Created by linxy on 7/27/15.
+ * Created by minel_000 on 27/7/2015.
  */
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelperSubjects extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "grades.db";
-    public static final String TABLE_NAME = "grades_table";
+    public static final String DATABASE_NAME = "subjects.db";
+    public static final String TABLE_NAME = "subjects_table";
     public static final String COL_1 = "ID";
-    public static final String COL_2 = "SUBJECT_NAME";
-    public static final String COL_3 = "GRADE_NAME";
-    public static final String COL_4 = "GRADE";
-    public static final String COL_5 = "GRADE_ROUNDED";
-    public static final String COL_6 = "FACTOR";
-    public static final String COL_7 = "DATE";
+    public static final String COL_2 = "SUBJECT";
 
-    public DatabaseHelper(Context context) {
+    public DatabaseHelperSubjects(Context context) {
         super(context, DATABASE_NAME, null, 1);
-        System.out.print("NJNA");
+        // System.out.print("NJNA");
 
     }
 
@@ -39,15 +32,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String subjectname, String gradename, String grade, String graderounded, String factor, String date){
+    public boolean insertData(String subjectname){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2, subjectname);
-        contentValues.put(COL_3, gradename);
-        contentValues.put(COL_4, grade);
-        contentValues.put(COL_5, graderounded);
-        contentValues.put(COL_6, factor);
-        contentValues.put(COL_7, date);
         long result = db.insert(TABLE_NAME, null, contentValues);
         if(result == -1)
             return false;

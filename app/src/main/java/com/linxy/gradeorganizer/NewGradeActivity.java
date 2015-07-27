@@ -2,22 +2,22 @@ package com.linxy.gradeorganizer;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 
 public class NewGradeActivity extends ActionBarActivity  {
@@ -31,6 +31,7 @@ public class NewGradeActivity extends ActionBarActivity  {
     EditText inGrade;
     EditText inFactor;
 
+    Calendar cal = Calendar.getInstance();
 
     double outRounded;
     String outDate;
@@ -58,6 +59,7 @@ public class NewGradeActivity extends ActionBarActivity  {
         inGrade = (EditText) findViewById(R.id.grade_achieved);
         inFactor = (EditText) findViewById(R.id.factor);
         btnAddGrade = (Button) findViewById(R.id.button_save);
+        tvCurrentDate = (TextView) findViewById(R.id.current_date_display);
 
 
 
@@ -67,7 +69,7 @@ public class NewGradeActivity extends ActionBarActivity  {
             public void onClick(View v) {
                 // Check that all fields are filled, if they all are, then input the data into the database and close the activity.
                 boolean isInserted = fillDatabase();
-                if(isInserted) {
+                if (isInserted) {
                     Toast.makeText(NewGradeActivity.this, "Data Inserted", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(NewGradeActivity.this, StartupActivity.class);
                     startActivity(intent);
@@ -79,12 +81,17 @@ public class NewGradeActivity extends ActionBarActivity  {
             }
         });
 
+        SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        String formattedDate = df.format(cal.getTime());
+
+        outDate = formattedDate;
+        tvCurrentDate.setText(outDate);
+
         showDialogOnButtonClick();
     }
 
     public void showDialogOnButtonClick(){
         btnPickDate = (Button) findViewById(R.id.choose_date);
-        tvCurrentDate = (TextView) findViewById(R.id.current_date_display);
 
         btnPickDate.setOnClickListener(new View.OnClickListener() {
             @Override
