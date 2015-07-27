@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">Notenrechner</string>
+    <string name="title_activity_new_grade">Note eintragen</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="overview">Übersicht</string>
+    <string name="history">Verlauf</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="average">Durchschnitt</string>
+    <string name="unsufficient">Mangelpunkte</string>
+    <string name="newgrade_name">Name</string>
+    <string name="subject">Fach</string>
+    <string name="achieved_grade">Erreichte Note</string>
+    <string name="factor">Faktor</string>
+    <string name="date">Datum</string>
+    <string name="save">Speichern</string>
+    <string name="round">Runden auf</string>
+    <string name="best_grade">beste Note</string>
+    <string name="new_subject">neues Fach</string>
+    <string name="add_new_subject">Fach hinzufügen</string>
+    <string name="edit_subjects">Fächer bearbeiten</string>
+    <string name="new_semester">neues Semester</string>
+    <string name="choose_date">Datum wählen</string>
+
+    <string name="hint_new_subject">z.B. Wirtschaft und Recht</string>
+    <string name="hint_achieved_grade">z.B. 4.6</string>
+    <string name="hint_factor">z.B. 100</string>
+    <string name="hint_newgrade_name">z.B. Atommodell</string>
+
+    <array name="test_subjects">
+        <item>Mathematik</item>
+        <item>Franzosisch</item>
+        <item>Deutsch</item>
+        <item>Wirtschaft</item>
+        <item>Zeichnen</item>
+        <item>Musik</item>
+        <item>Chemie</item>
+        <item>Physik</item>
+
+
+    </array>
+    <array name="testentries">
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+        <item>Mathe 33</item>
+    </array>
+</resources>
