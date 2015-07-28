@@ -52,6 +52,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_edit_subjects, menu);
         System.out.print("ok");
+        System.out.print("make");
         return true;
     }
 
@@ -62,7 +63,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
                 Cursor res = myDB.getAllData();
                 if (res.getCount() == 0) {
                     // Show message
-                    showMessage("Error:" , "No Data!");
+                    showMessage("Error:", "No Data!");
                     res.close();
                     return;
                 }
