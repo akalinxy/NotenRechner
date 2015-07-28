@@ -53,4 +53,7 @@
         <item>Mathe 33</item>
         <item>Mathe 33</item>
     </array>
+    <string name="title_activity_edit_subjects">EditSubjectsActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

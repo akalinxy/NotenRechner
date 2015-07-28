@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
 
 
@@ -23,8 +24,15 @@ public class StartupActivity extends ActionBarActivity {
     SlidingTabLayout tabs;
     CharSequence Titles[] = { "Ubersicht", "Verlauf", "Bearbeiten"};
     int Numboftabs = 3;
-    DatabaseHelper myDb;
+
+    DatabaseHelperSubjects myDBSubjects;
+    DatabaseHelper myDBGrades;
+
     FloatingActionButton test;
+
+
+    // Components
+
 
 
     @Override
@@ -57,18 +65,48 @@ public class StartupActivity extends ActionBarActivity {
         tabs.setDistributeEvenly(true);
 
         // Setting custom Color for Scroll bar indicator of the tabs
-        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer(){
+        tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
-            public int getIndicatorColor(int position){
+            public int getIndicatorColor(int position) {
                 return getResources().getColor(R.color.tabsScrolColor);
             }
         });
 
         // Setting the ViewPager for the slidingTabsLayout
         tabs.setViewPager(pager);
-        myDb = new DatabaseHelper(this);
+        tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 2) {
+                    test.setVisibility(View.INVISIBLE);
+
+                } else {
+                    test.setVisibility(View.VISIBLE);
+
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+        myDBGrades = new DatabaseHelper(this);
+        myDBSubjects = new DatabaseHelperSubjects(this);
+
 
     }
+
+    public void AddSubjectToDatabase(String subjectName, int factor){
+
+        myDBSubjects.insertData(subjectName, String.valueOf(factor));
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -90,6 +128,8 @@ public class StartupActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 

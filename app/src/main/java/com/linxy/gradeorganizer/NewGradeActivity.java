@@ -117,7 +117,7 @@ public class NewGradeActivity extends ActionBarActivity  {
 
         boolean b;
 
-        if(inGradeName.getText().toString() == null || inGradeName.toString().toString().isEmpty()) return false;
+        if(inGradeName.getText().toString() == null || inGradeName.toString().isEmpty()) return false;
         if(inSubjectName.getSelectedItem().toString() == null || inSubjectName.getSelectedItem().toString().isEmpty()) return false;
         if(inGrade.getText().toString() == null || inGrade.getText().toString().isEmpty()) return false;
         if(inFactor.getText().toString() == null || inFactor.getText().toString().isEmpty()) return false;
