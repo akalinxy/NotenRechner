@@ -1,6 +1,7 @@
 package com.linxy.gradeorganizer;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
@@ -8,22 +9,29 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.tabs.Popup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class EditSubjectsActivity extends ActionBarActivity {
 
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    Button testButton;
     DatabaseHelperSubjects myDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +47,11 @@ public class EditSubjectsActivity extends ActionBarActivity {
 //
 //        recyclerView.setAdapter(adapter);
 
+
+
         myDB = new DatabaseHelperSubjects(this);
-        testButton = (Button) findViewById(R.id.get_data_Temp);
-
         viewAll();
-
+       // populateListView();
 
     }
 
@@ -57,9 +65,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
     }
 
     public void viewAll(){
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
                 Cursor res = myDB.getAllData();
                 if (res.getCount() == 0) {
                     // Show message
@@ -67,19 +73,40 @@ public class EditSubjectsActivity extends ActionBarActivity {
                     res.close();
                     return;
                 }
+                String[] sname;
+                int sfactor[];
+                ArrayList<String> arrayList = new ArrayList<String>();
+                final ListView myList = (ListView) findViewById(R.id.edit_subjects_list_view);
 
-                StringBuffer buffer = new StringBuffer();
                 while (res.moveToNext()) {
-                    buffer.append("ID :" + res.getString(0) + "\n");
-                    buffer.append("SubjectName :" + res.getString(1) + "\n");
-                    buffer.append("SubjectFactor :" + res.getInt(2) + "\n\n");
+                    arrayList.add(res.getString(1) + " factor " + res.getString(2));
 
                 }
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.list_view_items, arrayList);
+                myList.setAdapter(arrayAdapter);
+                myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                showMessage("Data", buffer.toString());
+                        String nameOfSelected = (myList.getItemAtPosition(position)).toString();
+                        String nameOfSubject = "";
+
+                        int i = 0;
+                        while (nameOfSelected.charAt(i) != ' ') {
+
+                            nameOfSubject += nameOfSelected.charAt(i);
+                            if (nameOfSelected.charAt(i) == ' ') break;
+                            i++;
+                        }
+
+
+                        //showMessage("Subject name clicked", nameOfSubject);
+                        Intent intent = new Intent(getBaseContext(), Popup.class);
+                        startActivity(intent);
+                    }
+                });
                 res.close();
-            }
-        });
+
     }
 
     public void showMessage(String title, String message){
@@ -108,7 +135,10 @@ public class EditSubjectsActivity extends ActionBarActivity {
 
     @Override
     public void onStop(){
+        super.onStop();
         myDB.close();
 
       }
+
+
 }

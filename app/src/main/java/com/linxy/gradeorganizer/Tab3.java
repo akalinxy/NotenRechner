@@ -2,6 +2,7 @@ package com.linxy.gradeorganizer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -87,6 +88,8 @@ public class Tab3 extends Fragment implements View.OnClickListener{
     private boolean testFieldsNewSubject(){
         if(etNewSubjectName.getText().toString().equals("") | etNewSubjectName.getText().toString() == null) return false;
         if(etNewSubjectFactor.getText().toString().equals("") | etNewSubjectFactor.getText().toString() == null) return false;
+
+
         return true;
 
     }

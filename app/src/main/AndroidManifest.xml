@@ -24,6 +24,8 @@
             android:name=".EditSubjectsActivity"
             android:label="@string/title_activity_edit_subjects" >
         </activity>
+        <activity android:name=".tabs.Popup"
+            android:theme="@style/AppTheme.CustomTheme"></activity>
     </application>
 
 </manifest>

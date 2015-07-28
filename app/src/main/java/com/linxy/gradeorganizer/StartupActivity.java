@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
@@ -103,8 +104,11 @@ public class StartupActivity extends ActionBarActivity {
     }
 
     public void AddSubjectToDatabase(String subjectName, int factor){
+        if(!myDBSubjects.hasObject(subjectName))
 
         myDBSubjects.insertData(subjectName, String.valueOf(factor));
+        else Toast.makeText(this, "EXISTS!", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
