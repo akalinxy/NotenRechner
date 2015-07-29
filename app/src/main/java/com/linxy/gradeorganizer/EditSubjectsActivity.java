@@ -33,6 +33,8 @@ public class EditSubjectsActivity extends ActionBarActivity {
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
     DatabaseHelperSubjects myDB;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,44 +66,55 @@ public class EditSubjectsActivity extends ActionBarActivity {
         return true;
     }
 
+    @Override
+    public void onResume(){
+        super.onResume();
+        viewAll();
+    }
+
     public void viewAll(){
 
                 Cursor res = myDB.getAllData();
-                if (res.getCount() == 0) {
-                    // Show message
-                    showMessage("Error:", "No Data!");
-                    res.close();
-                    return;
-                }
-                String[] sname;
-                int sfactor[];
+//                if (res.getCount() == 0) {
+//                    // Show message
+//                    res.close();
+//                    return;
+//                }
+
                 ArrayList<String> arrayList = new ArrayList<String>();
                 final ListView myList = (ListView) findViewById(R.id.edit_subjects_list_view);
 
-                while (res.moveToNext()) {
-                    arrayList.add(res.getString(1) + " factor " + res.getString(2));
+//        if(res.getCount() == 0) return;
 
-                }
+
+        final int selSubIds[] = new int[res.getCount()];
+                final String selSubNames[] = new String[res.getCount()];
+                final int selSubFactors[] = new int[res.getCount()];
+
+
+            int i = 0;
+            while (res.moveToNext()) {
+                arrayList.add(res.getString(1));
+                selSubIds[i] = Integer.parseInt(res.getString(0));
+                selSubNames[i] = res.getString(1);
+
+                if(res.getString(2).equals("") || res.getString(2) == null) selSubFactors[i] = 0;
+                else
+                selSubFactors[i] = Integer.parseInt(res.getString(2));
+                i++;
+            }
+
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.list_view_items, arrayList);
                 myList.setAdapter(arrayAdapter);
                 myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                        String nameOfSelected = (myList.getItemAtPosition(position)).toString();
-                        String nameOfSubject = "";
 
-                        int i = 0;
-                        while (nameOfSelected.charAt(i) != ' ') {
-
-                            nameOfSubject += nameOfSelected.charAt(i);
-                            if (nameOfSelected.charAt(i) == ' ') break;
-                            i++;
-                        }
-
-
-                        //showMessage("Subject name clicked", nameOfSubject);
                         Intent intent = new Intent(getBaseContext(), Popup.class);
+                        intent.putExtra(Popup.IDX, selSubIds[position]);
+                        intent.putExtra(Popup.NAMEX, selSubNames[position]);
+                        intent.putExtra(Popup.FACTORX, selSubFactors[position]);
                         startActivity(intent);
                     }
                 });

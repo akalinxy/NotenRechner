@@ -16,7 +16,7 @@
         android:layout_gravity="center"
         android:layout_width="330dp"
         android:layout_height="180dp"
-        android:paddingTop="5dp"
+        android:layout_marginTop="5dp"
         card_view:cardCornerRadius="6dp"
         card_view:cardElevation="8dp">
 
@@ -30,7 +30,6 @@
             android:textColor="@color/ColorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="4.7"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="96sp"
             android:textStyle="bold"
@@ -50,6 +49,7 @@
 
 
         <ListView
+            android:id="@+id/list_subject_average"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:entries="@array/testentries"></ListView>

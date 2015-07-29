@@ -3,10 +3,12 @@ package com.linxy.gradeorganizer;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -15,9 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class NewGradeActivity extends ActionBarActivity  {
@@ -25,6 +29,7 @@ public class NewGradeActivity extends ActionBarActivity  {
     // Organize
 
     DatabaseHelper myDb;
+    DatabaseHelperSubjects mySDb;
 
     EditText inGradeName;
     Spinner inSubjectName;
@@ -52,6 +57,7 @@ public class NewGradeActivity extends ActionBarActivity  {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         myDb = new DatabaseHelper(this);
+        mySDb = new DatabaseHelperSubjects(this);
 
 
         inGradeName = (EditText) findViewById(R.id.newgrade_name);
@@ -88,6 +94,26 @@ public class NewGradeActivity extends ActionBarActivity  {
         tvCurrentDate.setText(outDate);
 
         showDialogOnButtonClick();
+
+        // Populate the Spinner
+        String items[];
+
+        Cursor cursor = mySDb.getAllData();
+
+        if(cursor.getCount() > 0) {
+            items = new String[cursor.getCount()];
+            int i = 0;
+            while (cursor.moveToNext()) {
+                items[i] = cursor.getString(1);
+                i++;
+            }
+        } else {
+            items = new String[0];
+        }
+        cursor.close();
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        inSubjectName.setAdapter(arrayAdapter);
     }
 
     public void showDialogOnButtonClick(){
@@ -101,12 +127,24 @@ public class NewGradeActivity extends ActionBarActivity  {
         });
     }
 
-
+    @Override
+    public void onStop(){
+        super.onStop();
+        myDb.close();
+        mySDb.close();
+    }
 
     @Override
     protected Dialog onCreateDialog(int id){
         if(id == DIALOG_ID){
-            return new DatePickerDialog(this, dpickerListner, year_x, month_x, day_x);
+                int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+                int month = Calendar.getInstance().get(Calendar.MONTH);
+                int year = Calendar.getInstance().get(Calendar.YEAR);
+
+           DatePickerDialog dpicker = new DatePickerDialog(this, dpickerListner, year_x, month_x, day_x);
+            dpicker.updateDate(year,month,day);
+            return dpicker;
+
         } return null;
     }
 

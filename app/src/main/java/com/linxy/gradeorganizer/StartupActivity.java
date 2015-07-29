@@ -1,6 +1,7 @@
 package com.linxy.gradeorganizer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -28,6 +29,7 @@ public class StartupActivity extends ActionBarActivity {
 
     DatabaseHelperSubjects myDBSubjects;
     DatabaseHelper myDBGrades;
+    public static final String PREFS = "PrefFile";
 
     FloatingActionButton test;
 
@@ -38,6 +40,7 @@ public class StartupActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
         test = (FloatingActionButton) findViewById(R.id.fab);
@@ -101,6 +104,8 @@ public class StartupActivity extends ActionBarActivity {
         myDBSubjects = new DatabaseHelperSubjects(this);
 
 
+
+
     }
 
     public void AddSubjectToDatabase(String subjectName, int factor){
@@ -131,6 +136,13 @@ public class StartupActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        myDBSubjects.close();
+        myDBGrades.close();
     }
 
 

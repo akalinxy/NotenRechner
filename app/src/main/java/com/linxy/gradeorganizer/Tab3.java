@@ -1,5 +1,6 @@
 package com.linxy.gradeorganizer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,9 +14,11 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,14 +36,23 @@ public class Tab3 extends Fragment implements View.OnClickListener{
     EditText etNewSubjectName;
     EditText etNewSubjectFactor;
     Button btnAddNewSubject;
+    Switch swtShowInsufficient;
 
     // Edit Subjects
     Button btnEditSubjects;
 
+    private boolean showinsufficient;
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+
         View v = inflater.inflate(R.layout.tab_3, container, false);
+
+
+
 
         // Add Subject Init Components
         etNewSubjectName = (EditText) v.findViewById(R.id.add_new_grade_name);
@@ -51,13 +63,28 @@ public class Tab3 extends Fragment implements View.OnClickListener{
         btnEditSubjects.setOnClickListener(this);
         btnAddNewSubject.setOnClickListener(this);
 
-
+        swtShowInsufficient = (Switch) v.findViewById(R.id.show_unsufficient);
 
         spinnerRoundTo = (Spinner) v.findViewById(R.id.round_to_grade);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getBaseContext(), R.layout.centered_spinner, arraySpinner);
         adapter.setDropDownViewResource(R.layout.centered_spinner);
         spinnerRoundTo.setAdapter(adapter);
 
+        SharedPreferences pref = getActivity().getSharedPreferences(StartupActivity.PREFS, 0);
+        final SharedPreferences.Editor editor = pref.edit();
+
+
+
+
+        showinsufficient = pref.getBoolean("insufficient", true);
+        swtShowInsufficient.setChecked(showinsufficient);
+        swtShowInsufficient.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                showinsufficient = isChecked;
+                editor.putBoolean("insufficient", showinsufficient);
+            }
+        });
 
 
         return  v;
