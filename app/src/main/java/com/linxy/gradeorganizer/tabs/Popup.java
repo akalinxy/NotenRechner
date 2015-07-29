@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.linxy.gradeorganizer.EditSubjectsActivity;
 import com.linxy.gradeorganizer.R;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+
+import java.util.ArrayList;
 
 /**
  * Created by minel_000 on 28/7/2015.
@@ -35,6 +38,7 @@ public class Popup extends Activity implements View.OnClickListener{
 
     EditText etSFactor;
     DatabaseHelperSubjects myDB = new DatabaseHelperSubjects(this);
+    DatabaseHelper db = new DatabaseHelper(this);
 
 
     @Override
@@ -67,6 +71,8 @@ public class Popup extends Activity implements View.OnClickListener{
         setInfo();
     }
 
+
+
     private void setInfo(){
         tvSName.setText(name);
         tvSFactor.setText(String.valueOf(factor));
@@ -88,8 +94,21 @@ public class Popup extends Activity implements View.OnClickListener{
                 break;
             case R.id.popup_delete:
 
-                myDB.deleteData(String.valueOf(ID));
+                ArrayList<Integer> deleteList = new ArrayList<Integer>();
+                Cursor cursor = db.getAllData();
+                int i = 0;
+                while(cursor.moveToNext()){
+                    if(cursor.getString(1).equals(name)){
+                        deleteList.add(i, Integer.parseInt(cursor.getString(0)));
+                    }
+                }
 
+                for(int s = 0; s < deleteList.size(); s++){
+                    db.deleteData(String.valueOf(deleteList.get(s)));
+                }
+
+                myDB.deleteData(String.valueOf(ID));
+                cursor.close();
                 break;
             default:
                 break;
@@ -105,6 +124,7 @@ public class Popup extends Activity implements View.OnClickListener{
     @Override
     public void onStop(){
         super.onStop();
+        db.close();
         myDB.close();
     }
 
