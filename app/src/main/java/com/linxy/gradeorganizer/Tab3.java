@@ -70,7 +70,7 @@ public class Tab3 extends Fragment implements View.OnClickListener{
         adapter.setDropDownViewResource(R.layout.centered_spinner);
         spinnerRoundTo.setAdapter(adapter);
 
-        SharedPreferences pref = getActivity().getSharedPreferences(StartupActivity.PREFS, 0);
+        final SharedPreferences pref = getActivity().getSharedPreferences(StartupActivity.PREFS, 0);
         final SharedPreferences.Editor editor = pref.edit();
 
 
@@ -83,6 +83,7 @@ public class Tab3 extends Fragment implements View.OnClickListener{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 showinsufficient = isChecked;
                 editor.putBoolean("insufficient", showinsufficient);
+                editor.commit();
             }
         });
 

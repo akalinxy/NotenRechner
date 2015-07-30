@@ -10,20 +10,31 @@
 
     <include
         android:id="@+id/tool_bar"
+
         layout="@layout/tool_bar"
         ></include>
     <com.linxy.gradeorganizer.tabs.SlidingTabLayout
         android:id="@+id/tabs"
+        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
         android:background="@color/ColorPrimary"
         />
 
+
+
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipChildren="false">
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="4dp"-->
+            <!--android:background="@drawable/shadow"-->
+            <!--/>-->
+
     <android.support.v4.view.ViewPager
+
         android:id="@+id/pager"
         android:layout_height="409dp"
         android:layout_width="match_parent"
@@ -37,9 +48,10 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:elevation="8dp"
-        app:backgroundTint="@color/ColorPrimary"
+        app:backgroundTint="#FFEA00"
         android:src="@drawable/ic_add_white_24dp"
         app:layout_anchorGravity="bottom|right"
+        app:borderWidth="0dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"

@@ -32,7 +32,7 @@ public class Tab1 extends Fragment {
     DatabaseHelperSubjects myDBS;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.tab_1, container, false);
 
@@ -47,44 +47,44 @@ public class Tab1 extends Fragment {
 
 
         populareView(v);
-
-
-
-
-
-        return  v;
+        return v;
 
 
     }
 
-    private double getAverage(String subjectName){
+    public void onResume(){
+        super.onResume();
+        populareView(getView());
+    }
+
+    private double getAverage(String subjectName) {
         Cursor gradesCur = myDB.getAllData();
         double avg = 0;
         ArrayList<Double> grades = new ArrayList<Double>();
         double total = 0;
 
         int i = 0;
-        while(gradesCur.moveToNext()){
-            if(gradesCur.getString(1).equals(subjectName)){
+        while (gradesCur.moveToNext()) {
+            if (gradesCur.getString(1).equals(subjectName)) {
                 grades.add(i, Double.parseDouble(gradesCur.getString(3)));
                 i++;
             }
         }
 
-        for(int s = 0; s < grades.size(); s++){
+        for (int s = 0; s < grades.size(); s++) {
             total += grades.get(s);
         }
 
-        if(grades.size() == 0) return 0;
+        if (grades.size() == 0) return 0;
 
-       avg = total / grades.size();
+        avg = total / grades.size();
 
 
         gradesCur.close();
-        return  avg;
+        return avg;
     }
 
-    private void populareView(View view){
+    private void populareView(View view) {
 
 
         boolean showInsufficient = prefs.getBoolean("insufficient", true);
@@ -99,26 +99,26 @@ public class Tab1 extends Fragment {
         Cursor subjectCur = myDBS.getAllData();
 
         amountAll = 0;
-        while(subjectCur.moveToNext()){
+        while (subjectCur.moveToNext()) {
             totalAll += getAverage(subjectCur.getString(1));
-            if(!(getAverage(subjectCur.getString(1)) == 0.0)){
+            if (!(getAverage(subjectCur.getString(1)) == 0.0)) {
                 amountAll += 1;
             }
         }
 
         averageAll = totalAll / amountAll;
-        allSubjectAverages.setText(String.format("%.3f",averageAll ));
+        allSubjectAverages.setText(String.format("%.1f", averageAll));
 
 
-        if(showInsufficient) {
-            listArray = new String [subjectCur.getCount() + 1];
+        if (showInsufficient) {
+            listArray = new String[subjectCur.getCount() + 1];
             listArray[0] = "Mangelpunkte: " + String.valueOf(insufficientMarks);
             int i = 1;
             subjectCur.close();
             Cursor sc = myDBS.getAllData();
 
-            while(sc.moveToNext()){
-                listArray[i] = sc.getString(1) + "  " + getAverage(sc.getString(1));
+            while (sc.moveToNext()) {
+                listArray[i] = sc.getString(1) + "  " + String.format("%.2f", getAverage(sc.getString(1)));
                 i++;
             }
 
@@ -126,14 +126,16 @@ public class Tab1 extends Fragment {
         } else {
             listArray = new String[subjectCur.getCount()];
             int i = 0;
-            while(subjectCur.moveToNext()){
-                listArray[i] = subjectCur.getString(1) + "  " + getAverage(subjectCur.getString(1));
+            subjectCur.close();
+            Cursor sc = myDBS.getAllData();
+            while (sc.moveToNext()) {
+                listArray[i] = sc.getString(1) + "  " + String.format("%.2f", getAverage(sc.getString(1)));
                 i++;
             }
 
+            sc.close();
+
         }
-
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(view.getContext(), android.R.layout.simple_list_item_1, listArray);
@@ -143,13 +145,12 @@ public class Tab1 extends Fragment {
     }
 
 
-
-    private void updateTotalAverage(){
+    private void updateTotalAverage() {
 
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         myDBS.close();
         myDB.close();
