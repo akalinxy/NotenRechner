@@ -20,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by minel_000 on 28/7/2015.
  */
-public class Popup extends Activity implements View.OnClickListener{
+public class Popup extends Activity { // implements View.OnClickListener
 
     public static final String IDX = "id";
     public static final String NAMEX = "subjectname";
@@ -57,75 +57,75 @@ public class Popup extends Activity implements View.OnClickListener{
         int height = dm.heightPixels;
 
         tvSName =(TextView) findViewById(R.id.popup_title);
-        tvSFactor = (TextView) findViewById(R.id.popup_factor);
+//        tvSFactor = (TextView) findViewById(R.id.popup_factor);
 
         btnSave = (Button) findViewById(R.id.popup_save);
-        btnDelete = (Button) findViewById(R.id.popup_delete);
+//        btnDelete = (Button) findViewById(R.id.popup_delete);
 
-        btnSave.setOnClickListener(this);
-        btnDelete.setOnClickListener(this);
+//        btnSave.setOnClickListener(this);
+//        btnDelete.setOnClickListener(this);
 
         etSFactor = (EditText) findViewById(R.id.popup_edit_factor);
 
         getWindow().setLayout((int)(width*.8),(int)(height*.5));
-        setInfo();
+        //setInfo();
     }
 
 
-
-    private void setInfo(){
-        tvSName.setText(name);
-        tvSFactor.setText(String.valueOf(factor));
-
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId())
-        {
-            case R.id.popup_save:
-                if(etSFactor.getText().toString().equals("") || etSFactor.getText().toString() == null)
-                    break;
-                myDB.updateData(String.valueOf(ID), name, etSFactor.getText().toString());
-
-
-
-                break;
-            case R.id.popup_delete:
-
-                ArrayList<Integer> deleteList = new ArrayList<Integer>();
-                Cursor cursor = db.getAllData();
-                int i = 0;
-                while(cursor.moveToNext()){
-                    if(cursor.getString(1).equals(name)){
-                        deleteList.add(i, Integer.parseInt(cursor.getString(0)));
-                    }
-                }
-
-                for(int s = 0; s < deleteList.size(); s++){
-                    db.deleteData(String.valueOf(deleteList.get(s)));
-                }
-
-                myDB.deleteData(String.valueOf(ID));
-                cursor.close();
-                break;
-            default:
-                break;
-        }
-
-//        Intent intent = new Intent(getBaseContext(), EditSubjectsActivity.class);
-//        startActivity(intent);
 //
-        this.finish();
-
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        db.close();
-        myDB.close();
-    }
+//    private void setInfo(){
+//        tvSName.setText(name);
+//        tvSFactor.setText(String.valueOf(factor));
+//
+//    }
+//
+//
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId())
+//        {
+//            case R.id.popup_save:
+//                if(etSFactor.getText().toString().equals("") || etSFactor.getText().toString() == null)
+//                    break;
+//                myDB.updateData(String.valueOf(ID), name, etSFactor.getText().toString());
+//
+//
+//
+//                break;
+//            case R.id.popup_delete:
+//
+//                ArrayList<Integer> deleteList = new ArrayList<Integer>();
+//                Cursor cursor = db.getAllData();
+//                int i = 0;
+//                while(cursor.moveToNext()){
+//                    if(cursor.getString(1).equals(name)){
+//                        deleteList.add(i, Integer.parseInt(cursor.getString(0)));
+//                    }
+//                }
+//
+//                for(int s = 0; s < deleteList.size(); s++){
+//                    db.deleteData(String.valueOf(deleteList.get(s)));
+//                }
+//
+//                myDB.deleteData(String.valueOf(ID));
+//                cursor.close();
+//                break;
+//            default:
+//                break;
+//        }
+//
+////        Intent intent = new Intent(getBaseContext(), EditSubjectsActivity.class);
+////        startActivity(intent);
+////
+//        this.finish();
+//
+//    }
+//
+//    @Override
+//    public void onStop(){
+//        super.onStop();
+//        db.close();
+//        myDB.close();
+//    }
 
 }

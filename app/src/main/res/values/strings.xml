@@ -22,7 +22,9 @@
     <string name="new_semester">neues Semester</string>
     <string name="choose_date">Datum wählen</string>
     <string name="delete">Löschen</string>
-
+    <string name="cancel">Abbrechen</string>
+    <string name="errorMsgWrongInputNumerical">Eingabe hat giftige eingabe!</string>
+    <string name="error">Fehler!</string>
     <string name="hint_new_subject">z.B. Wirtschaft und Recht</string>
     <string name="hint_achieved_grade">z.B. 4.6</string>
     <string name="hint_factor">z.B. 100</string>
