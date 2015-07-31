@@ -2,35 +2,23 @@ package com.linxy.gradeorganizer;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
+import com.linxy.gradeorganizer.com.linxy.adapters.RVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-import com.linxy.gradeorganizer.tabs.Popup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +40,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
     private List<Subject> subjects;
 
 
-    class Subject {
+   public class Subject {
         public String subjectid;
         public String subjectname;
         public String subjectfactor;

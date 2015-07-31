@@ -5,4 +5,7 @@
     <color name="tabsScrolColor">#FFEB3B</color>
     <color name="ColorYellow">#FFEB3B</color>
     <color name="GrayColor">#B0BEC5</color>
+    <color name="ColorFlatRed">#F44336</color>
+    <color name="ColorFlatGreen">#4CAF50</color>
+
 </resources>

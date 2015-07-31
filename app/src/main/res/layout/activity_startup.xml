@@ -8,11 +8,13 @@
     android:id="@+id/start"
     android:weightSum="1">
 
+
     <include
         android:id="@+id/tool_bar"
 
         layout="@layout/tool_bar"
         ></include>
+
     <com.linxy.gradeorganizer.tabs.SlidingTabLayout
         android:id="@+id/tabs"
         android:elevation="4dp"
@@ -27,11 +29,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:clipChildren="false">
-        <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="4dp"-->
-            <!--android:background="@drawable/shadow"-->
-            <!--/>-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:background="@drawable/shadow"
+            />
 
     <android.support.v4.view.ViewPager
 

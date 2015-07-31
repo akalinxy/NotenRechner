@@ -3,6 +3,10 @@ package com.linxy.gradeorganizer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by linxy on 7/26/15.
@@ -17,7 +21,10 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
         this.Titles = mTitles;
         this.NumbOfTabs = mNumbOfTabsumb;
 
+
+
     }
+
 
     @Override
     public Fragment getItem(int position){
@@ -45,4 +52,5 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
     public int getCount(){
         return NumbOfTabs;
     }
+
 }

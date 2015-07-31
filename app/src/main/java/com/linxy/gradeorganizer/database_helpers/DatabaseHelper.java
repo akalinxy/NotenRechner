@@ -93,12 +93,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return hasObject;
     }
 
-    public boolean updateData(String id, String subjectname, String subjectfactor){
+    public boolean updateData(String id, String subjectname, String gradename, String grade, String graderounded, String gradefactor, String date){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_1, id);
         contentValues.put(COL_2, subjectname);
-        contentValues.put(COL_3, subjectfactor);
+        contentValues.put(COL_3, gradename);
+        contentValues.put(COL_4, grade);
+        contentValues.put(COL_5, graderounded);
+        contentValues.put(COL_6, gradefactor);
+        contentValues.put(COL_7, date);
 
         db.update(TABLE_NAME, contentValues, "_id = ?", new String[]{id});
         db.close();

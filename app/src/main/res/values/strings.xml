@@ -29,6 +29,12 @@
     <string name="hint_achieved_grade">z.B. 4.6</string>
     <string name="hint_factor">z.B. 100</string>
     <string name="hint_newgrade_name">z.B. Atommodell</string>
+    <string name="info">Information</string>
+    <string name="details">Details</string>
+    <string name="exam">Prüfung</string>
+    <string name="grade">Note</string>
+    <string name="close">Schliessen</string>
+    <string name="okay">Ok</string>
 
     <array name="test_subjects">
         <item>Mathematik</item>

@@ -1,19 +1,18 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.com.linxy.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.linxy.gradeorganizer.EditSubjectsActivity;
+import com.linxy.gradeorganizer.R;
 
 import java.util.List;
-
-import javax.security.auth.Subject;
 
 /**
  * Created by Linxy on 30/7/2015 at 15:34
@@ -51,7 +50,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.SubjectViewHolder>
 
     List<EditSubjectsActivity.Subject> subjects;
 
-    RVAdapter(List<EditSubjectsActivity.Subject> subjects){
+   public RVAdapter(List<EditSubjectsActivity.Subject> subjects){
         this.subjects = subjects;
     }
 

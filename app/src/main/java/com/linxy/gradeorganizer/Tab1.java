@@ -52,10 +52,13 @@ public class Tab1 extends Fragment {
 
     }
 
+    @Override
     public void onResume(){
         super.onResume();
         populareView(getView());
     }
+
+
 
     private double getAverage(String subjectName) {
         Cursor gradesCur = myDB.getAllData();
@@ -85,8 +88,6 @@ public class Tab1 extends Fragment {
     }
 
     private void populareView(View view) {
-
-
         boolean showInsufficient = prefs.getBoolean("insufficient", true);
         Cursor gradesCur = myDB.getAllData();
         String listArray[];

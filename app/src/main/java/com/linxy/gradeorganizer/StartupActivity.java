@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,22 +27,22 @@ public class StartupActivity extends ActionBarActivity {
     ViewPager pager;
     ViewPageAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[] = { "Ubersicht", "Verlauf", "Bearbeiten"};
+    CharSequence Titles[] = {"Ubersicht", "Verlauf", "Bearbeiten"};
     int Numboftabs = 3;
 
     DatabaseHelperSubjects myDBSubjects;
     DatabaseHelper myDBGrades;
     public static final String PREFS = "PrefFile";
-
+    public static int tHeigt;
     FloatingActionButton test;
 
 
     // Components
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
@@ -57,12 +60,15 @@ public class StartupActivity extends ActionBarActivity {
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
 
+        tHeigt = getSupportActionBar().getHeight();
+
         // Create the ViewPageAdapter and passing it Fragment manager
         adapter = new ViewPageAdapter(getSupportFragmentManager(), Titles, Numboftabs);
 
         // Assigning Viewpager view and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(adapter);
+
 
         // Assigning the Sliding tab layout view
         tabs = (SlidingTabLayout) findViewById(R.id.tabs);
@@ -78,6 +84,9 @@ public class StartupActivity extends ActionBarActivity {
 
         // Setting the ViewPager for the slidingTabsLayout
         tabs.setViewPager(pager);
+
+
+
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -86,6 +95,8 @@ public class StartupActivity extends ActionBarActivity {
 
             @Override
             public void onPageSelected(int position) {
+
+
                 if (position == 2) {
                     test.setVisibility(View.INVISIBLE);
 
@@ -94,26 +105,19 @@ public class StartupActivity extends ActionBarActivity {
 
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
         myDBGrades = new DatabaseHelper(this);
         myDBSubjects = new DatabaseHelperSubjects(this);
-
-
-
-
     }
 
-    public void AddSubjectToDatabase(String subjectName, int factor){
-        if(!myDBSubjects.hasObject(subjectName))
-
-        myDBSubjects.insertData(subjectName, String.valueOf(factor));
+    // Remove this method #TODO
+    public void AddSubjectToDatabase(String subjectName, int factor) {
+        if (!myDBSubjects.hasObject(subjectName))
+            myDBSubjects.insertData(subjectName, String.valueOf(factor));
         else Toast.makeText(this, "EXISTS!", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -139,15 +143,11 @@ public class StartupActivity extends ActionBarActivity {
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         myDBSubjects.close();
         myDBGrades.close();
     }
-
-
-
-
 
 
 }
