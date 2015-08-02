@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:textAppearanceLarge"
-            android:text="@string/number4"
+            android:text="@string/number0"
             android:layout_gravity="center"/>
         <TextView
 
@@ -47,7 +47,7 @@
 
             android:textSize="50sp"
             android:textAppearance="?android:textAppearanceLarge"
-            android:text="@string/number6"
+            android:text="@string/number0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -61,7 +61,7 @@
 
             android:textSize="50sp"
             android:textAppearance="?android:textAppearanceLarge"
-            android:text="@string/number6"
+            android:text="@string/number0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

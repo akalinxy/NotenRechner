@@ -1,5 +1,6 @@
 package com.linxy.gradeorganizer.com.linxy.adapters;
 
+import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.linxy.gradeorganizer.EditSubjectsActivity;
 import com.linxy.gradeorganizer.R;
+import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.Tab2;
 
 import org.w3c.dom.Text;
@@ -38,6 +40,12 @@ public class HRVAdapter extends RecyclerView.Adapter<HRVAdapter.GradeViewHolder>
             btnMoreInfo = (ImageButton) v.findViewById(R.id.cvgh_moreinfo);
 
             btnMoreInfo.setOnClickListener(this);
+
+            if(Double.parseDouble(tvGrade.getText().toString()) < 4.0) {
+                tvGrade.setTextColor(Color.parseColor("#F44336"));
+            } else {
+                tvGrade.setTextColor(Color.parseColor("#4CAF50"));
+            }
             // v.setOnClickListener(this);
         }
 
@@ -75,12 +83,19 @@ public class HRVAdapter extends RecyclerView.Adapter<HRVAdapter.GradeViewHolder>
     @Override
     public void onBindViewHolder(GradeViewHolder gradeViewHolder, int i){
         gradeViewHolder.tvSubName.setText(grades.get(i).gradeSubject);
+//        if(Double.parseDouble(gradeViewHolder.tvGrade.getText().toString()) < 4.0) {
+//            gradeViewHolder.tvGrade.setTextColor(Color.parseColor("#F44336"));
+//        } else {
+//            gradeViewHolder.tvGrade.setTextColor(Color.parseColor("#4CAF50"));
+//        }
         gradeViewHolder.tvGrade.setText(grades.get(i).grade);
 
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView){
+     //   grades
+
         super.onAttachedToRecyclerView(recyclerView);
     }
 

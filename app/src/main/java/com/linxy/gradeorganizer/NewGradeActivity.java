@@ -15,6 +15,7 @@ import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
@@ -34,12 +35,14 @@ import android.widget.Toast;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 
+import org.w3c.dom.Text;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 
-public class NewGradeActivity extends ActionBarActivity   {
+public class NewGradeActivity extends ActionBarActivity {
 
     // Organize
 
@@ -48,23 +51,29 @@ public class NewGradeActivity extends ActionBarActivity   {
 
     EditText inGradeName;
     Spinner inSubjectName;
-    EditText inGrade;
     EditText inFactor;
+
+    Button btnCancel;
+
+    String grade = "";
 
     Button createGrade;
 
+    Toolbar toolbar;
 
     Calendar cal = Calendar.getInstance();
 
     String outDate;
     int pos = 0;
 
+    TextView inGrade;
+
     Button btnAddGrade;
 
     // Handle Date
     Button btnPickDate;
     TextView tvCurrentDate;
-    int year_x, month_x,day_x;
+    int year_x, month_x, day_x;
     static final int DIALOG_ID = 0;
 
     @Override
@@ -74,11 +83,13 @@ public class NewGradeActivity extends ActionBarActivity   {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         myDb = new DatabaseHelper(this);
+        btnCancel = (Button) findViewById(R.id.ang_cancel);
         mySDb = new DatabaseHelperSubjects(this);
+
+        inGrade = (TextView) findViewById(R.id.ang_show_grade);
 
         inGradeName = (EditText) findViewById(R.id.newgrade_name);
         inSubjectName = (Spinner) findViewById(R.id.subject_names);
-        inGrade = (EditText) findViewById(R.id.grade_achieved);
         inFactor = (EditText) findViewById(R.id.factor);
         btnAddGrade = (Button) findViewById(R.id.button_save);
         tvCurrentDate = (TextView) findViewById(R.id.current_date_display);
@@ -92,8 +103,8 @@ public class NewGradeActivity extends ActionBarActivity   {
                     Toast.makeText(NewGradeActivity.this, "Data Inserted", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(NewGradeActivity.this, StartupActivity.class);
                     startActivity(intent);
-                  //  finish();
-                  //  onBackPressed();
+                    //  finish();
+                    //  onBackPressed();
                 } else {
                     Toast.makeText(NewGradeActivity.this, "Fill All Fields!", Toast.LENGTH_SHORT).show();
                 }
@@ -104,11 +115,18 @@ public class NewGradeActivity extends ActionBarActivity   {
         outDate = formattedDate;
         tvCurrentDate.setText(outDate);
 
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         showDialogOnButtonClick();
         // Populate the Spinner
         String items[];
         Cursor cursor = mySDb.getAllData();
-        if(cursor.getCount() > 0) {
+        if (cursor.getCount() > 0) {
             items = new String[cursor.getCount()];
             int i = 0;
             while (cursor.moveToNext()) {
@@ -119,12 +137,15 @@ public class NewGradeActivity extends ActionBarActivity   {
             items = new String[0];
         }
         cursor.close();
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.centered_spinner, items);
         inSubjectName.setAdapter(arrayAdapter);
         showGradePicker();
+
+        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(toolbar);
     }
 
-    public void showGradePicker()  {
+    public void showGradePicker() {
         btnAddGrade = (Button) findViewById(R.id.set_grade);
         btnAddGrade.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,25 +159,26 @@ public class NewGradeActivity extends ActionBarActivity   {
                 final AlertDialog dialog;
 
                 builder.setView(dialogView);
+                builder.setCancelable(false);
 
                 final Button buttons[] = new Button[10];
 
-                  buttons[0] = (Button) dialogView.findViewById(R.id.mgp_0);
-                  buttons[1] = (Button) dialogView.findViewById(R.id.mgp_1);
-                  buttons[2] = (Button) dialogView.findViewById(R.id.mgp_2);
-                  buttons[3] = (Button) dialogView.findViewById(R.id.mgp_3);
-                  buttons[4] = (Button) dialogView.findViewById(R.id.mgp_4);
-                  buttons[5] = (Button) dialogView.findViewById(R.id.mgp_5);
-                  buttons[6] = (Button) dialogView.findViewById(R.id.mgp_6);
-                  buttons[7] = (Button) dialogView.findViewById(R.id.mgp_7);
-                  buttons[8] = (Button) dialogView.findViewById(R.id.mgp_8);
-                  buttons[9] = (Button) dialogView.findViewById(R.id.mgp_9);
+                buttons[0] = (Button) dialogView.findViewById(R.id.mgp_0);
+                buttons[1] = (Button) dialogView.findViewById(R.id.mgp_1);
+                buttons[2] = (Button) dialogView.findViewById(R.id.mgp_2);
+                buttons[3] = (Button) dialogView.findViewById(R.id.mgp_3);
+                buttons[4] = (Button) dialogView.findViewById(R.id.mgp_4);
+                buttons[5] = (Button) dialogView.findViewById(R.id.mgp_5);
+                buttons[6] = (Button) dialogView.findViewById(R.id.mgp_6);
+                buttons[7] = (Button) dialogView.findViewById(R.id.mgp_7);
+                buttons[8] = (Button) dialogView.findViewById(R.id.mgp_8);
+                buttons[9] = (Button) dialogView.findViewById(R.id.mgp_9);
 
 
                 final View touchView = dialogView.findViewById(R.id.mgp_relview);
                 touchView.setClickable(true);
 
-                for(int i = 0; i < buttons.length; i++){
+                for (int i = 0; i < buttons.length; i++) {
                     buttons[i].setClickable(false);
                 }
 
@@ -196,14 +218,14 @@ public class NewGradeActivity extends ActionBarActivity   {
                     }
                 });
 
+
+                dialog = builder.create();
                 touchView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-
                         int action = event.getAction();
-                        if(action==MotionEvent.ACTION_UP){
-
-                            switch (pos){
+                        if (action == MotionEvent.ACTION_UP) {
+                            switch (pos) {
 
                                 case 0:
                                     tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
@@ -217,6 +239,15 @@ public class NewGradeActivity extends ActionBarActivity   {
                                 case 2:
                                     tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                                     tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
+                                    grade = tvBeforeDecimal.getText().toString() + "." + tvAfteDecimal.getText().toString() + tvAfterAfterDecimal.getText().toString();
+                                    inGrade.setText(grade);
+                                    double d = Double.parseDouble(inGrade.getText().toString());
+                                    if(d<4)
+                                        inGrade.setTextColor(getResources().getColor(R.color.ColorFlatRed));
+                                    else
+                                        inGrade.setTextColor(getResources().getColor(R.color.ColorFlatGreen));
+                                    dialog.cancel();
+                                    pos = -1;
                                     break;
                             }
 
@@ -229,9 +260,6 @@ public class NewGradeActivity extends ActionBarActivity   {
                             return false;
 
 
-
-
-
                         Rect hitRect = new Rect();
                         Button button;
                         int s = -1;
@@ -239,13 +267,13 @@ public class NewGradeActivity extends ActionBarActivity   {
                         for (int i = 0; i < buttons.length; i++) {
 
                             button = buttons[i];
-                                button.getBackground().clearColorFilter();
+                            button.getBackground().clearColorFilter();
 
 
                             button.getHitRect(hitRect);
                             if (hitRect.contains((int) event.getX(), (int) event.getY())) {
 
-                                switch (pos){
+                                switch (pos) {
                                     case 0:
                                         tvBeforeDecimal.setText(button.getText().toString());
                                         button.getBackground().setColorFilter(getResources().getColor(R.color.WhiteCyan), PorterDuff.Mode.SRC_ATOP);
@@ -268,34 +296,13 @@ public class NewGradeActivity extends ActionBarActivity   {
                     }
                 });
 
-
-
-
-
-                dialog = builder.create();
                 dialog.show();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             }
         });
     }
 
-    public void showDialogOnButtonClick(){
+    public void showDialogOnButtonClick() {
         btnPickDate = (Button) findViewById(R.id.choose_date);
         btnPickDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -304,22 +311,23 @@ public class NewGradeActivity extends ActionBarActivity   {
             }
         });
     }
+
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
         myDb.close();
         mySDb.close();
     }
 
     @Override
-    protected Dialog onCreateDialog(int id){
-        if(id == DIALOG_ID){
-                int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-                int month = Calendar.getInstance().get(Calendar.MONTH);
-                int year = Calendar.getInstance().get(Calendar.YEAR);
+    protected Dialog onCreateDialog(int id) {
+        if (id == DIALOG_ID) {
+            int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            int month = Calendar.getInstance().get(Calendar.MONTH);
+            int year = Calendar.getInstance().get(Calendar.YEAR);
 
-           DatePickerDialog dpicker = new DatePickerDialog(this, dpickerListner, year_x, month_x, day_x);
-            dpicker.updateDate(year,month,day);
+            DatePickerDialog dpicker = new DatePickerDialog(this, dpickerListner, year_x, month_x, day_x);
+            dpicker.updateDate(year, month+1, day);
             return dpicker;
         }
 
@@ -329,18 +337,24 @@ public class NewGradeActivity extends ActionBarActivity   {
 
     }
 
-    private boolean fillDatabase(){
+    private boolean fillDatabase() {
         double r = 0;
         double s = 0;
         double t = 0;
 
         boolean b;
 
-        if(inGradeName.getText().toString() == null || inGradeName.toString().isEmpty()) return false;
-        if(inSubjectName.getSelectedItem().toString() == null || inSubjectName.getSelectedItem().toString().isEmpty()) return false;
-        if(inGrade.getText().toString() == null || inGrade.getText().toString().isEmpty()) return false;
-        if(inFactor.getText().toString() == null || inFactor.getText().toString().isEmpty()) return false;
-        if(outDate == null || outDate.isEmpty()) return false;
+        if(Double.parseDouble(inGrade.getText().toString()) <= 0.0) return false;
+
+        if (inGradeName.getText().toString() == null || inGradeName.toString().isEmpty())
+            return false;
+        if (inSubjectName.getSelectedItem().toString() == null || inSubjectName.getSelectedItem().toString().isEmpty())
+            return false;
+        if (inGrade.getText().toString() == null || inGrade.getText().toString().isEmpty())
+            return false;
+        if (inFactor.getText().toString() == null || inFactor.getText().toString().isEmpty())
+            return false;
+        if (outDate == null || outDate.isEmpty()) return false;
 
 
 //        t = Double.parseDouble(inGrade.getText().toString());
@@ -354,7 +368,7 @@ public class NewGradeActivity extends ActionBarActivity   {
                 inGrade.getText().toString(),
                 inFactor.getText().toString(),
                 outDate);
-        return  b;
+        return b;
     }
 
     private DatePickerDialog.OnDateSetListener dpickerListner =

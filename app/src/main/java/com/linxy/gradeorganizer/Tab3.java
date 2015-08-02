@@ -16,7 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,6 +42,8 @@ public class Tab3 extends Fragment implements View.OnClickListener{
     EditText etNewSubjectFactor;
     Button btnAddNewSubject;
     Switch swtShowInsufficient;
+
+    ScrollView scrollView;
 
     // Edit Subjects
     Button btnEditSubjects;
@@ -90,6 +94,8 @@ public class Tab3 extends Fragment implements View.OnClickListener{
                 editor.commit();
             }
         });
+
+
 
 
         return  v;

@@ -35,13 +35,16 @@ enum SearchBarVisible {
 
 public class StartupActivity extends ActionBarActivity implements SearchView.OnQueryTextListener{
 
-    private Toolbar toolbar;
+    public  Toolbar toolbar;
     private SearchBarVisible SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
 
     MenuItem searchItem;
+
     ViewPager pager;
+
     ViewPageAdapter adapter;
     SlidingTabLayout tabs;
+
     CharSequence Titles[] = {"Ubersicht", "Verlauf", "Bearbeiten"};
     int Numboftabs = 3;
 
@@ -76,10 +79,11 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
             }
         });
         // Create the Toolbar and set it as the toolbar
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
 
         tHeigt = getSupportActionBar().getHeight();
+
 
         // Create the ViewPageAdapter and passing it Fragment manager
         adapter = new ViewPageAdapter(getSupportFragmentManager(), Titles, Numboftabs);

@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.Layout;
 import android.view.LayoutInflater;
@@ -23,11 +25,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +41,8 @@ import android.widget.ToggleButton;
 import com.linxy.gradeorganizer.com.linxy.adapters.HRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.tabs.HidingScrollListener;
+import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +64,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
     private List<Grade> grades;
     private boolean inEdit = false;
+    static boolean scroll_down;
 
     SearchView searchView;
 
@@ -69,7 +77,6 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
     double selGrade[];
     int selGradeFactor[];
     String selGradeDate[];
-
 
 
     public class Grade {
@@ -115,8 +122,35 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager llm = new LinearLayoutManager(v.getContext());
+        final LinearLayoutManager llm = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(llm);
+
+        int paddingTop = Utils.getToolbarHeight(getActivity().getBaseContext()) + Utils.getTabsHeight(getActivity().getBaseContext());
+        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
+        final LinearLayout mToolbarContainer;
+        mToolbarContainer = (LinearLayout) getActivity().findViewById(R.id.toolbar_container);
+
+            final Toolbar toolbar;
+        toolbar = (Toolbar) getActivity().findViewById(R.id.app_bar);
+
+        recyclerView.setOnScrollListener(new HidingScrollListener(v.getContext()) {
+            @Override
+            public void onShow() {
+                mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+            }
+
+            @Override
+            public void onHide() {
+                mToolbarContainer.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
+            }
+
+            @Override
+            public void onMoved(int distance) {
+                mToolbarContainer.setTranslationY(-distance);
+
+
+            }
+        });
         fillListView(v);
 
 
@@ -179,7 +213,6 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
                     );
 
 
-
                     examName.setFocusable(false);
                     grade.setFocusable(false);
                     factor.setFocusable(false);
@@ -187,10 +220,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
                     edit.setChecked(false);
 
 
-
-
                 }
-
 
 
             }
@@ -202,8 +232,6 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
                 fillListView(v);
-
-
 
 
             }
@@ -234,7 +262,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
     @Override
     public void onResume() {
         super.onResume();
-       // fillListView(getView());
+        // fillListView(getView());
     }
 
 
@@ -267,7 +295,6 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
         cdb.close();
     }
-
 
 
     @Override

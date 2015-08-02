@@ -9,19 +9,35 @@
     android:weightSum="1">
 
 
-    <include
-        android:id="@+id/tool_bar"
-
-        layout="@layout/tool_bar"
-        ></include>
-
-    <com.linxy.gradeorganizer.tabs.SlidingTabLayout
-        android:id="@+id/tabs"
-        android:elevation="4dp"
+    <LinearLayout
+        android:id="@+id/toolbar_container"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/ColorPrimary"
-        />
+        android:layout_height="wrap_content">
+
+
+        <android.support.v7.widget.Toolbar
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:id="@+id/app_bar"
+            android:background="@color/ColorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        </android.support.v7.widget.Toolbar>
+
+        <com.linxy.gradeorganizer.tabs.SlidingTabLayout
+            android:id="@+id/tabs"
+            android:elevation="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ColorPrimary"
+            />
+
+    </LinearLayout>
+
+
+
 
 
 
@@ -35,14 +51,15 @@
             android:background="@drawable/shadow"
             />
 
-    <android.support.v4.view.ViewPager
+        <android.support.v4.view.ViewPager
 
-        android:id="@+id/pager"
-        android:layout_height="409dp"
-        android:layout_width="match_parent"
-        android:layout_gravity="top"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true" />
+            android:id="@+id/pager"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_gravity="top"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
