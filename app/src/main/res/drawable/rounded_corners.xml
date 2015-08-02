@@ -4,5 +4,5 @@
     <!--<padding android:left="7dp" android:top="13dp"
         android:right="7dp" android:bottom="17dp" /> -->
     <corners android:radius="0dp" />
-    <solid android:color="@color/ColorPrimary"></solid>
+    <solid android:color="@color/switch_thumb_disabled_material_light"></solid>
 </shape>

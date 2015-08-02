@@ -1,5 +1,8 @@
 package com.linxy.gradeorganizer;
 
+import android.app.SearchManager;
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -7,34 +10,49 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
 
+enum SearchBarVisible {
+    SEARCH_BAR_VISIBLE, SEARCH_BAR_INVISIBLE;
+}
 
-public class StartupActivity extends ActionBarActivity {
+
+public class StartupActivity extends ActionBarActivity implements SearchView.OnQueryTextListener{
 
     private Toolbar toolbar;
+    private SearchBarVisible SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
+
+    MenuItem searchItem;
     ViewPager pager;
     ViewPageAdapter adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[] = {"Ubersicht", "Verlauf", "Bearbeiten"};
     int Numboftabs = 3;
 
-    DatabaseHelperSubjects myDBSubjects;
-    DatabaseHelper myDBGrades;
     public static final String PREFS = "PrefFile";
     public static int tHeigt;
     FloatingActionButton test;
+
+
+    private SearchView searchView;
+    private ListView listView;
+    private ArrayAdapter arrayAdapter;
 
 
     // Components
@@ -42,6 +60,7 @@ public class StartupActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
 
         super.onCreate(savedInstanceState);
@@ -67,6 +86,7 @@ public class StartupActivity extends ActionBarActivity {
 
         // Assigning Viewpager view and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
+        pager.setOffscreenPageLimit(2);
         pager.setAdapter(adapter);
 
 
@@ -96,34 +116,77 @@ public class StartupActivity extends ActionBarActivity {
             @Override
             public void onPageSelected(int position) {
 
+                switch (position) {
+                    case 0: /* Overview */
+                        test.setVisibility(View.VISIBLE);
+                        SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
+                        invalidateOptionsMenu();
+//                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//                            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
-                if (position == 2) {
-                    test.setVisibility(View.INVISIBLE);
 
-                } else {
-                    test.setVisibility(View.VISIBLE);
+                        break;
+                    case 1: /* History */
+                        test.setVisibility(View.INVISIBLE);
+                        searchItem.setVisible(true);
+                        SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_VISIBLE;
+                        invalidateOptionsMenu();
+
+
+                        break;
+                    case 2: /* Settings */
+                        searchItem.setVisible(false);
+                        SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
+                        invalidateOptionsMenu();
+
+
+                        break;
+                    default: /* This doesnt Happen*/
+                        break;
 
                 }
+
+
             }
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
-        myDBGrades = new DatabaseHelper(this);
-        myDBSubjects = new DatabaseHelperSubjects(this);
+
+        String testArr[] = getResources().getStringArray(R.array.test_subjects);
+     //   listView = new ListView(getBaseContext());
+
+
     }
 
-    // Remove this method #TODO
-    public void AddSubjectToDatabase(String subjectName, int factor) {
-        if (!myDBSubjects.hasObject(subjectName))
-            myDBSubjects.insertData(subjectName, String.valueOf(factor));
-        else Toast.makeText(this, "EXISTS!", Toast.LENGTH_SHORT).show();
-    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_startup, menu);
+
+
+         searchItem = menu.findItem(R.id.toolbar_search);
+        SearchManager searchManger = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        switch (SEARCH_VISIBILITY){
+            case SEARCH_BAR_VISIBLE:
+                searchItem.setVisible(true);
+                break;
+            case SEARCH_BAR_INVISIBLE:
+                searchItem.setVisible(false);
+                break;
+            default:
+        }
+
+        searchView.setSearchableInfo(searchManger.getSearchableInfo(getComponentName()));
+        searchView.setIconifiedByDefault(true);
+        searchView.setOnQueryTextListener(this);
+
+
         return true;
     }
 
@@ -135,9 +198,11 @@ public class StartupActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.toolbar_settings) {
+
             return true;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -145,9 +210,18 @@ public class StartupActivity extends ActionBarActivity {
     @Override
     public void onStop() {
         super.onStop();
-        myDBSubjects.close();
-        myDBGrades.close();
+
     }
 
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
 }

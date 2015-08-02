@@ -22,6 +22,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+
 import org.w3c.dom.Text;
 
 /**
@@ -30,7 +33,7 @@ import org.w3c.dom.Text;
 public class Tab3 extends Fragment implements View.OnClickListener{
 
     Spinner spinnerRoundTo;
-    String arraySpinner[] = {"Nicht Runden", "Halbe Note", "Ganze Note" };
+    String arraySpinner[] = {"Nicht Runden", "Halbe Note" };
 
     // Add Subject Components
     EditText etNewSubjectName;
@@ -43,6 +46,7 @@ public class Tab3 extends Fragment implements View.OnClickListener{
 
     private boolean showinsufficient;
 
+    DatabaseHelperSubjects dbs;
 
 
 
@@ -51,7 +55,7 @@ public class Tab3 extends Fragment implements View.OnClickListener{
 
         View v = inflater.inflate(R.layout.tab_3, container, false);
 
-
+        dbs = new DatabaseHelperSubjects(getActivity());
 
 
         // Add Subject Init Components
@@ -91,26 +95,27 @@ public class Tab3 extends Fragment implements View.OnClickListener{
         return  v;
     }
 
-    @Override
+    @Override /* TODO Create String References in strings.xml for these Strings! */
     public void onClick(View v) {
-
         switch (v.getId()){
             case R.id.add_new_subject:
-                if(testFieldsNewSubject()) {
-                    ((StartupActivity) getActivity()).AddSubjectToDatabase(etNewSubjectName.getText().toString(), Integer.parseInt(etNewSubjectFactor.getText().toString()));
-                    Toast.makeText((StartupActivity)getActivity(), "Added Subject to DB", Toast.LENGTH_SHORT).show();
+                if(testFieldsNewSubject()) { /* Subject is not blank */
+                    if(dbs.hasObject(etNewSubjectName.getText().toString())){ /* SubjectName already exists in Database */
+                        Toast.makeText((StartupActivity)getActivity(), "Subject Exists!", Toast.LENGTH_SHORT).show();
+                    } else { /* SubjectName is unique. */
+                        dbs.insertData(etNewSubjectName.getText().toString(), etNewSubjectFactor.getText().toString());
+                        Toast.makeText((StartupActivity)getActivity(), "Subject inserted @ " + dbs.getDatabaseName(), Toast.LENGTH_SHORT).show();
+                        dbs.close();
+                    }
                 } else {
-                    Toast.makeText((StartupActivity)getActivity(), "Fill in ALL fields!", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText((StartupActivity)getActivity(), "Fill all Fields!", Toast.LENGTH_SHORT).show();
                 }
-
                 break;
             case R.id.edit_subjects:
                 Intent intent = new Intent((StartupActivity)getActivity(), EditSubjectsActivity.class);
                 startActivity(intent);
                 break;
         }
-
     }
 
     private boolean testFieldsNewSubject(){

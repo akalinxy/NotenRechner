@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+    <LinearLayout
+        android:padding="8dp"
+        android:background="@color/Cyan"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:clickable="true"
+            android:id="@+id/mgp_textview_beforedecimal"
+            android:textColor="@color/WhiteColor"
+            android:textStyle="bold"
+            android:textSize="50sp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:text="@string/number4"
+            android:layout_gravity="center"/>
+        <TextView
+
+            android:textColor="@color/WhiteCyan"
+
+            android:textStyle="bold"
+
+            android:textSize="50sp"
+
+            android:text="."
+            android:textAppearance="?android:textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:clickable="true"
+
+            android:id="@+id/mgp_textview_afterdecimal"
+
+            android:textColor="@color/WhiteCyan"
+
+            android:textStyle="bold"
+
+            android:textSize="50sp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:text="@string/number6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:clickable="true"
+
+            android:id="@+id/mgp_textview_afterafterdecimal"
+
+            android:textColor="@color/WhiteCyan"
+
+            android:textStyle="bold"
+
+            android:textSize="50sp"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:text="@string/number6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+
+    <RelativeLayout
+        android:paddingTop="10dp"
+        android:id="@+id/mgp_relview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+
+        >
+
+        <View
+            android:id="@+id/mgp_touchview"
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="20dp"
+
+            android:background="@drawable/gray_circleshape"
+             />
+
+
+        <Button
+            android:id="@+id/mgp_0"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="46dp"
+            android:layout_marginTop="33dp"
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number0"
+
+            />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+
+            android:id="@+id/mgp_1"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="93dp"
+
+
+            android:layout_marginTop="18dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+
+            android:text="@string/number1" />
+
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_2"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="33dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number2" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_3"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="169dp"
+            android:layout_marginTop="73dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number3" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_4"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="169dp"
+            android:layout_marginTop="122dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number4" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_5"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="162dp"
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number5" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_6"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="93dp"
+            android:layout_marginTop="177dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number6" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_7"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="46dp"
+            android:layout_marginTop="162dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number7" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_8"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="18dp"
+
+            android:layout_marginTop="122dp"
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number8" />
+
+        <Button
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:id="@+id/mgp_9"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="18dp"
+            android:layout_marginTop="73dp"
+
+            android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/number9" />
+
+
+    </RelativeLayout>
+</LinearLayout>

@@ -36,6 +36,21 @@
     <string name="close">Schliessen</string>
     <string name="okay">Ok</string>
 
+    <string name="search_hint">Suche nach Prüfungen oder Fächer</string>
+    <string name="search_label">Pruefungen</string>
+    <string name="number0">0</string>
+    <string name="number1">1</string>
+    <string name="number2">2</string>
+    <string name="number3">3</string>
+    <string name="number4">4</string>
+    <string name="number5">5</string>
+    <string name="number6">6</string>
+    <string name="number7">7</string>
+    <string name="number8">8</string>
+    <string name="number9">9</string>
+
+
+
     <array name="test_subjects">
         <item>Mathematik</item>
         <item>Franzosisch</item>
@@ -65,4 +80,5 @@
     <string name="title_activity_edit_subjects">EditSubjectsActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_searchable">SearchableActivity</string>
 </resources>

@@ -3,6 +3,9 @@ package com.linxy.gradeorganizer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.HashMap;
@@ -15,12 +18,12 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
 
     CharSequence Titles[];
     int NumbOfTabs;
+    SparseArray<View> views = new SparseArray<>();
 
     public ViewPageAdapter(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb){
         super(fm);
         this.Titles = mTitles;
         this.NumbOfTabs = mNumbOfTabsumb;
-
 
 
     }
@@ -51,6 +54,14 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
     @Override
     public int getCount(){
         return NumbOfTabs;
+    }
+
+
+
+    @Override
+    public Object instantiateItem(View container, int position){
+        container.setTag(position);
+        return container;
     }
 
 }

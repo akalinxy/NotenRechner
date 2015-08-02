@@ -2,17 +2,24 @@ package com.linxy.gradeorganizer;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.text.Layout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -51,15 +58,19 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
     private List<Grade> grades;
     private boolean inEdit = false;
 
+    SearchView searchView;
+
+
     HRVAdapter adapter;
 
     int selGradeIds[];
     String selGradeSubName[];
     String selGradeName[];
     double selGrade[];
-    double selGradeRounded[];
     int selGradeFactor[];
     String selGradeDate[];
+
+
 
     public class Grade {
 
@@ -68,16 +79,14 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         public String gradeName;
         public String grade;
         public String gradeFactor;
-        public String gradeRounded;
         public String gradeDate;
 
-        Grade(String gradeId, String gradeSubject, String gradeName, String grade, String gradeRounded, String gradeFactor, String gradeDate) {
+        Grade(String gradeId, String gradeSubject, String gradeName, String grade, String gradeFactor, String gradeDate) {
             this.gradeId = gradeId;
             this.gradeSubject = gradeSubject;
             this.gradeName = gradeName;
             this.grade = grade;
             this.gradeFactor = gradeFactor;
-            this.gradeRounded = gradeRounded;
             this.gradeDate = gradeDate;
         }
     }
@@ -97,7 +106,6 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         selGradeSubName = new String[size];
         selGradeName = new String[size];
         selGrade = new double[size];
-        selGradeRounded = new double[size];
         selGradeFactor = new int[size];
         selGradeDate = new String[size];
 
@@ -166,10 +174,11 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
                             selGradeSubName[position],
                             examName.getText().toString(),
                             grade.getText().toString(),
-                            String.valueOf(selGradeRounded[position]), // Fix for later, remove gradefactor...
                             factor.getText().toString(),
                             date.getText().toString()
                     );
+
+
 
                     examName.setFocusable(false);
                     grade.setFocusable(false);
@@ -177,7 +186,12 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
                     date.setFocusable(false);
                     edit.setChecked(false);
 
+
+
+
                 }
+
+
 
             }
         });
@@ -220,7 +234,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        fillListView(getView());
+       // fillListView(getView());
     }
 
 
@@ -235,14 +249,13 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
         int i = 0;
         while (cdb.moveToNext()) {
-            grades.add(new Grade(cdb.getString(0), cdb.getString(1), cdb.getString(2), cdb.getString(3), cdb.getString(4), cdb.getString(5), cdb.getString(6)));
+            grades.add(new Grade(cdb.getString(0), cdb.getString(1), cdb.getString(2), cdb.getString(3), cdb.getString(4), cdb.getString(5)));
             selGradeIds[i] = Integer.parseInt(cdb.getString(0));
             selGradeSubName[i] = cdb.getString(1);
             selGradeName[i] = cdb.getString(2);
             selGrade[i] = Double.parseDouble(cdb.getString(3));
-            selGradeRounded[i] = Double.parseDouble(cdb.getString(4));
-            selGradeFactor[i] = Integer.parseInt(cdb.getString(5));
-            selGradeDate[i] = cdb.getString(6);
+            selGradeFactor[i] = Integer.parseInt(cdb.getString(4));
+            selGradeDate[i] = cdb.getString(5);
 
             i++;
         }
@@ -254,6 +267,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
         cdb.close();
     }
+
 
 
     @Override

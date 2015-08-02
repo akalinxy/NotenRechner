@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:elevation="8dp"
-        app:backgroundTint="#FFEA00"
+        app:backgroundTint="#ffdc00"
         android:src="@drawable/ic_add_white_24dp"
         app:layout_anchorGravity="bottom|right"
         app:borderWidth="0dp"

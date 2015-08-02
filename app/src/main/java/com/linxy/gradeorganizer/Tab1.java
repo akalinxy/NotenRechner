@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.tabs.UpdatableFragment;
 
 import java.util.ArrayList;
 
@@ -22,7 +23,7 @@ import java.util.ArrayList;
  * Created by linxy on 7/26/15.
  */
 
-public class Tab1 extends Fragment {
+public class Tab1 extends Fragment{
 
     ListView lvSubjectAverages;
     TextView allSubjectAverages;
@@ -60,54 +61,67 @@ public class Tab1 extends Fragment {
 
 
 
-    private double getAverage(String subjectName) {
-        Cursor gradesCur = myDB.getAllData();
-        double avg = 0;
-        ArrayList<Double> grades = new ArrayList<Double>();
-        double total = 0;
-
-        int i = 0;
-        while (gradesCur.moveToNext()) {
-            if (gradesCur.getString(1).equals(subjectName)) {
-                grades.add(i, Double.parseDouble(gradesCur.getString(3)));
-                i++;
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+        if (getActivity() != null )
+        {
+            if (visible) {
+                populareView(getView());
             }
         }
+    }
 
-        for (int s = 0; s < grades.size(); s++) {
-            total += grades.get(s);
+    //TODO Disallow Grade or Factor of 0!
+    private double getAverage(String subjectName) {
+        /* Returns -1 if the subject has no registered Grades */
+
+        Cursor gradesCur = myDB.getAllData();
+
+        double numerator = 0;
+        double denominator = 0;
+
+        while (gradesCur.moveToNext()) { /* This Loop will cycle through all grade entries */
+
+            if (gradesCur.getString(1).equals(subjectName)) { /* This will Trigger IF and only IF a registered grade is found with subjectName */
+
+                numerator += (Double.parseDouble(gradesCur.getString(4)) / 100) * Double.parseDouble(gradesCur.getString(3));
+                denominator += Double.parseDouble(gradesCur.getString(4)) / 100 ;
+
+            }
         }
-
-        if (grades.size() == 0) return 0;
-
-        avg = total / grades.size();
-
-
         gradesCur.close();
-        return avg;
+
+        if(numerator == 0) return -1;
+        return (numerator / denominator);
     }
 
     private void populareView(View view) {
+
         boolean showInsufficient = prefs.getBoolean("insufficient", true);
-        Cursor gradesCur = myDB.getAllData();
         String listArray[];
         double insufficientMarks = 0;
 
-        double averageAll;
-        double totalAll = 0;
-        int amountAll;
+        double averageAll = 0;
+        double subjectTop = 0;
+        double subjectBottom = 0;
 
         Cursor subjectCur = myDBS.getAllData();
 
-        amountAll = 0;
         while (subjectCur.moveToNext()) {
-            totalAll += getAverage(subjectCur.getString(1));
-            if (!(getAverage(subjectCur.getString(1)) == 0.0)) {
-                amountAll += 1;
+            if(getAverage(subjectCur.getString(1)) == -1){ /* Should this statement execute, then said subject has no registered grades. */
+
+            } else { /* Average of given subject was calculated. */
+
+                subjectTop += getAverage(subjectCur.getString(1)) * (Double.parseDouble(subjectCur.getString(2)) * 100.0);
+                subjectBottom += Double.parseDouble(subjectCur.getString(2)) * 100.0;
             }
         }
 
-        averageAll = totalAll / amountAll;
+        subjectCur.close();
+
+        averageAll = subjectTop / subjectBottom;
+
         allSubjectAverages.setText(String.format("%.1f", averageAll));
 
 
@@ -160,3 +174,5 @@ public class Tab1 extends Fragment {
 
 
 }
+
+

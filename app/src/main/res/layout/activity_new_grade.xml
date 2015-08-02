@@ -1,115 +1,130 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingBottom="20dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     android:paddingTop="20dp"
-    android:paddingBottom="20dp"
     tools:context="com.linxy.gradeorganizer.NewGradeActivity">
 
+
+
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="@string/newgrade_name"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/newgrade_name"
-        android:maxLines="1"
-        android:maxLength="14"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@android:drawable/edit_text"
+        android:hint="@string/hint_newgrade_name"
         android:imeOptions="actionDone"
         android:inputType="text"
-        android:hint="@string/hint_newgrade_name"
+        android:maxLength="14"
+        android:maxLines="1" />
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        />
-    <TextView
-        android:text="@string/subject"
+
+        android:layout_marginBottom="5dp"
         android:layout_marginTop="15dp"
+        android:text="@string/subject"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+
         />
+
     <Spinner
         android:id="@+id/subject_names"
-        android:layout_marginTop="10dp"
-        style="?android:attr/spinnerStyle"
-        android:paddingLeft="110dp"
-        android:spinnerMode="dropdown"
-        android:layout_marginBottom="10dp"
+        style="?android:attr/dropDownSpinnerStyle"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="center_horizontal"
-         />
+        android:layout_height="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="0dp"
+        android:spinnerMode="dropdown" />
+
     <TextView
-        android:layout_marginTop="15dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="@string/achieved_grade"
-        />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/grade_achieved"
-        android:maxLines="1"
-        android:maxLength="14"
-        android:imeOptions="actionDone"
-        android:inputType="numberDecimal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_achieved_grade"
-        />
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:maxLength="14"
+        android:maxLines="1" />
+    <Button
+        android:id="@+id/set_grade"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/grade"/>
+
     <TextView
-        android:layout_marginTop="15dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
         android:text="@string/factor"
-        />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
     <EditText
         android:id="@+id/factor"
-        android:inputType="numberDecimal"
-        android:maxLines="1"
-        android:maxLength="14"
-        android:imeOptions="actionDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_factor"
-        />
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:maxLength="14"
+        android:maxLines="1" />
+
     <TextView
-        android:layout_marginTop="15dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textStyle="bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/date"/>
+        android:layout_marginTop="15dp"
+        android:text="@string/date"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
     <Button
         android:id="@+id/choose_date"
-        android:textAppearance="?android:attr/textAppearanceButton"
-        android:layout_width="match_parent"
-        android:text="@string/choose_date"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:id="@+id/current_date_display"
-        android:gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:layout_marginTop="40dp"
-        android:elevation="8dp"
-        android:textAppearance="?android:attr/textAppearanceButton"
-        android:id="@+id/button_save"
-        android:text="@string/save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:outlineProvider="background" />
+        android:text="@string/choose_date"
+        android:textAppearance="?android:attr/textAppearanceButton" />
 
+    <TextView
+        android:id="@+id/current_date_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:elevation="8dp"
+        android:outlineProvider="background"
+        android:text="@string/save"
+        android:textAppearance="?android:attr/textAppearanceButton" />
 
 </LinearLayout>
