@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -33,17 +34,17 @@ enum SearchBarVisible {
 }
 
 
-public class StartupActivity extends ActionBarActivity implements SearchView.OnQueryTextListener{
+public class StartupActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
 
-    public  Toolbar toolbar;
+    public Toolbar toolbar;
     private SearchBarVisible SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
 
     MenuItem searchItem;
 
     ViewPager pager;
-
     ViewPageAdapter adapter;
     SlidingTabLayout tabs;
+
 
     CharSequence Titles[] = {"Ubersicht", "Verlauf", "Bearbeiten"};
     int Numboftabs = 3;
@@ -51,6 +52,8 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
     public static final String PREFS = "PrefFile";
     public static int tHeigt;
     FloatingActionButton test;
+
+    DatabaseHelperSubjects dbs;
 
 
     private SearchView searchView;
@@ -65,19 +68,31 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
         super.onCreate(savedInstanceState);
+        dbs = new DatabaseHelperSubjects(this);
         setContentView(R.layout.activity_startup);
         test = (FloatingActionButton) findViewById(R.id.fab);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
-                startActivity(intent);
+
+
+                Cursor subjectCursor = dbs.getAllData();
+                if(subjectCursor.getCount()  == 0){
+                    Toast.makeText(StartupActivity.this, getResources().getString(R.string.needSubjects), Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
+                    startActivity(intent);
+                }
+
+                dbs.close();
+                subjectCursor.close();
 
             }
         });
+
+
         // Create the Toolbar and set it as the toolbar
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
@@ -102,13 +117,12 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.tabsScrolColor);
+                return getResources().getColor(R.color.ColorYellow);
             }
         });
 
         // Setting the ViewPager for the slidingTabsLayout
         tabs.setViewPager(pager);
-
 
 
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -131,7 +145,7 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
                         break;
                     case 1: /* History */
-                        test.setVisibility(View.INVISIBLE);
+                        test.setVisibility(View.VISIBLE);
                         searchItem.setVisible(true);
                         SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_VISIBLE;
                         invalidateOptionsMenu();
@@ -139,6 +153,8 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
                         break;
                     case 2: /* Settings */
+                        test.setVisibility(View.INVISIBLE);
+
                         searchItem.setVisible(false);
                         SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
                         invalidateOptionsMenu();
@@ -152,18 +168,17 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
 
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
 
         String testArr[] = getResources().getStringArray(R.array.test_subjects);
-     //   listView = new ListView(getBaseContext());
+        //   listView = new ListView(getBaseContext());
 
 
     }
-
-
 
 
     @Override
@@ -172,11 +187,11 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
         getMenuInflater().inflate(R.menu.menu_startup, menu);
 
 
-         searchItem = menu.findItem(R.id.toolbar_search);
+        searchItem = menu.findItem(R.id.toolbar_search);
         SearchManager searchManger = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        switch (SEARCH_VISIBILITY){
+        switch (SEARCH_VISIBILITY) {
             case SEARCH_BAR_VISIBLE:
                 searchItem.setVisible(true);
                 break;

@@ -41,11 +41,7 @@ public class HRVAdapter extends RecyclerView.Adapter<HRVAdapter.GradeViewHolder>
 
             btnMoreInfo.setOnClickListener(this);
 
-            if(Double.parseDouble(tvGrade.getText().toString()) < 4.0) {
-                tvGrade.setTextColor(Color.parseColor("#F44336"));
-            } else {
-                tvGrade.setTextColor(Color.parseColor("#4CAF50"));
-            }
+
             // v.setOnClickListener(this);
         }
 
@@ -81,13 +77,19 @@ public class HRVAdapter extends RecyclerView.Adapter<HRVAdapter.GradeViewHolder>
     }
 
     @Override
+    public void onViewAttachedToWindow(GradeViewHolder gradeViewHolder){
+        super.onViewAttachedToWindow(gradeViewHolder);
+                if(Double.parseDouble(gradeViewHolder.tvGrade.getText().toString()) < 4.0) {
+            gradeViewHolder.tvGrade.setTextColor(Color.parseColor("#F44336"));
+        } else {
+            gradeViewHolder.tvGrade.setTextColor(Color.parseColor("#4CAF50"));
+        }
+    }
+
+    @Override
     public void onBindViewHolder(GradeViewHolder gradeViewHolder, int i){
         gradeViewHolder.tvSubName.setText(grades.get(i).gradeSubject);
-//        if(Double.parseDouble(gradeViewHolder.tvGrade.getText().toString()) < 4.0) {
-//            gradeViewHolder.tvGrade.setTextColor(Color.parseColor("#F44336"));
-//        } else {
-//            gradeViewHolder.tvGrade.setTextColor(Color.parseColor("#4CAF50"));
-//        }
+
         gradeViewHolder.tvGrade.setText(grades.get(i).grade);
 
     }

@@ -23,6 +23,7 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
     private int mToolbarOffset = 0;
     private int mToolbarHeight;
     private boolean mControlsVisible = true;
+    private int mTotalScrolledDistance;
 
     public HidingScrollListener(Context context) {
         mToolbarHeight = Utils.getToolbarHeight(context);
@@ -32,18 +33,22 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
 
-        if(newState == RecyclerView.SCROLL_STATE_IDLE){
-            if(mControlsVisible){
-                if(mToolbarOffset > HIDE_THRESHOLD){
-                    setInvisible();
-                } else {
-                    setVisible();
-                }
+        if(newState == RecyclerView.SCROLL_STATE_IDLE) {
+            if(mTotalScrolledDistance < mToolbarHeight) {
+                setVisible();
             } else {
-                if((mToolbarHeight - mToolbarOffset) > SHOW_THRESHOLD){
-                    setVisible();
+                if (mControlsVisible) {
+                    if (mToolbarOffset > HIDE_THRESHOLD) {
+                        setInvisible();
+                    } else {
+                        setVisible();
+                    }
                 } else {
-                    setInvisible();
+                    if ((mToolbarHeight - mToolbarOffset) > SHOW_THRESHOLD) {
+                        setVisible();
+                    } else {
+                        setInvisible();
+                    }
                 }
             }
         }
@@ -59,6 +64,9 @@ public abstract class HidingScrollListener extends RecyclerView.OnScrollListener
         if((mToolbarOffset <mToolbarHeight && dy>0) || (mToolbarOffset >0 && dy<0)) {
             mToolbarOffset += dy;
         }
+
+        mTotalScrolledDistance += dy;
+
     }
 
     private void clipToolbarOffset() {

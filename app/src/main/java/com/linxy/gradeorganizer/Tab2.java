@@ -118,42 +118,11 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
         c.close();
 
-
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recycler_view);
-        recyclerView.setHasFixedSize(true);
-
+        recyclerView.setHasFixedSize(false);
         final LinearLayoutManager llm = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(llm);
-
-        int paddingTop = Utils.getToolbarHeight(getActivity().getBaseContext()) + Utils.getTabsHeight(getActivity().getBaseContext());
-        recyclerView.setPadding(recyclerView.getPaddingLeft(), paddingTop, recyclerView.getPaddingRight(), recyclerView.getPaddingBottom());
-        final LinearLayout mToolbarContainer;
-        mToolbarContainer = (LinearLayout) getActivity().findViewById(R.id.toolbar_container);
-
-            final Toolbar toolbar;
-        toolbar = (Toolbar) getActivity().findViewById(R.id.app_bar);
-
-        recyclerView.setOnScrollListener(new HidingScrollListener(v.getContext()) {
-            @Override
-            public void onShow() {
-                mToolbarContainer.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
-            }
-
-            @Override
-            public void onHide() {
-                mToolbarContainer.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
-            }
-
-            @Override
-            public void onMoved(int distance) {
-                mToolbarContainer.setTranslationY(-distance);
-
-
-            }
-        });
         fillListView(v);
-
-
         return v;
     }
 
@@ -262,7 +231,19 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        // fillListView(getView());
+
+         fillListView(getView());
+    }
+
+    @Override
+    public void setMenuVisibility(final boolean visible) {
+        super.setMenuVisibility(visible);
+
+        if (getActivity() != null) {
+          fillListView(getView());
+        }
+
+
     }
 
 
@@ -290,6 +271,9 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
         adapter = new HRVAdapter(grades);
         adapter.setOnItemClickListener(this);
+
+
+
         recyclerView.setAdapter(adapter);
 
 

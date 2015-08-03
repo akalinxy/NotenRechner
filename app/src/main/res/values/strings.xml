@@ -35,6 +35,10 @@
     <string name="grade">Note</string>
     <string name="close">Schliessen</string>
     <string name="okay">Ok</string>
+    <string name="needSubjects">Trage bitte zuerst ein Fach ein!</string>
+    <string name="deleteSure">Sind si sicher dass sie \nalle noten loshen willen?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nien</string>
 
     <string name="search_hint">Suche nach Prüfungen oder Fächer</string>
     <string name="search_label">Pruefungen</string>
