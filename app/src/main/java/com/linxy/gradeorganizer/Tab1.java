@@ -177,7 +177,13 @@ public class Tab1 extends Fragment {
 
 
 
-        allSubjectAverages.setText(String.format("%.2f", exactAverage));
+        if(Double.isNaN(exactAverage)){
+            allSubjectAverages.setText(getResources().getString(R.string.hyphen));
+        } else {
+
+            allSubjectAverages.setText(String.format("%.2f", exactAverage));
+        }
+
         if (exactAverage < 4.0) {
             allSubjectAverages.setTextColor(getResources().getColor(R.color.ColorFlatRed));
         } else {
@@ -222,7 +228,12 @@ public class Tab1 extends Fragment {
             }
 
             cName.setText(sc.getString(1).toString());
-            cGrade.setText(String.format("%.2f", getAverage(sc.getString(1), roundMarks)));
+
+            if(getAverage(sc.getString(1), roundMarks) == -1){
+                cGrade.setText(getResources().getString(R.string.triplehyphen));
+            } else {
+                cGrade.setText(String.format("%.2f", getAverage(sc.getString(1), roundMarks)));
+            }
             linearLayout.addView(layoutC);
             i++;
         }
@@ -231,6 +242,7 @@ public class Tab1 extends Fragment {
 
 
         if (showInsufficient) {
+
             if (roundMarks) {
                 tvInsufficient.setText(String.valueOf(roundToHalf(insufficientMarks)));
             } else {

@@ -77,6 +77,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
     double selGrade[];
     int selGradeFactor[];
     String selGradeDate[];
+    TextView noGrades;
 
 
     public class Grade {
@@ -119,9 +120,10 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         c.close();
 
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recycler_view);
-        recyclerView.setHasFixedSize(false);
+        recyclerView.setHasFixedSize(true);
         final LinearLayoutManager llm = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(llm);
+        noGrades = (TextView) v.findViewById(R.id.no_grade_text);
         fillListView(v);
         return v;
     }
@@ -273,8 +275,12 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         adapter.setOnItemClickListener(this);
 
 
-
-        recyclerView.setAdapter(adapter);
+        if(adapter.getItemCount() == 0){
+            noGrades.setVisibility(View.VISIBLE);
+        } else {
+            noGrades.setVisibility(View.GONE);
+            recyclerView.setAdapter(adapter);
+        }
 
 
         cdb.close();

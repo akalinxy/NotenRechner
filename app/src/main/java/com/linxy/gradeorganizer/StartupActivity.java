@@ -1,16 +1,11 @@
 package com.linxy.gradeorganizer;
 
 import android.app.SearchManager;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -24,12 +19,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
 
@@ -65,17 +58,17 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
     private ArrayAdapter arrayAdapter;
 
     // NavigationDrawer
-    String TITLES[] = {"Home", "Events", "Mail", "Shop", "Travel"};
+    String TITLES[] = new String[5];
     int ICONS[] = {
-            R.drawable.ic_delete_black_48dp,
-            R.drawable.abc_btn_check_material,
-            R.drawable.ic_list_black_48dp,
-    R.drawable.ic_info_black_48dp,
-    R.drawable.ic_block_black_48dp};
+            R.drawable.icon_home,
+            R.drawable.icon_calendar,
+            R.drawable.icon_librarybooks,
+            R.drawable.icon_cart,
+            R.drawable.icon_setting};
 
-    String NAME = "LINXY";
-    String EMAIL = "mine.lynx@gmail.com";
-    int PROFILE = R.drawable.ic_block_black_48dp;
+    String NAME = "3F";
+    String EMAIL = "Semester 1";
+    int PROFILE = R.drawable.testshot;
 
     RecyclerView mRecyclerView;
     RecyclerView.Adapter mAdapter;
@@ -93,6 +86,12 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
 
         super.onCreate(savedInstanceState);
+
+        TITLES[0] = getResources().getString(R.string.iconHome);
+        TITLES[1] = getResources().getString(R.string.iconCalendar);
+        TITLES[2] = getResources().getString(R.string.iconSubjects);
+        TITLES[3] = getResources().getString(R.string.iconShoppingcart);
+        TITLES[4] = getResources().getString(R.string.iconSettings);
         dbs = new DatabaseHelperSubjects(this);
         setContentView(R.layout.activity_startup);
         test = (FloatingActionButton) findViewById(R.id.fab);
@@ -103,7 +102,7 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
 
                 Cursor subjectCursor = dbs.getAllData();
-                if(subjectCursor.getCount()  == 0){
+                if (subjectCursor.getCount() == 0) {
                     Toast.makeText(StartupActivity.this, getResources().getString(R.string.needSubjects), Toast.LENGTH_SHORT).show();
                 } else {
                     Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
@@ -211,14 +210,14 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
         mRecyclerView.setLayoutManager(mLayoutManager);
         Drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, toolbar, R.string.yes, R.string.no){
-          @Override
-            public void onDrawerOpened(View drawerView){
-              super.onDrawerOpened(drawerView);
-          }
+        mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, toolbar, R.string.yes, R.string.no) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
 
             @Override
-        public void onDrawerClosed(View drawerView){
+            public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
             }
 

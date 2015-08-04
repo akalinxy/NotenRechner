@@ -40,15 +40,6 @@
     <string name="deleteSure">Sind si sicher dass sie \nalle noten loshen willen?</string>
     <string name="yes">Ja</string>
     <string name="no">Nien</string>
-    <string name="hyphen">-</string>
-    <string name="triplehyphen">---</string>
-    <string name="iconHome">Noten Durchschnitt</string>
-    <string name="iconCalendar">Noten Kalender</string>
-    <string name="iconSubjects">Facher</string>
-    <string name="iconShoppingcart">Shop</string>
-    <string name="noGrades">Noch Keine Noten Eingetragen</string>
-    <string name="iconSettings">Einstellungen</string>
-
 
     <string name="search_hint">Suche nach Prüfungen oder Fächer</string>
     <string name="search_label">Pruefungen</string>

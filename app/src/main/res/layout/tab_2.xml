@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     >
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/no_grade_text"
+        android:text="@string/noGrades"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginTop="40dp"/>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gh_recycler_view"
