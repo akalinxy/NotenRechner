@@ -220,7 +220,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
 
         dialog = builder.create();
-
+        dialog.setCancelable(true);
         dialog.show();
 
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);

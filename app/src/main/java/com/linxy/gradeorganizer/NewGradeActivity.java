@@ -264,7 +264,7 @@ public class NewGradeActivity extends ActionBarActivity {
                     }
                 });
 
-
+                builder.setCancelable(true);
                 dialog = builder.create();
 
                 touchView.setOnTouchListener(new View.OnTouchListener() {
