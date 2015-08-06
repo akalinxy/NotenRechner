@@ -2,8 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@color/DarkOrange"
+    android:background="@color/WhiteColor"
     android:layout_height="178dp"
+    android:orientation="vertical"
     android:weightSum="1">
 
     <LinearLayout
@@ -20,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:textColor="@color/WhiteColor"
+            android:textColor="@color/ColorPrimaryDark"
             android:text="3G"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -30,7 +31,7 @@
             android:id="@+id/header_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/WhiteColor"
+            android:textColor="@color/ColorPrimaryDark"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="5dp"
             android:text="Semester 1"

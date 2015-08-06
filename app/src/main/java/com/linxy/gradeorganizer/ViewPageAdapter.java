@@ -3,13 +3,11 @@ package com.linxy.gradeorganizer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
-import android.view.ViewGroup;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.linxy.gradeorganizer.fragments.Tab1;
+import com.linxy.gradeorganizer.fragments.Tab2;
 
 /**
  * Created by linxy on 7/26/15.
@@ -39,9 +37,6 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
             case 1:
                 Tab2 tab2 = new Tab2();
                 return tab2;
-            case 2:
-                Tab3 tab3 = new Tab3();
-                return tab3;
         }
         return null;
     }

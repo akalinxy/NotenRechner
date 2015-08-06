@@ -15,4 +15,14 @@
 
     </style>
 
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        //hint color And Label Color in False State
+        <item name="android:textColorHint">#9E9E9E</item>
+        <item name="android:textSize">20sp</item>
+        //Label color in True State And Bar Color False And True State
+        <item name="colorAccent">@color/ColorYellow</item>
+        <item name="colorControlNormal">#616161</item>
+        <item name="colorControlActivated">@color/ColorYellow</item>
+    </style>
+
 </resources>

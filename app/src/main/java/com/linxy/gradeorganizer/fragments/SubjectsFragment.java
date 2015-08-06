@@ -1,4 +1,19 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.fragments;
+
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.linxy.gradeorganizer.R;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -24,12 +39,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EditSubjectsActivity extends ActionBarActivity {
+public class SubjectsFragment extends Fragment {
 
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    DatabaseHelperSubjects myDB = new DatabaseHelperSubjects(this);
-    DatabaseHelper db = new DatabaseHelper(this);
+    DatabaseHelperSubjects myDB = new DatabaseHelperSubjects(getActivity());
+    DatabaseHelper db = new DatabaseHelper(getActivity());
     Toolbar toolbar;
 
     String clickedname;
@@ -40,7 +55,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
     private List<Subject> subjects;
 
 
-   public class Subject {
+    public class Subject {
         public String subjectid;
         public String subjectname;
         public String subjectfactor;
@@ -54,9 +69,8 @@ public class EditSubjectsActivity extends ActionBarActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_subjects);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+        View v = inflater.inflate(R.layout.fragment_preference, container, false);
 
 //        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 //        recyclerView.setHasFixedSize(true);
@@ -66,53 +80,26 @@ public class EditSubjectsActivity extends ActionBarActivity {
 //        recyclerView.setItemAnimator(new DefaultItemAnimator());
 //
 //        recyclerView.setAdapter(adapter);
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        toolbar.setTitle(getResources().getString(R.string.edit_subjects));
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.edit_subjects));
 
-        myDB = new DatabaseHelperSubjects(this);
+        myDB = new DatabaseHelperSubjects(getActivity());
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
         viewAll();
-        // populateListView();
-
+        return v;
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_subjects, menu);
-        System.out.print("ok");
-        System.out.print("make");
-        return true;
-    }
-
-//    @Override
-//    public void onResume(){
-//        super.onResume();
-//        viewAll();
-//    }
 
 
     public void viewAll() {
 
         Cursor res = myDB.getAllData();
-//                if (res.getCount() == 0) {
-//                    // Show message
-//                    res.close();
-//                    return;
-//                }
 
         subjects = new ArrayList<>();
-        //  final ListView myList = (ListView) findViewById(R.id.edit_subjects_list_view);
 
-//        if(res.getCount() == 0) return;
 
 
         final int selSubIds[] = new int[res.getCount()];
@@ -161,10 +148,10 @@ public class EditSubjectsActivity extends ActionBarActivity {
                     case R.id.cv_subject_factor:
 
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(EditSubjectsActivity.this);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle(R.string.factor);
                         // Set up the intput
-                        final EditText input = new EditText(EditSubjectsActivity.this);
+                        final EditText input = new EditText(getActivity());
                         input.setInputType(InputType.TYPE_CLASS_NUMBER);
                         input.setMaxLines(1);
                         input.setText(String.valueOf(selSubFactors[position]));
@@ -205,7 +192,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
 
                         break;
                     case R.id.cv_subject_delete:
-                        new AlertDialog.Builder(EditSubjectsActivity.this)
+                        new AlertDialog.Builder(getActivity())
                                 .setTitle(R.string.delete)
                                 .setMessage("Sind sie sicher dass sie loschen willn?")// REMEMBER TO ADD A STRING XML FOR THIS
                                 .setPositiveButton("Ya", new DialogInterface.OnClickListener() // AD IN STRIGNS XML
@@ -266,7 +253,7 @@ public class EditSubjectsActivity extends ActionBarActivity {
     }
 
     public void showMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setCancelable(true);
         builder.setTitle(title);
         builder.setMessage(message);
@@ -299,4 +286,3 @@ public class EditSubjectsActivity extends ActionBarActivity {
 
 
 }
-

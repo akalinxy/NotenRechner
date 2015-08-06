@@ -12,11 +12,5 @@
         app:showAsAction="ifRoom"
         />
 
-    <item
-        android:id="@+id/toolbar_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="200"
-        android:icon="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
-        app:showAsAction="ifRoom" />
 
 </menu>

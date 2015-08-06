@@ -11,17 +11,23 @@
     android:id="@+id/drawerlayout"
     >
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
+
 
 
     <android.support.design.widget.CoordinatorLayout
-
         android:id="@+id/coordinatorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".StartupActivity">
 
 
-        <android.support.design.widget.AppBarLayout
+        <com.linxy.gradeorganizer.ControllableAppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -41,15 +47,19 @@
                 android:layout_height="wrap_content"
                 android:elevation="4dp" />
 
-        </android.support.design.widget.AppBarLayout>
+        </com.linxy.gradeorganizer.ControllableAppBarLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
 
-            />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
+                />
+
+
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
@@ -69,16 +79,20 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
+
+
+
     <android.support.v7.widget.RecyclerView
+        android:fitsSystemWindows="true"
         android:id="@+id/drawer_recycler_view"
         android:layout_width="320dp"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
-        android:background="#ffffff"
+        android:layout_gravity="left|start"
+        android:background="@color/WhiteColor"
         android:scrollbars="vertical"
         >
-
     </android.support.v7.widget.RecyclerView>
+
 
 
 </android.support.v4.widget.DrawerLayout>

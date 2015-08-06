@@ -1,11 +1,13 @@
 package com.linxy.gradeorganizer;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Created by Linxy on 4/8/2015 at 15:33
@@ -22,9 +24,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private String name;
     private int profile;
     private String email;
+    Context context;
 
     // Create a ViewHolder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         int Holderid;
 
         TextView textView;
@@ -32,10 +35,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         ImageView profile;
         TextView Name;
         TextView email;
+        Context contxt;
 
-        public ViewHolder(View itemView, int ViewType){
+        public ViewHolder(View itemView, int ViewType, Context c){
             super(itemView);
-
+            itemView.setClickable(true);
+            itemView.setOnClickListener(this);
+            contxt = c;
             if(ViewType == TYPE_ITEM){
                 textView = (TextView) itemView.findViewById(R.id.rowText);
                 imageView = (ImageView) itemView.findViewById(R.id.rowIcon);
@@ -47,26 +53,33 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 Holderid = 0;
             }
         }
+
+        @Override
+        public void onClick(View view){
+
+        }
+
     }
 
     /* MyAdapter Constructor */
-    MyAdapter(String Titles[], int Icons[], String Name, String Email, int Profile){
+    MyAdapter(String Titles[], int Icons[], String Name, String Email, int Profile, Context passedContext){
         mNavTitles = Titles;
         mIcons = Icons;
         name = Name;
         email = Email;
         profile = Profile;
+        this.context = passedContext;
     }
 
     @Override
     public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         if(viewType == TYPE_ITEM){
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row, parent, false); /* Inflating Layout */
-            ViewHolder vhItem = new ViewHolder(v, viewType);
+            ViewHolder vhItem = new ViewHolder(v, viewType, context);
             return  vhItem; /* Return the created object and inflate */
         } else if (viewType == TYPE_HEADER) {
             View v =  LayoutInflater.from(parent.getContext()).inflate(R.layout.header, parent, false); /* Inflating Layout */
-            ViewHolder vhHeader  = new ViewHolder(v, viewType);
+            ViewHolder vhHeader  = new ViewHolder(v, viewType, context);
             return vhHeader; /* Return  the created object */
         }
         return  null;

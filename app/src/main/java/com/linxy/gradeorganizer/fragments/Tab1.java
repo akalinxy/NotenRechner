@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.linxy.gradeorganizer.R;
+import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.tabs.UpdatableFragment;

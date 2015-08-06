@@ -6,16 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.linxy.gradeorganizer.EditSubjectsActivity;
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.StartupActivity;
-import com.linxy.gradeorganizer.Tab2;
-
-import org.w3c.dom.Text;
+import com.linxy.gradeorganizer.fragments.Tab2;
 
 import java.util.List;
 
