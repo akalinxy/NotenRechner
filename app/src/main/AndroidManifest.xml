@@ -40,6 +40,10 @@
             android:name=".fragments.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        <activity
+            android:name=".RegisterExamActivity"
+            android:label="@string/title_activity_register_exam" >
+        </activity>
     </application>
 
 </manifest>

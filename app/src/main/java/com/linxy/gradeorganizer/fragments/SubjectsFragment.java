@@ -43,8 +43,8 @@ public class SubjectsFragment extends Fragment {
 
     RecyclerView recyclerView;
     LinearLayoutManager layoutManager;
-    DatabaseHelperSubjects myDB = new DatabaseHelperSubjects(getActivity());
-    DatabaseHelper db = new DatabaseHelper(getActivity());
+    DatabaseHelperSubjects myDB;
+    DatabaseHelper db;
     Toolbar toolbar;
 
     String clickedname;
@@ -70,7 +70,7 @@ public class SubjectsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_preference, container, false);
+        View v = inflater.inflate(R.layout.fragment_subjects , container, false);
 
 //        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 //        recyclerView.setHasFixedSize(true);
@@ -81,9 +81,10 @@ public class SubjectsFragment extends Fragment {
 //
 //        recyclerView.setAdapter(adapter);
 
-        myDB = new DatabaseHelperSubjects(getActivity());
+        myDB = new DatabaseHelperSubjects(getActivity().getBaseContext());
+        db = new DatabaseHelper(getActivity().getBaseContext());
 
-        recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view2);
         recyclerView.setHasFixedSize(true);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

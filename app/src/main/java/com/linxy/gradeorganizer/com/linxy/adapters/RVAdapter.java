@@ -9,8 +9,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.linxy.gradeorganizer.EditSubjectsActivity;
+import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 import com.linxy.gradeorganizer.R;
+import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ import java.util.List;
  */
 public class RVAdapter extends RecyclerView.Adapter<RVAdapter.SubjectViewHolder>{
     public static MyClickListener myClickListener;
+
+
 
     public static class SubjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CardView cv;
@@ -48,9 +51,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.SubjectViewHolder>
 
     }
 
-    List<EditSubjectsActivity.Subject> subjects;
+    List<SubjectsFragment.Subject> subjects;
 
-   public RVAdapter(List<EditSubjectsActivity.Subject> subjects){
+   public RVAdapter(List<SubjectsFragment.Subject> subjects){
         this.subjects = subjects;
     }
 

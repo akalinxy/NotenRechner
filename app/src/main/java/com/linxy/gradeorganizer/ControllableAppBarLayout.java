@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 
@@ -63,6 +65,8 @@ public class ControllableAppBarLayout extends AppBarLayout {
         }
     }
 
+
+
     private synchronized void analyzeQueuedChange() {
         switch (mQueuedChange) {
             case COLLAPSE:
@@ -81,6 +85,8 @@ public class ControllableAppBarLayout extends AppBarLayout {
 
         mQueuedChange = ToolbarChange.NONE;
     }
+
+
 
     public void collapseToolbar() {
         collapseToolbar(false);

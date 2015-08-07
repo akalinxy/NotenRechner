@@ -22,7 +22,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.linxy.gradeorganizer.EditSubjectsActivity;
+import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
@@ -221,7 +221,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 }
                 break;
             case R.id.edit_subjects:
-                Intent intent = new Intent((StartupActivity)getActivity(), EditSubjectsActivity.class);
+                Intent intent = new Intent((StartupActivity)getActivity(), SubjectsFragment.class);
                 startActivity(intent);
                 break;
         }

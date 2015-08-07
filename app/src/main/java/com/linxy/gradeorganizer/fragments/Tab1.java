@@ -9,7 +9,9 @@ import android.graphics.PorterDuffColorFilter;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,11 +34,12 @@ import java.util.ArrayList;
  * Created by linxy on 7/26/15.
  */
 
-public class Tab1 extends Fragment {
+public class Tab1 extends Fragment implements AppBarLayout.OnOffsetChangedListener {
 
     ListView lvSubjectAverages;
     TextView allSubjectAverages;
     SharedPreferences prefs;
+    NestedScrollView nestedScrollView;
     SharedPreferences.Editor editor;
     DatabaseHelper myDB;
     DatabaseHelperSubjects myDBS;
@@ -59,7 +62,7 @@ public class Tab1 extends Fragment {
         myDBS = new DatabaseHelperSubjects(getActivity().getBaseContext());
         linearLayout = (LinearLayout) v.findViewById(R.id.tabone_linearlayout);
         allSubjectAverages = (TextView) v.findViewById(R.id.average_grade);
-
+        nestedScrollView = (NestedScrollView) v.findViewById(R.id.tabone_nestescrollview);
 
         prefs = getActivity().getSharedPreferences(StartupActivity.PREFS, 0);
         editor = prefs.edit();
@@ -281,6 +284,12 @@ public class Tab1 extends Fragment {
     }
 
 
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        if(nestedScrollView.canScrollVertically(1)){
+            appBarLayout.setTranslationY(0);
+        }
+    }
 }
 
 

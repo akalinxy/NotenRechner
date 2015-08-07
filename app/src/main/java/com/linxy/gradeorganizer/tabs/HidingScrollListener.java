@@ -6,7 +6,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
-import com.linxy.gradeorganizer.EditSubjectsActivity;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.Utils;

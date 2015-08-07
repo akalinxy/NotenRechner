@@ -1,7 +1,9 @@
 package com.linxy.gradeorganizer.com.linxy.adapters;
 
+import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +71,10 @@ public class HRVAdapter extends RecyclerView.Adapter<HRVAdapter.GradeViewHolder>
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_past_grades, viewGroup, false);
         GradeViewHolder gvh  = new GradeViewHolder(v);
         return gvh;
+
     }
+
+
 
     @Override
     public void onViewAttachedToWindow(GradeViewHolder gradeViewHolder){

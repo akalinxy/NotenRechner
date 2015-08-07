@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 
 import org.w3c.dom.Text;
 
@@ -192,7 +193,7 @@ public class Tab3 extends Fragment implements View.OnClickListener{
                 }
                 break;
             case R.id.edit_subjects:
-                Intent intent = new Intent((StartupActivity)getActivity(), EditSubjectsActivity.class);
+                Intent intent = new Intent((StartupActivity)getActivity(), SubjectsFragment.class);
                 startActivity(intent);
                 break;
         }

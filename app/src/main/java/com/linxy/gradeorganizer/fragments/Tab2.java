@@ -8,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
@@ -22,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -38,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.linxy.gradeorganizer.ControllableAppBarLayout;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.com.linxy.adapters.HRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
@@ -54,7 +58,7 @@ import java.util.List;
 
 // This is the history of grades.
 
-public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
+public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, RecyclerView.OnTouchListener {
 
     ListView lvRecentGrades;
     RecyclerView recyclerView;
@@ -71,14 +75,15 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
 
 
     HRVAdapter adapter;
+    ControllableAppBarLayout capl;
 
-    int selGradeIds[];
-    String selGradeSubName[];
-    String selGradeName[];
-    double selGrade[];
-    int selGradeFactor[];
-    String selGradeDate[];
+
     TextView noGrades;
+
+    private static final int MAX_CLICK_DURATION = 200;
+    private long mStartClickTime;
+
+
 
 
     public class Grade {
@@ -109,25 +114,35 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         dbs = new DatabaseHelperSubjects(getActivity().getBaseContext());
 
         //lvRecentGrades = (ListView) v.findViewById(R.id.list_view_recent_grades);
-        Cursor c = db.getAllData();
-        int size = c.getCount();
-        selGradeIds = new int[size];
-        selGradeSubName = new String[size];
-        selGradeName = new String[size];
-        selGrade = new double[size];
-        selGradeFactor = new int[size];
-        selGradeDate = new String[size];
 
-        c.close();
+        capl = (ControllableAppBarLayout) getActivity().findViewById(R.id.appBarLayout);
+
 
         recyclerView = (RecyclerView) v.findViewById(R.id.gh_recycler_view);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setOnTouchListener(this);
         final LinearLayoutManager llm = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(llm);
         noGrades = (TextView) v.findViewById(R.id.no_grade_text);
-        fillListView(v);
+
+        grades = new ArrayList<>();
+        adapter = new HRVAdapter(grades);
+        adapter.setOnItemClickListener(this);
+
+        populateList();
+        recyclerView.setAdapter(adapter);
+
         return v;
     }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if(v instanceof RecyclerView){
+            if(adapter.getItemCount() >=7) return  false;
+        }
+        return true;
+    }
+
 
     @Override
     public void onItemClick(final int position, final View v) {
@@ -149,11 +164,11 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         final ToggleButton edit = (ToggleButton) dialogView.findViewById(R.id.dialog_btn_edit);
 
 
-        subjectName.setText(selGradeSubName[position]);
-        examName.setText(selGradeName[position]);
-        grade.setText(String.valueOf(selGrade[position]));
-        factor.setText(String.valueOf(selGradeFactor[position]));
-        date.setText(selGradeDate[position]);
+        subjectName.setText(grades.get(position).gradeSubject);
+        examName.setText(grades.get(position).gradeName);
+        grade.setText(String.valueOf(grades.get(position).grade));
+        factor.setText(String.valueOf(grades.get(position).gradeFactor));
+        date.setText(grades.get(position).gradeDate);
 
         examName.setFocusable(false);
         grade.setFocusable(false);
@@ -176,8 +191,8 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
                 } else {
                     // Clicking save
                     db.updateData(String.valueOf(
-                                    selGradeIds[position]),
-                            selGradeSubName[position],
+                                    grades.get(position).gradeId),
+                            grades.get(position).gradeSubject,
                             examName.getText().toString(),
                             grade.getText().toString(),
                             factor.getText().toString(),
@@ -191,6 +206,21 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
                     date.setFocusable(false);
                     edit.setChecked(false);
 
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Grade g = new Grade(grades.get(position).gradeId,
+                                    grades.get(position).gradeSubject,
+                                    examName.getText().toString(),
+                                    grade.getText().toString(),
+                                    factor.getText().toString(),
+                                    date.getText().toString());
+
+                            grades.set(position, g);
+                            adapter.notifyItemChanged(position);
+                        }
+                    });
+
 
                 }
 
@@ -203,7 +233,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                fillListView(v);
+               // fillListView(v);
 
 
             }
@@ -212,9 +242,21 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         builder.setNegativeButton(getResources().getString(R.string.delete), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                db.deleteData(String.valueOf(selGradeIds[position]));
+                db.deleteData(String.valueOf(grades.get(position).gradeId));
+                db.close();
+                Cursor c = db.getAllData();
+                if(c.getCount() == 6) capl.expandToolbar(true);
                 dialog.cancel();
-                fillListView(v);
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        grades.remove(position);
+                        adapter.notifyItemRemoved(position);
+                    }
+                });
+
+               // fillListView(v);
 
             }
         });
@@ -231,60 +273,25 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener {
         // final TextView tvSubject = new TextView("Fach: ");
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
 
-         fillListView(getView());
-    }
-
-    @Override
-    public void setMenuVisibility(final boolean visible) {
-        super.setMenuVisibility(visible);
-
-        if (getActivity() != null) {
-          fillListView(getView());
-        }
-
-
     }
 
 
-    private void fillListView(View v) {
-
-
+    private void populateList() {
         Cursor cdb = db.getAllData();
-        grades = new ArrayList<>();
-
-        int size = cdb.getCount();
-
-
-        int i = 0;
         while (cdb.moveToNext()) {
             grades.add(new Grade(cdb.getString(0), cdb.getString(1), cdb.getString(2), cdb.getString(3), cdb.getString(4), cdb.getString(5)));
-            selGradeIds[i] = Integer.parseInt(cdb.getString(0));
-            selGradeSubName[i] = cdb.getString(1);
-            selGradeName[i] = cdb.getString(2);
-            selGrade[i] = Double.parseDouble(cdb.getString(3));
-            selGradeFactor[i] = Integer.parseInt(cdb.getString(4));
-            selGradeDate[i] = cdb.getString(5);
-
-            i++;
         }
-
-        adapter = new HRVAdapter(grades);
-        adapter.setOnItemClickListener(this);
-
-
+        cdb.close();
         if(adapter.getItemCount() == 0){
             noGrades.setVisibility(View.VISIBLE);
         } else {
             noGrades.setVisibility(View.GONE);
-            recyclerView.setAdapter(adapter);
         }
-
-
-        cdb.close();
     }
 
 

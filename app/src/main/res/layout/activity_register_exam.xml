@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.linxy.gradeorganizer.RegisterExamActivity">
+
+
+    <include
+        android:id="@+id/tool_bar"
+
+        layout="@layout/tool_bar"></include>
+
+    <!--<TextView-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:paddingLeft="16dp"-->
+        <!--android:textAppearance="?android:textAppearanceMedium"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textStyle="bold"-->
+        <!--android:text="@string/subject"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content" />-->
+    <Spinner
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_subjects"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/til_subjectname"
+        android:theme="@style/TextLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/edit_text_test_name"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:maxLength="15"
+            android:hint="@string/testname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/til_subjectfactor"
+        android:theme="@style/TextLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_testfactor"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:maxLength="3"
+            android:hint="@string/testfactor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:mcv_showOtherDates="false"
+        app:mcv_tileSize="35dp"
+        app:mcv_arrowColor="@color/ColorPrimaryDark"
+        app:mcv_selectionColor="@color/ColorYellow"
+        />
+
+
+
+
+</LinearLayout>

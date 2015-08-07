@@ -99,6 +99,7 @@
         android:background="@android:color/darker_gray"></View>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/tabone_nestescrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

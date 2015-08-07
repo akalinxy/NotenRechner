@@ -158,7 +158,8 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
                         invalidateOptionsMenu();
                         break;
                     case 1: /* History */
-                        fabAddSubject.setVisibility(View.VISIBLE);
+                        appBarLayout.expandToolbar(true);
+                        fabAddSubject.setVisibility(View.GONE);
                         searchItem.setVisible(true);
                         SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_VISIBLE;
                         invalidateOptionsMenu();

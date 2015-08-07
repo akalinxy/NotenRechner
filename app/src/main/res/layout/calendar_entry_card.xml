@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/linlay_calendar"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:paddingLeft="8dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="4dp"
+            android:id="@+id/tvDateDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:text="5"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_marginBottom="8dp"
+            android:layout_alignBottom="@+id/tvDateDay"
+            android:layout_toRightOf="@+id/tvDateDay"
+            android:layout_marginRight="4dp"
+            android:id="@+id/tvDateMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="JAN" />
+        <TextView
+            android:id="@+id/tvWeekday"
+            android:layout_marginTop="8dp"
+            android:layout_alignTop="@+id/tvDateDay"
+            android:layout_toRightOf="@+id/tvDateDay"
+            android:text="MON"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+
+    </RelativeLayout>
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cvMain"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        card_view:cardBackgroundColor="@color/ColorPrimary"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="0dp">
+
+        <LinearLayout
+            android:id="@+id/cv_BackgroundCard"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:paddingTop="24dp"
+                android:layout_marginLeft="8dp"
+
+                android:id="@+id/tvSubjectname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="3"
+                android:gravity="left"
+                android:text="Mathematik"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textColor="@color/WhiteColor"
+                android:textSize="24sp"
+                android:textStyle="normal" />
+
+
+            <TextView
+                android:id="@+id/tvGradename"
+                android:layout_marginLeft="8dp"
+                android:paddingBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/WhiteColor"
+                android:layout_weight="3"
+                android:gravity="left"
+                android:text="Das Faktorialsystem"
+                android:textAppearance="?android:textAppearanceMedium"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+
+
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <View
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:background="@android:color/transparent"
+            />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvAlarm"
+            android:layout_alignParentBottom="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="8dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="0"
+            android:layout_gravity="bottom"
+            card_view:cardBackgroundColor="@color/ColorPrimary"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="0dp">
+
+            <ImageButton
+                android:id="@+id/imgbtnAddNotification"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:scaleType="centerInside"
+                android:background="@null"
+                android:src="@drawable/icon_whitealarm" />
+
+
+
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cvDelete"
+            android:layout_above="@+id/cvAlarm"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="8dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="0"
+            android:layout_gravity="bottom"
+            card_view:cardBackgroundColor="@color/ColorPrimary"
+            card_view:cardCornerRadius="4dp"
+            card_view:cardElevation="0dp">
+            <ImageButton
+                android:id="@+id/imgbtnDeleteSceduledExam"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:scaleType="centerInside"
+                android:background="@null"
+                android:src="@drawable/icon_deletewhite" />
+        </android.support.v7.widget.CardView>
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
