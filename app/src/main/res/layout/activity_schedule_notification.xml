@@ -1,0 +1,18 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.linxy.gradeorganizer.fragments.ScheduleNotificationActivity">
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:mcv_showOtherDates="false"
+        app:mcv_tileSize="35dp"
+        app:mcv_arrowColor="@color/ColorPrimaryDark"
+        app:mcv_selectionColor="@color/ColorYellow"
+        />
+</LinearLayout>

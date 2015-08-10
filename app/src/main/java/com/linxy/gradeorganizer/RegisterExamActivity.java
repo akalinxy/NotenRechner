@@ -1,10 +1,13 @@
 package com.linxy.gradeorganizer;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperCalendar;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.fragments.CalendarFragment;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateChangedListener;
@@ -54,6 +58,8 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
     /* Database Helpers */
     DatabaseHelperSubjects dbs;
     DatabaseHelperCalendar dbc;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +79,6 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
         Calendar cal = Calendar.getInstance();
 
         //
-
 
         mcvCalendar.setMinimumDate(cal);
         mcvCalendar.setOnDateChangedListener(this);
@@ -105,6 +110,7 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Had a Snackbar", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("Submit Exam", clickListener);
         snackbar.setActionTextColor(getResources().getColor(R.color.FlatOrange));
+
 
     }
 
@@ -186,6 +192,8 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
 
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_CANCELED, returnIntent);
             finish();
             return true;
         }
@@ -216,12 +224,16 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
 
             CalendarDay calDay = mcvCalendar.getSelectedDate();
             int day = calDay.getDay();
-            int month = calDay.getMonth();
+            int month = calDay.getMonth() + 1;
             int year = calDay.getYear();
-            Toast.makeText(getBaseContext(), String.valueOf(day), Toast.LENGTH_SHORT).show();
             String examdate = day + "." + month + "." + year;
-            dbc.insertData(subjectname,examname,examfactor,examdate);
-            dbc.close();
+
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra("subjectname", subjectname);
+            returnIntent.putExtra("examname", examname);
+            returnIntent.putExtra("examfactor", examfactor);
+            returnIntent.putExtra("examdate", examdate);
+            setResult(RESULT_OK, returnIntent);
             finish();
         }
     };
@@ -232,4 +244,7 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
         dbc.close();
         dbs.close();
     }
+
+
+
 }

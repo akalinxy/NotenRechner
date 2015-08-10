@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.StartupActivity;
@@ -34,6 +35,7 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
     public static class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CardView cvMain;
         CardView cvIcon;
+        CardView cvDelete;
         TextView tvSubjectName;
         TextView tvExamName;
         TextView tvDateDay;
@@ -47,6 +49,7 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
 
             cvMain = (CardView) v.findViewById(R.id.cvMain);
             cvIcon = (CardView) v.findViewById(R.id.cvAlarm);
+            cvDelete = (CardView) v.findViewById(R.id.cvDelete);
             tvSubjectName = (TextView) v.findViewById(R.id.tvSubjectname);
             tvExamName = (TextView) v.findViewById(R.id.tvGradename);
             tvDateDay = (TextView) v.findViewById(R.id.tvDateDay);
@@ -105,34 +108,32 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
         calendarViewHolder.tvExamName.setText(dates.get(i).dateGradeName);
 
 
-        DateFormat format = new SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH);
         String dateString = dates.get(i).dateDate;
+        Log.i("DATESTRING", dateString);
 
-        Date date = null;
-
-        try {
-            date = format.parse(dateString);
-        } catch (ParseException e) {
-            Log.i("CRVAdapter", "ParseException");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date convertedDate = new Date();
+        try{
+            convertedDate = dateFormat.parse(dateString);
+        } catch (ParseException e){
+            e.printStackTrace();
         }
-        Calendar cal = format.getCalendar();
-        cal.setTime(date);
-
-        String monthString = (new DateFormatSymbols().getShortMonths()[date.getMonth() + 1]).toUpperCase();
-        String dayString = String.valueOf(cal.get(Calendar.DAY_OF_MONTH));
-
-        String weekdayString = String.valueOf(cal.get(Calendar.DAY_OF_WEEK));
+        Log.i("DATE", convertedDate.toString());
 
 
-        calendarViewHolder.tvDateDay.setText(dayString);
 
-        calendarViewHolder.tvDateMonth.setText(monthString);
 
-        calendarViewHolder.tvWeekDay.setText(weekdayString);
+        calendarViewHolder.tvDateDay.setText(String.valueOf(convertedDate.getDate()));
+        int monthInt = convertedDate.getMonth();
+        calendarViewHolder.tvDateMonth.setText(String.valueOf(new DateFormatSymbols().getShortMonths()[monthInt]));
+        calendarViewHolder.tvWeekDay.setText(String.valueOf(new SimpleDateFormat("EE").format(convertedDate)));
 
-        calendarViewHolder.cvIcon.setCardBackgroundColor(Color.parseColor(monthBackground(date.getMonth())));
 
-        calendarViewHolder.cvMain.setCardBackgroundColor(Color.parseColor(monthBackground(date.getMonth())));
+
+        String color = monthBackground(convertedDate.getMonth());
+        calendarViewHolder.cvIcon.setCardBackgroundColor(Color.parseColor(color));
+        calendarViewHolder.cvMain.setCardBackgroundColor(Color.parseColor(color));
+        calendarViewHolder.cvDelete.setCardBackgroundColor(Color.parseColor(color));
 
     }
 
@@ -154,7 +155,7 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
                     "#673AB7" // December
         };
 
-        return colors[month ];
+        return colors[month];
     }
 
 

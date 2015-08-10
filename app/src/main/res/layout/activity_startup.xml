@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:elevation="8dp"
-    android:fitsSystemWindows="true"
-    android:id="@+id/drawerlayout"
-    >
+    android:fitsSystemWindows="true">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
 
 
 
@@ -25,6 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".StartupActivity">
+
+
 
 
         <com.linxy.gradeorganizer.ControllableAppBarLayout
@@ -38,62 +32,67 @@
                 android:layout_height="wrap_content"
                 android:elevation="4dp"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/Theme.AppCompat.NoActionBar"
-                ></android.support.v7.widget.Toolbar>
+                app:theme="@style/Theme.AppCompat.NoActionBar"></android.support.v7.widget.Toolbar>
 
-            <com.linxy.gradeorganizer.tabs.SlidingTabLayout
-                android:id="@+id/tabs"
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                style="@style/MyCustomTabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="4dp" />
+                app:tabIndicatorColor="@color/ColorYellow"
+                app:tabIndicatorHeight="3dp"
+                app:tabTextAppearance="?android:textAllCaps"
+                app:tabTextColor="@color/ColorPrimaryLight"
+                app:tabMode="fixed"
+                app:tabGravity="fill"
+                />
 
         </com.linxy.gradeorganizer.ControllableAppBarLayout>
 
 
-
-            <android.support.v4.view.ViewPager
-                android:id="@+id/pager"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-
-                />
-
-
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+        </FrameLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:elevation="8dp"
-            android:layout_gravity="end|bottom"
             android:src="@drawable/ic_add_white_48dp"
             app:backgroundTint="@color/ColorYellow"
             app:borderWidth="0dp"
-            app:layout_behavior="com.linxy.gradeorganizer.ScrollingFABBehavior"
-            />
-
+            app:layout_behavior="com.linxy.gradeorganizer.ScrollingFABBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/drawer_recycler_view"-->
+        <!--android:layout_width="320dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_gravity="left|start"-->
+        <!--android:background="@color/WhiteColor"-->
+        <!--android:fitsSystemWindows="true"-->
+        <!--android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>-->
 
-
-
-    <android.support.v7.widget.RecyclerView
-        android:fitsSystemWindows="true"
-        android:id="@+id/drawer_recycler_view"
-        android:layout_width="320dp"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="left|start"
-        android:background="@color/WhiteColor"
-        android:scrollbars="vertical"
-        >
-    </android.support.v7.widget.RecyclerView>
-
-
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:itemTextColor="#333"
+        app:itemIconTint="#333"
+        app:menu="@menu/navigationdraweritems"
+        />
 
 </android.support.v4.widget.DrawerLayout>
 

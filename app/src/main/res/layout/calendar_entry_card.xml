@@ -23,7 +23,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="9dp"
             android:layout_alignBottom="@+id/tvDateDay"
             android:layout_toRightOf="@+id/tvDateDay"
             android:layout_marginRight="4dp"
@@ -34,7 +34,7 @@
             android:text="JAN" />
         <TextView
             android:id="@+id/tvWeekday"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="11dp"
             android:layout_alignTop="@+id/tvDateDay"
             android:layout_toRightOf="@+id/tvDateDay"
             android:text="MON"
@@ -121,8 +121,7 @@
             android:layout_alignParentBottom="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="8dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
@@ -133,9 +132,10 @@
             card_view:cardElevation="0dp">
 
             <ImageButton
+                android:padding="4dp"
                 android:id="@+id/imgbtnAddNotification"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:scaleType="centerInside"
@@ -152,7 +152,6 @@
             android:layout_above="@+id/cvAlarm"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:padding="8dp"
             android:layout_marginBottom="0dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="8dp"
@@ -164,8 +163,9 @@
             card_view:cardElevation="0dp">
             <ImageButton
                 android:id="@+id/imgbtnDeleteSceduledExam"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:padding="4dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:backgroundTint="@android:color/transparent"

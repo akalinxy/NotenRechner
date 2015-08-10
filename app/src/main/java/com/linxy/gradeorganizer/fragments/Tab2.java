@@ -43,11 +43,14 @@ import android.widget.ToggleButton;
 
 import com.linxy.gradeorganizer.ControllableAppBarLayout;
 import com.linxy.gradeorganizer.R;
+import com.linxy.gradeorganizer.ServerRequest;
+import com.linxy.gradeorganizer.com.linxy.adapters.GetGradeCallback;
 import com.linxy.gradeorganizer.com.linxy.adapters.HRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.tabs.HidingScrollListener;
 import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -216,6 +219,10 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
                                     factor.getText().toString(),
                                     date.getText().toString());
 
+                            /* TODO REPLACE THIS */
+
+
+
                             grades.set(position, g);
                             adapter.notifyItemChanged(position);
                         }
@@ -279,6 +286,8 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
         super.onResume();
 
     }
+
+
 
 
     private void populateList() {

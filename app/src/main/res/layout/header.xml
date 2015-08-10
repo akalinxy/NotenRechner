@@ -9,9 +9,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         >
@@ -22,10 +21,18 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:textColor="@color/ColorPrimaryDark"
-            android:text="3G"
+            android:text="Notenrechner Basic"
             android:textSize="14sp"
             android:textStyle="bold"
             />
+
+        <com.db.chart.view.LineChartView
+            xmlns:chart="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/linechart"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            />
+
 
         <TextView
             android:id="@+id/header_email"
@@ -33,19 +40,11 @@
             android:layout_height="wrap_content"
             android:textColor="@color/ColorPrimaryDark"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="5dp"
-            android:text="Semester 1"
+            android:text="Deine Leistung"
             android:textSize="14sp"
             android:textStyle="bold"/>
+
         </LinearLayout>
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/ic_block_black_48dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="38dp"
-            android:id="@+id/header_circleView"
-            />
 
 </RelativeLayout>

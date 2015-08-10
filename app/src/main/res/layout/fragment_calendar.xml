@@ -1,11 +1,9 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-
-    android:paddingTop="60dp"
-    >
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
 
@@ -20,6 +18,8 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:id="@+id/fab_newtest"
+        app:layout_behavior="com.linxy.gradeorganizer.ScrollingFABBehavior"
+        android:src="@drawable/icon_addcalendar"
         />
 
 

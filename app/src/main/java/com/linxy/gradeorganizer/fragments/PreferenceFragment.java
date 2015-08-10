@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.parse.ParseObject;
 
 import org.w3c.dom.Text;
 
@@ -87,6 +89,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
     private boolean showinsufficient;
     private boolean showTwoDigit;
     private int roundSubjectGradesPosition;
+    private String deviceId;
 
     DatabaseHelperSubjects dbs;
     DatabaseHelper db;
@@ -99,7 +102,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         View v = inflater.inflate(R.layout.fragment_preference, container, false);
 
         dbs = new DatabaseHelperSubjects(getActivity());
-
+        deviceId = Settings.Secure.getString(getActivity().getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Add Subject Init Components
         etNewSubjectName = (EditText) v.findViewById(R.id.add_new_grade_name);
@@ -212,6 +215,12 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                     if(dbs.hasObject(etNewSubjectName.getText().toString())){ /* SubjectName already exists in Database */
                         Toast.makeText((StartupActivity) getActivity(), "Subject Exists!", Toast.LENGTH_SHORT).show();
                     } else { /* SubjectName is unique. */
+
+                        ParseObject subjectObject = new ParseObject("Subjects");
+                        subjectObject.put("deviceId", deviceId);
+                        subjectObject.put("subjectname", etNewSubjectName.getText().toString());
+                        subjectObject.put("subjectfactor", etNewSubjectFactor.getText().toString());
+                        subjectObject.saveInBackground();
                         dbs.insertData(etNewSubjectName.getText().toString(), etNewSubjectFactor.getText().toString());
                         Toast.makeText((StartupActivity)getActivity(), "Subject inserted @ " + dbs.getDatabaseName(), Toast.LENGTH_SHORT).show();
                         dbs.close();

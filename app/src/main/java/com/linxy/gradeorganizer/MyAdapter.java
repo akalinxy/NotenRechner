@@ -32,7 +32,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         TextView textView;
         ImageView imageView;
-        ImageView profile;
+      //  ImageView profile;
         TextView Name;
         TextView email;
         Context contxt;
@@ -49,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             } else {
                 Name = (TextView) itemView.findViewById(R.id.header_name);
                 email = (TextView) itemView.findViewById(R.id.header_email);
-                profile = (ImageView) itemView.findViewById(R.id.header_circleView);
+               // profile = (ImageView) itemView.findViewById(R.id.header_circleView);
                 Holderid = 0;
             }
         }
@@ -62,12 +62,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     /* MyAdapter Constructor */
-    MyAdapter(String Titles[], int Icons[], String Name, String Email, int Profile, Context passedContext){
+    MyAdapter(String Titles[], int Icons[], String Name, String Email, Context passedContext){
         mNavTitles = Titles;
         mIcons = Icons;
         name = Name;
         email = Email;
-        profile = Profile;
         this.context = passedContext;
     }
 
@@ -91,7 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             holder.textView.setText(mNavTitles[position - 1]);
             holder.imageView.setImageResource(mIcons[position-1]);
         } else {
-            holder.profile.setImageResource(profile);
+         //  holder.profile.setImageResource(profile);
             holder.Name.setText(name);
             holder.email.setText(email);
         }

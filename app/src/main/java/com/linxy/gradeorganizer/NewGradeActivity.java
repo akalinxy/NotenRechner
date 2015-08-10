@@ -13,11 +13,13 @@ import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,6 +37,8 @@ import android.widget.Toast;
 
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.fragments.Tab2;
+import com.parse.ParseObject;
 
 import org.w3c.dom.Text;
 
@@ -53,7 +57,7 @@ public class NewGradeActivity extends ActionBarActivity {
     EditText inGradeName;
     Spinner inSubjectName;
     EditText inFactor;
-
+    private String deviceId;
     Button btnCancel;
 
     String grade = "";
@@ -88,9 +92,9 @@ public class NewGradeActivity extends ActionBarActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
          prefs = getSharedPreferences(StartupActivity.PREFS, 0);
+        deviceId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-
-        showTwoDigit = prefs.getBoolean("twodigit", false);
+                showTwoDigit = prefs.getBoolean("twodigit", false);
         myDb = new DatabaseHelper(this);
         btnCancel = (Button) findViewById(R.id.ang_cancel);
         mySDb = new DatabaseHelperSubjects(this);
@@ -463,6 +467,18 @@ public class NewGradeActivity extends ActionBarActivity {
                 inGrade.getText().toString(),
                 inFactor.getText().toString(),
                 outDate);
+
+        ParseObject gradeObject = new ParseObject("Grades");
+        Log.i("DEVICEID", deviceId);
+        gradeObject.put("deviceid", deviceId);
+        gradeObject.put("gradesubject", inSubjectName.getSelectedItem().toString());
+        gradeObject.put("gradename",  inGradeName.getText().toString());
+        gradeObject.put("grade",  inGrade.getText().toString());
+        gradeObject.put("gradefactor", inFactor.getText().toString());
+        gradeObject.put("gradedate", outDate);
+        gradeObject.saveInBackground();
+
+
         return b;
     }
 

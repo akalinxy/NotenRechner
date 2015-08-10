@@ -16,7 +16,6 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
 
     CharSequence Titles[];
     int NumbOfTabs;
-    SparseArray<View> views = new SparseArray<>();
 
     public ViewPageAdapter(FragmentManager fm, CharSequence mTitles[], int mNumbOfTabsumb){
         super(fm);
@@ -50,9 +49,6 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
     public int getCount(){
         return NumbOfTabs;
     }
-
-
-
     @Override
     public Object instantiateItem(View container, int position){
         container.setTag(position);

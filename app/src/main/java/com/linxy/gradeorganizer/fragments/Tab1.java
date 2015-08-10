@@ -286,9 +286,7 @@ public class Tab1 extends Fragment implements AppBarLayout.OnOffsetChangedListen
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
-        if(nestedScrollView.canScrollVertically(1)){
-            appBarLayout.setTranslationY(0);
-        }
+
     }
 }
 
