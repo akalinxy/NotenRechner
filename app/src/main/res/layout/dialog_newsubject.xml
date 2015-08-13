@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:theme="@style/TextLabel">
+        <EditText
+
+
+            android:id="@+id/add_new_grade_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:hint="@string/subjectname"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:maxLength="14"
+            android:maxLines="1"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:theme="@style/TextLabel">
+
+        <EditText
+            android:id="@+id/factor_new_grade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="@string/subjectfactor"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1" />
+
+    </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>

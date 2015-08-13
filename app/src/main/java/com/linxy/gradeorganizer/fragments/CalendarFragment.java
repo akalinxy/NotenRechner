@@ -22,15 +22,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.linxy.gradeorganizer.NotificationPublisher;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.RegisterExamActivity;
+import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.com.linxy.adapters.CRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperCalendar;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelperScheduled;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.utils.MyRecyclerScroll;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateChangedListener;
@@ -46,11 +54,10 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-public class CalendarFragment extends Fragment implements View.OnClickListener, CRVAdapter.MyCalClickListener{
+public class CalendarFragment extends Fragment implements View.OnClickListener, CRVAdapter.MyCalClickListener {
 
 
-
-    public class Date implements Comparable<Date>{
+    public class Date implements Comparable<Date> {
 
         public String dateId;
         public String dateSubjectName;
@@ -69,24 +76,24 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
             String dateString = dateDate;
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
             java.util.Date convertedDate = new java.util.Date();
-            try{
+            try {
                 convertedDate = dateFormat.parse(dateString);
-            } catch (ParseException e){
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
             this.date = convertedDate;
         }
 
-        public java.util.Date getDateTime(){
+        public java.util.Date getDateTime() {
             return date;
         }
 
-        public void setDateTime(java.util.Date d){
+        public void setDateTime(java.util.Date d) {
             this.date = d;
         }
 
         @Override
-        public int compareTo(Date o){
+        public int compareTo(Date o) {
             return getDateTime().compareTo(o.getDateTime());
         }
     }
@@ -98,6 +105,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     private int selectedDay;
     private int selectedMonth;
     private int selectedYear;
+
 
     RecyclerView rvCalDates;
     FloatingActionButton fabRegisterExam;
@@ -124,7 +132,6 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         rvCalDates.setHasFixedSize(true);
 
 
-
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(v.getContext());
         rvCalDates.setLayoutManager(linearLayoutManager);
 
@@ -134,17 +141,26 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         fillDates();
         Collections.sort(dates);
         rvCalDates.setAdapter(adapter);
+        rvCalDates.setOnScrollListener(new MyRecyclerScroll() {
+            @Override
+            public void show() {
+                fabRegisterExam.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+            }
+
+            @Override
+            public void hide() {
+                fabRegisterExam.animate().translationY(fabRegisterExam.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+            }
+        });
+
 
         return v;
     }
 
 
-
-
-
-    private void fillDates(){
+    private void fillDates() {
         Cursor c = dbc.getAllData();
-        while(c.moveToNext()) {
+        while (c.moveToNext()) {
             dates.add(new Date(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4)));
         }
         c.close();
@@ -153,13 +169,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onItemClick(final int position, View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.imgbtnAddNotification:
                 dateSelected = false;
                 LayoutInflater li = LayoutInflater.from(v.getContext());
                 View dialogView = li.inflate(R.layout.popup_schedulenotification, null);
 
-                AlertDialog.Builder builder1  = new AlertDialog.Builder(v.getContext());
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
                 AlertDialog dialog1;
                 builder1.setView(dialogView);
                 builder1.setTitle("Errinerung Setzern"); /* TODO MAKE STRING REFERENCE FOR THIS */
@@ -168,7 +184,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
 
                 final java.util.Date today = new java.util.Date();
-                today.setDate(today.getDate() );
+                today.setDate(today.getDate());
                 today.setHours(0);
 
                 java.util.Date dayofexam = dates.get(position).date;
@@ -187,16 +203,20 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         /* Create the Notification */
-                        if(dateSelected){
+                        if (dateSelected) {
                             Calendar startDate = Calendar.getInstance();
-                            Calendar endDate= mcvScheduledNotification.getSelectedDate().getCalendar();
+                            Calendar endDate = mcvScheduledNotification.getSelectedDate().getCalendar();
                             long days = daysBetween(startDate, endDate);
                             Log.i("DAYS", String.valueOf(days));
 
-                            long millis =  TimeUnit.DAYS.toMillis(days);
+                            long millis = TimeUnit.DAYS.toMillis(days);
 
-                        scheduleNotification(getNotification(dates.get(position).dateSubjectName + "\n" + dates.get(position).dateGradeName), millis);  /* TODO MAKE THIS WORK */
-                        Log.i("TIMEDATE: ",  String.valueOf(millis));
+                            scheduleNotification(getNotification(dates.get(position).dateSubjectName + "\n" + dates.get(position).dateGradeName), millis);  /* TODO MAKE THIS WORK */
+                            Log.i("TIMEDATE: ", String.valueOf(millis));
+                            DatabaseHelperScheduled db = new DatabaseHelperScheduled(getActivity().getBaseContext());
+                            db.insertData(endDate.get(Calendar.DAY_OF_WEEK)+"."+endDate.get(Calendar.MONTH) + 1+"."+endDate.get(Calendar.YEAR), dates.get(position).dateSubjectName, dates.get(position).dateGradeName);
+                            db.close();
+
 
                         } else {
                             Toast.makeText(getActivity().getBaseContext(), "Error, must select date!", Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE FOR ERROR MUST SELECT DATE */
@@ -252,32 +272,34 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 dialog.show();
 
                 break;
-            default:break;
+            default:
+                break;
         }
     }
 
-    public static long daysBetween(Calendar startDate, Calendar endDate){
+    public static long daysBetween(Calendar startDate, Calendar endDate) {
         Calendar date = (Calendar) startDate.clone();
         long daysBetween = 0;
-        while(date.before(endDate)){
+        while (date.before(endDate)) {
             date.add(Calendar.DAY_OF_MONTH, 1);
             daysBetween++;
         }
         return daysBetween;
     }
 
-    private void scheduleNotification(Notification notification, long delay){
+    private void scheduleNotification(Notification notification, long delay) {
         Intent notificationIntent = new Intent(getActivity().getBaseContext(), NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID,1);
+        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(),0,notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long futureInMillis = SystemClock.elapsedRealtime() + delay;
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
+
     }
 
-    private Notification getNotification(String content){
+    private Notification getNotification(String content) {
         Notification.Builder builder = new Notification.Builder(getActivity().getBaseContext());
         builder.setContentTitle("Prufing Errinerung"); /* TODO MAKE STRING REFERENCE FOR REMEMBER TEST */
         builder.setContentTitle(content);
@@ -292,17 +314,17 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == 1){
-            if(resultCode == Activity.RESULT_OK) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
 
                 String subjectname = data.getStringExtra("subjectname");
                 String examname = data.getStringExtra("examname");
                 String examfactor = data.getStringExtra("examfactor");
                 String examdate = data.getStringExtra("examdate");
-                Log.i("DebugResult", "Data inserted :" + subjectname + examname  + examfactor + examdate);
+                Log.i("DebugResult", "Data inserted :" + subjectname + examname + examfactor + examdate);
 
-                dbc.insertData(subjectname,examname,examfactor,examdate);
+                dbc.insertData(subjectname, examname, examfactor, examdate);
                 dbc.close();
 
                 Cursor c = dbc.getAllData();
@@ -310,7 +332,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
 
                 dates.add(new Date(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4)));
-                Log.i("DebugResult", "Date Added" + dates.get(dates.size()-1).toString());
+                Log.i("DebugResult", "Date Added" + dates.get(dates.size() - 1).toString());
                 c.close();
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -322,7 +344,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 dbc.close();
 
             }
-            if(resultCode == Activity.RESULT_CANCELED){
+            if (resultCode == Activity.RESULT_CANCELED) {
                 /* No Result */
             }
         }
@@ -330,14 +352,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Log.i("ONRESUME", "RESUME");
     }
 
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         dbc.close();
         Log.i("ONPAUSE", "PAUSE");
@@ -351,14 +373,13 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.fab_newtest:
                 Intent intent = new Intent(getActivity().getBaseContext(), RegisterExamActivity.class);
                 startActivityForResult(intent, 1);
 
 
                 break;
-
 
 
         }

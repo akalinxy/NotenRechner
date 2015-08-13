@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/header_view"
     android:layout_width="match_parent"
     android:layout_height="192dp"
-    android:background="@color/ColorPrimary"
-    android:padding="16dp"
+    android:background="#455A64"
     android:gravity="top"
-    >
+    android:orientation="vertical"
+    android:paddingTop="0dp">
 
-    <TextView
-        android:text="Notenrechner Basic"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <com.db.chart.view.LineChartView
         xmlns:chart="http://schemas.android.com/apk/res-auto"
         android:id="@+id/linechart"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        />
+        android:layout_height="124dp"
+        android:layout_marginTop="24dp" />
+
+    <ImageView
+        android:id="@+id/overlay_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/header_email"
+        android:id="@+id/navTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Deine Leistung"
-/>
+        android:layout_below="@+id/linechart"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/WhiteColor"
+        android:textStyle="bold" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,14 +1,9 @@
 package com.linxy.gradeorganizer.tabs;
 
 import android.content.Context;
-import android.database.DatabaseUtils;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 
-import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.StartupActivity;
-import com.linxy.gradeorganizer.Utils;
+import com.linxy.gradeorganizer.utils.Utils;
 
 /**
  * Created by Linxy on 30/7/2015 at 19:46

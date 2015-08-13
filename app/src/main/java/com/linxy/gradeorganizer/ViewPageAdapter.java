@@ -3,6 +3,7 @@ package com.linxy.gradeorganizer;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.SparseArray;
 import android.view.View;
 
@@ -53,6 +54,11 @@ public class ViewPageAdapter extends FragmentStatePagerAdapter{
     public Object instantiateItem(View container, int position){
         container.setTag(position);
         return container;
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
     }
 
 }

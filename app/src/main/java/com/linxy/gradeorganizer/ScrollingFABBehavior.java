@@ -7,6 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.linxy.gradeorganizer.utils.Utils;
+
 /**
  * Created by Linxy on 3/8/2015 at 13:59
  * Working on Grade Organizer in com.linxy.gradeorganizer

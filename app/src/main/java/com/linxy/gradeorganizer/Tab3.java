@@ -176,20 +176,19 @@ public class Tab3 extends Fragment implements View.OnClickListener{
         return  v;
     }
 
-    @Override /* TODO Create String References in strings.xml for these Strings! */
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.add_new_subject:
                 if(testFieldsNewSubject()) { /* Subject is not blank */
                     if(dbs.hasObject(etNewSubjectName.getText().toString())){ /* SubjectName already exists in Database */
-                        Toast.makeText((StartupActivity)getActivity(), "Subject Exists!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText((StartupActivity)getActivity(), getResources().getString(R.string.subjectExists), Toast.LENGTH_SHORT).show();
                     } else { /* SubjectName is unique. */
                         dbs.insertData(etNewSubjectName.getText().toString(), etNewSubjectFactor.getText().toString());
-                        Toast.makeText((StartupActivity)getActivity(), "Subject inserted @ " + dbs.getDatabaseName(), Toast.LENGTH_SHORT).show();
                         dbs.close();
                     }
                 } else {
-                    Toast.makeText((StartupActivity)getActivity(), "Fill all Fields!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText((StartupActivity)getActivity(), getResources().getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.edit_subjects:

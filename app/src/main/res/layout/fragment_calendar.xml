@@ -1,6 +1,6 @@
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -21,7 +21,6 @@
         app:layout_behavior="com.linxy.gradeorganizer.ScrollingFABBehavior"
         android:src="@drawable/icon_addcalendar"
         />
-
 
 
 </android.support.design.widget.CoordinatorLayout>

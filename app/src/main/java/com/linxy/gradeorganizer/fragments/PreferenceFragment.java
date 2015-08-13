@@ -23,6 +23,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.StartupActivity;
@@ -73,9 +75,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
     String arraySpinner[] = {"Nicht Runden", "Halbe Note" };
 
     // Add Subject Components
-    EditText etNewSubjectName;
-    EditText etNewSubjectFactor;
-    Button btnAddNewSubject;
+
     Switch swtShowInsufficient;
 
     Button deleteAllGrades;
@@ -84,7 +84,6 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
 
 
     // Edit Subjects
-    Button btnEditSubjects;
 
     private boolean showinsufficient;
     private boolean showTwoDigit;
@@ -105,13 +104,8 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         deviceId = Settings.Secure.getString(getActivity().getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // Add Subject Init Components
-        etNewSubjectName = (EditText) v.findViewById(R.id.add_new_grade_name);
-        etNewSubjectFactor = (EditText) v.findViewById(R.id.factor_new_grade);
-        btnAddNewSubject = (Button) v.findViewById(R.id.add_new_subject);
-        btnEditSubjects = (Button) v.findViewById(R.id.edit_subjects);
+
         db = new DatabaseHelper(getActivity());
-        btnEditSubjects.setOnClickListener(this);
-        btnAddNewSubject.setOnClickListener(this);
         swtTwoDigit = (Switch) v.findViewById(R.id.switch_doubledigitgrade);
         deleteAllGrades = (Button) v.findViewById(R.id.new_semester);
         swtShowInsufficient = (Switch) v.findViewById(R.id.show_unsufficient);
@@ -202,7 +196,15 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         });
 
 
+        AdView mAdView = (AdView) v.findViewById(R.id.AdView);
+        if(StartupActivity.PREMIUM){
+            mAdView.setVisibility(View.GONE);
 
+        } else {
+            mAdView.setVisibility(View.VISIBLE);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("B2CAF611A47219282C0590A0804E1BEF").build();
+            mAdView.loadAd(adRequest);
+        }
 
         return  v;
     }
@@ -210,25 +212,6 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
     @Override /* TODO Create String References in strings.xml for these Strings! */
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.add_new_subject:
-                if(testFieldsNewSubject()) { /* Subject is not blank */
-                    if(dbs.hasObject(etNewSubjectName.getText().toString())){ /* SubjectName already exists in Database */
-                        Toast.makeText((StartupActivity) getActivity(), "Subject Exists!", Toast.LENGTH_SHORT).show();
-                    } else { /* SubjectName is unique. */
-
-                        ParseObject subjectObject = new ParseObject("Subjects");
-                        subjectObject.put("deviceId", deviceId);
-                        subjectObject.put("subjectname", etNewSubjectName.getText().toString());
-                        subjectObject.put("subjectfactor", etNewSubjectFactor.getText().toString());
-                        subjectObject.saveInBackground();
-                        dbs.insertData(etNewSubjectName.getText().toString(), etNewSubjectFactor.getText().toString());
-                        Toast.makeText((StartupActivity)getActivity(), "Subject inserted @ " + dbs.getDatabaseName(), Toast.LENGTH_SHORT).show();
-                        dbs.close();
-                    }
-                } else {
-                    Toast.makeText((StartupActivity)getActivity(), "Fill all Fields!", Toast.LENGTH_SHORT).show();
-                }
-                break;
             case R.id.edit_subjects:
                 Intent intent = new Intent((StartupActivity)getActivity(), SubjectsFragment.class);
                 startActivity(intent);
@@ -236,12 +219,5 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private boolean testFieldsNewSubject(){
-        if(etNewSubjectName.getText().toString().equals("") | etNewSubjectName.getText().toString() == null) return false;
-        if(etNewSubjectFactor.getText().toString().equals("") | etNewSubjectFactor.getText().toString() == null) return false;
 
-
-        return true;
-
-    }
 }

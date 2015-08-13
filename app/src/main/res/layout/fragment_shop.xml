@@ -1,16 +1,135 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="70dp"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fillViewport="true"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:clipToPadding="false"
+    android:padding="30dp"
     >
 
-    <TextView
-        android:text="ShopFragment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_premiumpurchased"
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+
+
+        android:layout_marginTop="8dp"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="8dp"
+        >
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sie Sind Premium!"
+            android:textSize="24sp"
+            android:paddingTop="24dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textAppearance="?android:textAppearanceLarge"
+            />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Viel Erfolg!"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textSize="14sp"
+            android:paddingBottom="24dp"
+            />
+
+        </LinearLayout>
 
 
 
-</LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+    <android.support.v7.widget.CardView
+        android:layout_centerInParent="true"
+        android:id="@+id/cardview_premiumunpurchased"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="8dp"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/premiumTitle"
+            android:textSize="24sp"
+            android:paddingTop="24dp"
+            android:paddingBottom="12dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textAppearance="?android:textAppearanceLarge"
+            />
+
+        <TextView
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/premiumSubtitle"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:textSize="14sp"
+            android:paddingBottom="16dp"
+            />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/premiumfeatures"
+                android:textAppearance="?android:textAppearance"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                />
+
+            <Button
+                android:id="@+id/buyPremium"
+                style="?android:borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/ColorPrimary"
+                android:text="@string/premiumBuyNow"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+
+                />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+
+
+
+
+</RelativeLayout>

@@ -20,6 +20,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -41,9 +42,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.linxy.gradeorganizer.ControllableAppBarLayout;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.ServerRequest;
+import com.linxy.gradeorganizer.StartupActivity;
+import com.linxy.gradeorganizer.ViewPageAdapter;
 import com.linxy.gradeorganizer.com.linxy.adapters.GetGradeCallback;
 import com.linxy.gradeorganizer.com.linxy.adapters.HRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
@@ -54,6 +59,9 @@ import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by linxy on 7/26/15.
@@ -134,6 +142,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
 
         populateList();
         recyclerView.setAdapter(adapter);
+
 
         return v;
     }
@@ -284,8 +293,36 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
     @Override
     public void onResume() {
         super.onResume();
+        Log.i("TABS", "onResume");
+        repopulate();
+    }
+
+    private static final ScheduledExecutorService worker =
+            Executors.newSingleThreadScheduledExecutor();
+    void repopulate(){
+
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                Log.i("refreshExecuted", "REFRESHED");
+
+                grades.clear();
+                populateList();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+
+            }
+        };
+
+        worker.schedule(task, 1, TimeUnit.SECONDS);
 
     }
+
 
 
 

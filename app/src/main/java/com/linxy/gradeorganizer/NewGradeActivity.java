@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Vibrator;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
@@ -22,8 +23,10 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -62,9 +65,8 @@ public class NewGradeActivity extends ActionBarActivity {
 
     String grade = "";
 
-    Button createGrade;
 
-    Toolbar toolbar;
+    Toolbar mToolbar;
 
     Calendar cal = Calendar.getInstance();
     private int lastIndex;
@@ -75,6 +77,7 @@ public class NewGradeActivity extends ActionBarActivity {
     TextView inGrade;
     boolean canVib = true;
     Button btnAddGrade;
+    Button btnSetGrade;
     private boolean showTwoDigit;
 
     SharedPreferences prefs;
@@ -91,10 +94,23 @@ public class NewGradeActivity extends ActionBarActivity {
         setContentView(R.layout.activity_new_grade);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-         prefs = getSharedPreferences(StartupActivity.PREFS, 0);
+        mToolbar = (Toolbar) findViewById(R.id.tool_bar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.registerExam));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.ColorPrimaryDark));
+        }
+
+
+        prefs = getSharedPreferences(StartupActivity.PREFS, 0);
         deviceId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-                showTwoDigit = prefs.getBoolean("twodigit", false);
+        showTwoDigit = prefs.getBoolean("twodigit", false);
         myDb = new DatabaseHelper(this);
         btnCancel = (Button) findViewById(R.id.ang_cancel);
         mySDb = new DatabaseHelperSubjects(this);
@@ -105,21 +121,28 @@ public class NewGradeActivity extends ActionBarActivity {
         inSubjectName = (Spinner) findViewById(R.id.subject_names);
         inFactor = (EditText) findViewById(R.id.factor);
         btnAddGrade = (Button) findViewById(R.id.button_save);
+        btnSetGrade = (Button) findViewById(R.id.set_grade);
+
         tvCurrentDate = (TextView) findViewById(R.id.current_date_display);
 
         btnAddGrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Check that all fields are filled, if they all are, then input the data into the database and close the activity.
-                boolean isInserted = fillDatabase();
-                if (isInserted) {
-                    Toast.makeText(NewGradeActivity.this, "Data Inserted", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(NewGradeActivity.this, StartupActivity.class);
-                    startActivity(intent);
-                    //  finish();
-                    //  onBackPressed();
+
+                if (isValid()) {
+                    fillDatabase();
+
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("subjectname", inSubjectName.getSelectedItem().toString());
+                    returnIntent.putExtra("gradename",  inGradeName.getText().toString());
+                    returnIntent.putExtra("grade", inGrade.getText().toString());
+                    returnIntent.putExtra("gradefactor", inFactor.getText().toString());
+                    returnIntent.putExtra("gradedate", outDate);
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
                 } else {
-                    Toast.makeText(NewGradeActivity.this, "Fill All Fields!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewGradeActivity.this, getResources().getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -131,6 +154,8 @@ public class NewGradeActivity extends ActionBarActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent returnIntent = new Intent();
+                setResult(RESULT_CANCELED, returnIntent);
                 finish();
             }
         });
@@ -154,13 +179,28 @@ public class NewGradeActivity extends ActionBarActivity {
         inSubjectName.setAdapter(arrayAdapter);
         showGradePicker();
 
-        toolbar = (Toolbar) findViewById(R.id.tool_bar);
-        setSupportActionBar(toolbar);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            Intent returnIntent = new Intent();
+            setResult(RESULT_CANCELED, returnIntent);
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void showGradePicker() {
-        btnAddGrade = (Button) findViewById(R.id.set_grade);
-        btnAddGrade.setOnClickListener(new View.OnClickListener() {
+        btnSetGrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -430,20 +470,24 @@ public class NewGradeActivity extends ActionBarActivity {
             return dpicker;
         }
 
-
         return null;
 
 
     }
 
-    private boolean fillDatabase() {
-        double r = 0;
-        double s = 0;
-        double t = 0;
+    private boolean isValid(){
 
-        boolean b;
+        double zero;
 
-        if(Double.parseDouble(inGrade.getText().toString()) <= 0.0) return false;
+        if(inGrade.getText().toString().isEmpty() || inGrade.getText().toString().equals("") || inGrade.getText().toString() == null) return false;
+
+        try {
+            zero = Double.parseDouble(inGrade.getText().toString());
+            if(zero == 0) return false;
+        } catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+
 
         if (inGradeName.getText().toString() == null || inGradeName.toString().isEmpty())
             return false;
@@ -455,31 +499,21 @@ public class NewGradeActivity extends ActionBarActivity {
             return false;
         if (outDate == null || outDate.isEmpty()) return false;
 
+        return true;
+    }
 
-//        t = Double.parseDouble(inGrade.getText().toString());
-//        r = 2 * t;
-//        s = Math.round(r);
-//        outRounded = s / 2;
-
-        b = myDb.insertData(
-                inSubjectName.getSelectedItem().toString(),
-                inGradeName.getText().toString(),
-                inGrade.getText().toString(),
-                inFactor.getText().toString(),
-                outDate);
+    private void fillDatabase() {
 
         ParseObject gradeObject = new ParseObject("Grades");
         Log.i("DEVICEID", deviceId);
         gradeObject.put("deviceid", deviceId);
         gradeObject.put("gradesubject", inSubjectName.getSelectedItem().toString());
-        gradeObject.put("gradename",  inGradeName.getText().toString());
-        gradeObject.put("grade",  inGrade.getText().toString());
+        gradeObject.put("gradename", inGradeName.getText().toString());
+        gradeObject.put("grade", inGrade.getText().toString());
         gradeObject.put("gradefactor", inFactor.getText().toString());
         gradeObject.put("gradedate", outDate);
         gradeObject.saveInBackground();
 
-
-        return b;
     }
 
     private DatePickerDialog.OnDateSetListener dpickerListner =

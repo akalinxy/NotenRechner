@@ -53,6 +53,14 @@
     <string name="subjectfactor">Fach Faktor wie z.B. 100 = 1</string>
     <string name="testfactor">Prufung Faktor wie z.B. 100 = 1</string>
     <string name="testname">Prufing Name</string>
+    <string name="splash.text">Notemrechnei</string>
+    <string name="premiumForCalendar">Fur prufungkalender brauchst du premium!</string>
+    <string name="fillAllFields">Fulle alle felder aus!</string>
+    <string name="premiumTitle">Premium</string>
+    <string name="premiumSubtitle">1.50 CHF</string>
+    <string name="premiumBuyNow">Jetz Kaufen</string>
+    <string name="registerExam">Prufing Eintragen</string>
+    <string name="subjectExists">Fach existierti bErieit</string>
 
     <string name="search_hint">Suche nach Prüfungen oder Fächer</string>
     <string name="search_label">Pruefungen</string>
@@ -69,38 +77,17 @@
 
     <string name="gradecalculator">Notenrechner</string>
     <string name="grade_calendar">Noten Kalender</string>
-    <string name="subjects">Facher</string>
+    <string name="sAverages">Facher</string>
     <string name="shop">Notenrechner Premium</string>
     <string name="settings">Einstellungen</string>
 
+    <string name="premiumfeatures"> - Unendlich Viele Facher Eintragen\n\n- Angesagte Prufungen eintragen\n\n- Errinnerungen Setzen \n\n- Keine Werbing</string>
+
+   <!-- <string name="banner_ad_unit_id">ca-app-pub-4536790503715606/3852335375</string>-->
+
+    <string name="banner_ad_unit_id"> ca-app-pub-3940256099942544/6300978111</string>
 
 
-    <array name="test_subjects">
-        <item>Mathematik</item>
-        <item>Franzosisch</item>
-        <item>Deutsch</item>
-        <item>Wirtschaft</item>
-        <item>Zeichnen</item>
-        <item>Musik</item>
-        <item>Chemie</item>
-        <item>Physik</item>
-
-
-    </array>
-    <array name="testentries">
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-        <item>Mathe 33</item>
-    </array>
 
     <string-array name="navigation_drawer_items_array">
         <item>Create</item>

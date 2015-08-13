@@ -2,12 +2,16 @@ package com.linxy.gradeorganizer.fragments;
 
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.linxy.gradeorganizer.R;
 
 
@@ -28,12 +32,18 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.com.linxy.adapters.RVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.utils.MyRecyclerScroll;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +56,8 @@ public class SubjectsFragment extends Fragment {
     DatabaseHelperSubjects myDB;
     DatabaseHelper db;
     Toolbar toolbar;
+    private FloatingActionButton fab;
+    private String deviceId;
 
     String clickedname;
     String clickedID;
@@ -67,10 +79,12 @@ public class SubjectsFragment extends Fragment {
         }
     }
 
+    RVAdapter adapter;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        View v = inflater.inflate(R.layout.fragment_subjects , container, false);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_subjects, container, false);
 
 //        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 //        recyclerView.setHasFixedSize(true);
@@ -84,14 +98,118 @@ public class SubjectsFragment extends Fragment {
         myDB = new DatabaseHelperSubjects(getActivity().getBaseContext());
         db = new DatabaseHelper(getActivity().getBaseContext());
 
+        fab = (FloatingActionButton) v.findViewById(R.id.fabaddsubject);
         recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view2);
         recyclerView.setHasFixedSize(true);
+        deviceId = Settings.Secure.getString(getActivity().getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(llm);
 
+        recyclerView.setOnScrollListener(new MyRecyclerScroll() {
+            @Override
+            public void show() {
+                fab.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+
+            }
+
+            @Override
+            public void hide() {
+                fab.animate().translationY(fab.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+
+            }
+        });
         viewAll();
+        fab.setOnClickListener(FabClickListener);
+
+        AdView mAdView = (AdView) v.findViewById(R.id.AdView);
+        if(StartupActivity.PREMIUM){
+            mAdView.setVisibility(View.GONE);
+
+        } else {
+            mAdView.setVisibility(View.VISIBLE);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("B2CAF611A47219282C0590A0804E1BEF").build();
+            mAdView.loadAd(adRequest);
+        }
         return v;
+    }
+
+    final View.OnClickListener FabClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (StartupActivity.PREMIUM == true || basicCount()) {
+
+                LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
+                View dialogView = layoutInflater.inflate(R.layout.dialog_newsubject, null);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                AlertDialog dialog;
+                builder.setView(dialogView);
+
+                final EditText etSubjectName = (EditText) dialogView.findViewById(R.id.add_new_grade_name);
+                final EditText etSubjectFactor = (EditText) dialogView.findViewById(R.id.factor_new_grade);
+
+                builder.setTitle("Neues Fach Eintragen"); // TODO MAKE STRING REFERENCE
+                builder.setPositiveButton("Add Subject", new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    /* First make sure that both fields have been filled in */
+                        if (testFieldsNewSubject()) { /* Subject is not blank */
+                            if (myDB.hasObject(etSubjectName.getText().toString())) { /* SubjectName already exists in Database */
+                                Toast.makeText((StartupActivity) getActivity(), "Subject Exists!", Toast.LENGTH_SHORT).show();
+                            } else { /* SubjectName is unique. */
+
+                                ParseObject subjectObject = new ParseObject("Subjects");
+                                subjectObject.put("deviceId", deviceId);
+                                subjectObject.put("subjectname", etSubjectName.getText().toString());
+                                subjectObject.put("subjectfactor", etSubjectFactor.getText().toString());
+                                subjectObject.saveInBackground();
+                                myDB.insertData(etSubjectName.getText().toString(), etSubjectFactor.getText().toString());
+                                Toast.makeText((StartupActivity) getActivity(), "Subject inserted @ " + myDB.getDatabaseName(), Toast.LENGTH_SHORT).show();
+                                myDB.close();
+                                viewAll();
+
+
+                            }
+                        } else {
+                            Toast.makeText((StartupActivity) getActivity(), "Fill all Fields!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    private boolean testFieldsNewSubject() {
+                        if (etSubjectName.getText().toString().equals("") | etSubjectName.getText().toString() == null)
+                            return false;
+                        if (etSubjectFactor.getText().toString().equals("") | etSubjectFactor.getText().toString() == null)
+                            return false;
+                        return true;
+                    }
+
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.show();
+
+
+            } else {
+                Toast.makeText(v.getContext(), "Purchase Premium to add more subjects", Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE */
+            }
+
+        }
+
+
+    };
+
+    private boolean basicCount(){
+        Cursor cursor = myDB.getAllData();
+        return (cursor.getCount() < 12);
     }
 
 
@@ -100,7 +218,6 @@ public class SubjectsFragment extends Fragment {
         Cursor res = myDB.getAllData();
 
         subjects = new ArrayList<>();
-
 
 
         final int selSubIds[] = new int[res.getCount()];
@@ -120,7 +237,6 @@ public class SubjectsFragment extends Fragment {
             i++;
         }
 
-        RVAdapter adapter;
         adapter = new RVAdapter(subjects);
 
 //                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.list_view_items, arrayList);
@@ -172,8 +288,7 @@ public class SubjectsFragment extends Fragment {
                                     myDB.updateData(String.valueOf(selSubIds[position]), selSubNames[position], input.getText().toString());
                                     dialog.cancel();
                                     viewAll();
-                                }
-                                else {
+                                } else {
 
                                     showMessage(getResources().getString(R.string.error), getResources().getString(R.string.errorMsgWrongInputNumerical));
                                 }
@@ -245,7 +360,7 @@ public class SubjectsFragment extends Fragment {
 
     }
 
-    public static void setMargins (View v, int l, int t, int r, int b) {
+    public static void setMargins(View v, int l, int t, int r, int b) {
         if (v.getLayoutParams() instanceof RelativeLayout.MarginLayoutParams) {
             RelativeLayout.MarginLayoutParams p = (RelativeLayout.MarginLayoutParams) v.getLayoutParams();
             p.setMargins(l, t, r, b);

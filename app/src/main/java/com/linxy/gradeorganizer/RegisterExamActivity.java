@@ -86,7 +86,7 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Prufung Eintragen"); /* TODO Make a Strings.xml Reference */
+        getSupportActionBar().setTitle(getResources().getString(R.string.registerExam));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -217,26 +217,29 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
 
     final View.OnClickListener clickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            //Toast.makeText(RegisterExamActivity.this, "Clicky", Toast.LENGTH_SHORT).show();
-            String subjectname = spnrSubjectList.getSelectedItem().toString();
-            String examname = etTestName.getText().toString();
-            String examfactor = etExamFactor.getText().toString();
 
-            CalendarDay calDay = mcvCalendar.getSelectedDate();
-            int day = calDay.getDay();
-            int month = calDay.getMonth() + 1;
-            int year = calDay.getYear();
-            String examdate = day + "." + month + "." + year;
+                //Toast.makeText(RegisterExamActivity.this, "Clicky", Toast.LENGTH_SHORT).show();
+                String subjectname = spnrSubjectList.getSelectedItem().toString();
+                String examname = etTestName.getText().toString();
+                String examfactor = etExamFactor.getText().toString();
 
-            Intent returnIntent = new Intent();
-            returnIntent.putExtra("subjectname", subjectname);
-            returnIntent.putExtra("examname", examname);
-            returnIntent.putExtra("examfactor", examfactor);
-            returnIntent.putExtra("examdate", examdate);
-            setResult(RESULT_OK, returnIntent);
-            finish();
+                CalendarDay calDay = mcvCalendar.getSelectedDate();
+                int day = calDay.getDay();
+                int month = calDay.getMonth() + 1;
+                int year = calDay.getYear();
+                String examdate = day + "." + month + "." + year;
+
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("subjectname", subjectname);
+                returnIntent.putExtra("examname", examname);
+                returnIntent.putExtra("examfactor", examfactor);
+                returnIntent.putExtra("examdate", examdate);
+                setResult(RESULT_OK, returnIntent);
+                finish();
+
         }
     };
+
 
     @Override
     public void onPause(){

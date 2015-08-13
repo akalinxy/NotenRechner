@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer.tabs;
+package com.linxy.gradeorganizer.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.ViewPageAdapter;
+import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
 
 
 public class ViewPagerContainer extends Fragment {
@@ -24,7 +25,7 @@ public class ViewPagerContainer extends Fragment {
     OnDataPass dataPasser;
 
     TabLayout tabLayout;
-
+    Activity activity;
     public ViewPagerContainer(){}
 
 
@@ -39,7 +40,7 @@ public class ViewPagerContainer extends Fragment {
         mViewPager = (ViewPager) v.findViewById(R.id.viewpager);
         adapter = new ViewPageAdapter(getActivity().getSupportFragmentManager(), Titles, Numboftabs);
         mViewPager.setAdapter(adapter);
-        passData(mViewPager);
+        passData(mViewPager, tabLayout);
        tabLayout.setupWithViewPager(mViewPager);
 
 
@@ -52,12 +53,20 @@ public class ViewPagerContainer extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        this.activity = activity;
         dataPasser = (OnDataPass) activity;
 
     }
 
-    public void passData(ViewPager viewPager){
-        dataPasser.onDataPass(viewPager, tabLayout);
+    @Override
+    public void onResume(){
+        super.onResume();
+        dataPasser = (OnDataPass) activity;
+        passData(mViewPager, tabLayout);
+    }
+
+    public void passData(ViewPager vp, TabLayout tl){
+        dataPasser.onDataPass(vp, tl);
     }
 
     @Override

@@ -1,103 +1,117 @@
 package com.linxy.gradeorganizer;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
-import android.view.GestureDetector;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.vending.billing.IInAppBillingService;
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
+import com.db.chart.model.LineSet;
+import com.db.chart.model.Point;
+import com.db.chart.view.AxisController;
+import com.db.chart.view.LineChartView;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.fragments.CalendarFragment;
 import com.linxy.gradeorganizer.fragments.PreferenceFragment;
 import com.linxy.gradeorganizer.fragments.ShopFragment;
 import com.linxy.gradeorganizer.fragments.SubjectsFragment;
-import com.linxy.gradeorganizer.fragments.Tab2;
-import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
-import com.linxy.gradeorganizer.tabs.ViewPagerContainer;
-import com.parse.Parse;
-import com.parse.ParseInstallation;
-import com.parse.ParseObject;
+import com.linxy.gradeorganizer.fragments.ViewPagerContainer;
 
-import java.util.List;
-
-enum SearchBarVisible {
-    SEARCH_BAR_VISIBLE, SEARCH_BAR_INVISIBLE;
-}
+import util.IabHelper;
+import util.IabResult;
+import util.Inventory;
+import util.Purchase;
 
 
-public class StartupActivity extends ActionBarActivity implements SearchView.OnQueryTextListener, ViewPagerContainer.OnDataPass {
+public class StartupActivity extends ActionBarActivity implements ViewPagerContainer.OnDataPass, ShopFragment.BuyPremiumButtonClick, BillingProcessor.IBillingHandler {
 
     /* Instance Variables*/
-    private SearchBarVisible SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
     public static final String PREFS = "PrefFile";
     private boolean toolbarScroll;
+    private boolean runOnce = true;
+    public static boolean PREMIUM;
 
     /* View Components */
-    private SearchView searchView;
-    private MenuItem searchItem;
     private ControllableAppBarLayout appBarLayout;
     private Toolbar toolbar;
     private FloatingActionButton fabAddSubject;
     private FrameLayout container;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private LineChartView chart;
+    private TextView navTitle;
 
 
     /* Database Helpers*/
     private DatabaseHelperSubjects dbs;
-
+    private DatabaseHelper db;
     /* Navigation Drawer */
-
-
-    private String NAME = "Notenrechner Basic";
-    private String EMAIL = "Deine Leistung";
-
 
     private NavigationView mNavigationView;
     private DrawerLayout Drawer;
     private ActionBarDrawerToggle mDrawerToggle;
 
+    /* Billing */
+//    IInAppBillingService mService;
+//    IabHelper mHelper;
+    static final String ITEM_SKU = "purchase_premium";
+    BillingProcessor bp;
+
+    /* Ads */
+    InterstitialAd mIntersitialAd;
+
+    /* Debug */
+    private static final String TAG = "StartupActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
+        Log.i(TAG, "OnCreate Called");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Create the Toolbar and set it as the toolbar
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         toolbarScroll = true;
 
+//        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+//        viewPager = (ViewPager) findViewById(R.id.viewpager);
+
 
         container = (FrameLayout) findViewById(R.id.fragment_container);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
-
-
+        db = new DatabaseHelper(this);
         dbs = new DatabaseHelperSubjects(this);
         appBarLayout = (ControllableAppBarLayout) findViewById(R.id.appBarLayout);
         fabAddSubject = (FloatingActionButton) findViewById(R.id.fab);
@@ -108,8 +122,20 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
                 if (subjectCursor.getCount() == 0) {
                     Toast.makeText(StartupActivity.this, getResources().getString(R.string.needSubjects), Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
-                    startActivity(intent);
+                    if (PREMIUM) {
+                        Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
+                        startActivityForResult(intent, 2);
+                    } else {
+                        if (mIntersitialAd.isLoaded()) {
+
+                            Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
+                            startActivityForResult(intent, 2);
+                            mIntersitialAd.show();
+
+                        }
+
+                    }
+
                 }
                 dbs.close();
                 subjectCursor.close();
@@ -124,6 +150,13 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                Log.i(TAG, "Drawer Opened, runOnce is: " + runOnce);
+                if (runOnce) {
+                    createChart();
+                    blurChart();
+
+                    runOnce = false;
+                }
             }
 
             @Override
@@ -132,20 +165,146 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
             }
         };
         Drawer.setDrawerListener(mDrawerToggle);
-
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
-
-
         mDrawerToggle.syncState();
+        if (!PREMIUM) {
+            mIntersitialAd = new InterstitialAd(this);
+            mIntersitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            mIntersitialAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdClosed() {
+                    super.onAdClosed();
+                    requestNewIntersitial();
+                }
+            });
+            requestNewIntersitial();
+        }
+
+        bp = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsijTNgztiarHDP9P1B42JqJQnnTeGxmAOSb7uE98thZk814I7VYJDwSqFlFIBMcdAZfmNXfQEXINLXgAARON4NB7qVwBh3FM/5RW0Xz1ptPkr9JWeb70pIfg3urJ6aWZtj826y8ebZ2AJSVtbD1m+5lfeGeOw03+NJYqLscKDkXJEYVTvDIByipgobgMdiHP9JNJdGLiP+9xxKxssXPLBuVjMYSOeLlda0/1mPkiXsG5RgJyhJJ/dTGqFSyErHs9+z6MJEQfU7JxxIvgRiKn5gArOdsqMJRczLewfI8HtXx68yGqp6qE9CxPVti0fBFXuk+kRhmwjWyelRBNKJnnuwIDAQAB", this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
+        bp.loadOwnedPurchasesFromGoogle();
+        if(bp.isPurchased(ITEM_SKU)){
+            PREMIUM = true;
+        }
 
     }
 
-//    @Override
-//    public void onOptionItemsSelected(MenuItem item){
-//        switch (item.getItemId()){
-//        }
-//    }
+
+    @Override
+    public void OnPremiumClick() {
+        bp.purchase(this, ITEM_SKU);
+    }
+
+    @Override
+    public void onBillingInitialized() {
+        /*
+         * Called when BillingProcessor was initialized and it's ready to purchase
+         */
+    }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        /*
+         * Called when requested PRODUCT ID was successfully purchased
+         */
+        Toast.makeText(this, "Purchase Successful", Toast.LENGTH_SHORT).show();
+        PREMIUM = true;
+        createChart();
+        blurChart();
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+        /*
+         * Called when some error occurred. See Constants class for more details
+         */
+        Toast.makeText(this, "Purchase Fail", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+        /*
+         * Called when purchase history was restored and the list of all owned PRODUCT ID's
+         * was loaded from Google Play
+         */
+        if(bp.isPurchased(ITEM_SKU)){
+            PREMIUM = true;
+        }
+    }
+
+
+    private void requestNewIntersitial() {
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("B2CAF611A47219282C0590A0804E1BEF").build();
+        mIntersitialAd.loadAd(adRequest);
+    }
+
+    public void onDestroy() {
+        if (bp != null)
+            bp.release();
+
+        super.onDestroy();
+    }
+
+    private void blurChart() {
+        navTitle = (TextView) findViewById(R.id.navTitle);
+
+        RelativeLayout view = (RelativeLayout) findViewById(R.id.header_view);
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bm = view.getDrawingCache();
+        Bitmap blurredBm = fastblur(bm, 50);
+        ImageView overlayview = (ImageView) findViewById(R.id.overlay_view);
+        overlayview.setImageBitmap(blurredBm);
+
+        if (PREMIUM) {
+            navTitle.setText("Notenrechner Premium");
+        } else {
+            navTitle.setText("Notenrechner Basic");
+        }
+        Log.i(TAG, "After BlurChart");
+    }
+
+    private void createChart() {
+        Log.i(TAG, "CreateChart!");
+
+
+        DatabaseHelper db = new DatabaseHelper(this);
+        Cursor c = db.getAllData();
+        if (c.getCount() == 0) {
+            c.close();
+            db.close();
+            Log.i(TAG, "GradeList is Empty, Closing Createchart");
+            return;
+        }
+        chart = (LineChartView) findViewById(R.id.linechart);
+        LineSet dataset = new LineSet();
+        while (c.moveToNext()) {
+            dataset.addPoint(new Point("gradepoint", Float.valueOf(c.getString(3))));
+        }
+        c.close();
+        db.close();
+
+        dataset.setColor(getResources().getColor(R.color.ColorYellow));
+        dataset.setThickness(20);
+
+        Paint paint = new Paint();
+        paint.setColor(getResources().getColor(R.color.ColorFlatRed));
+        paint.setStrokeWidth(15);
+        chart.setThresholdLine(4, paint);
+
+        chart.setYLabels(AxisController.LabelPosition.NONE);
+        chart.setXLabels(AxisController.LabelPosition.NONE);
+        chart.setXAxis(false);
+        chart.setYAxis(false);
+        chart.addData(dataset);
+
+        chart.show();
+        Log.i(TAG, "CreateChart, After Chart.SHOW");
+
+
+    }
 
 
     final NavigationView.OnNavigationItemSelectedListener navigationListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -157,14 +316,12 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
                     f = getSupportFragmentManager().findFragmentByTag("viewpagerfrag");
                     if (f != null && f instanceof ViewPagerContainer) {
-                        Toast.makeText(StartupActivity.this, "Fragment NOT Changed", Toast.LENGTH_SHORT).show();
                     } else {
                         Drawer.closeDrawers();
                         toolbarScroll = true;
                         AppBarLayout.LayoutParams toolbarLayoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
                         toolbarLayoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                         toolbar.setLayoutParams(toolbarLayoutParams);
-                        Toast.makeText(StartupActivity.this, "Fragment CHANGED", Toast.LENGTH_SHORT).show();
                         tabLayout.setVisibility(View.VISIBLE);
                         setToolbarTitle(getResources().getString(R.string.app_name));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer(), "viewpagerfrag").commit();
@@ -173,30 +330,30 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
                     break;
                 case R.id.navitem_gradecalendar:
 
-
-                    f = getSupportFragmentManager().findFragmentByTag("calefrag");
-                    if (f != null && f instanceof CalendarFragment) {
-                        Toast.makeText(StartupActivity.this, "Fragment NOT Changed", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Drawer.closeDrawers();
-                        if (toolbarScroll) {
-                            ControllableAppBarLayout.LayoutParams toolbarLayoutParams = (ControllableAppBarLayout.LayoutParams) toolbar.getLayoutParams();
-                            toolbarLayoutParams.setScrollFlags(0);
-                            toolbar.setLayoutParams(toolbarLayoutParams);
-                            toolbarScroll = false;
+                    if (PREMIUM) {
+                        f = getSupportFragmentManager().findFragmentByTag("calefrag");
+                        if (f != null && f instanceof CalendarFragment) {
+                        } else {
+                            Drawer.closeDrawers();
+                            if (toolbarScroll) {
+                                ControllableAppBarLayout.LayoutParams toolbarLayoutParams = (ControllableAppBarLayout.LayoutParams) toolbar.getLayoutParams();
+                                toolbarLayoutParams.setScrollFlags(0);
+                                toolbar.setLayoutParams(toolbarLayoutParams);
+                                toolbarScroll = false;
+                            }
+                            appBarLayout.expandToolbar();
+                            tabLayout.setVisibility(View.GONE);
+                            setToolbarTitle(getResources().getString(R.string.grade_calendar));
+                            fabAddSubject.setVisibility(View.GONE);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalendarFragment(), "calefrag").commit();
                         }
-                        appBarLayout.expandToolbar();
-                        Toast.makeText(StartupActivity.this, "Fragment CHANGED", Toast.LENGTH_SHORT).show();
-                        tabLayout.setVisibility(View.GONE);
-                        setToolbarTitle(getResources().getString(R.string.grade_calendar));
-                        fabAddSubject.setVisibility(View.GONE);
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalendarFragment(), "calefrag").commit();
+                    } else {
+                        Toast.makeText(StartupActivity.this, getResources().getString(R.string.premiumForCalendar), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.navitem_subjects:
                     f = getSupportFragmentManager().findFragmentByTag("subjfrag");
                     if (f != null && f instanceof SubjectsFragment) {
-                        Toast.makeText(StartupActivity.this, "Fragment NOT Changed", Toast.LENGTH_SHORT).show();
                     } else {
                         Drawer.closeDrawers();
                         if (toolbarScroll) {
@@ -207,9 +364,8 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
                         }
                         appBarLayout.expandToolbar();
                         tabLayout.setVisibility(View.GONE);
-                        Toast.makeText(StartupActivity.this, "Fragment CHANGED", Toast.LENGTH_SHORT).show();
                         fabAddSubject.setVisibility(View.GONE);
-                        setToolbarTitle(getResources().getString(R.string.subjects));
+                        setToolbarTitle(getResources().getString(R.string.subject));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SubjectsFragment(), "subjfrag").commit();
                     }
                     break;
@@ -217,7 +373,6 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
                     f = getSupportFragmentManager().findFragmentByTag("shopfrag");
                     if (f != null && f instanceof ShopFragment) {
-                        Toast.makeText(StartupActivity.this, "Fragment NOT Changed", Toast.LENGTH_SHORT).show();
                     } else {
                         Drawer.closeDrawers();
                         if (toolbarScroll) {
@@ -228,7 +383,6 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
                         }
                         appBarLayout.expandToolbar();
                         tabLayout.setVisibility(View.GONE);
-                        Toast.makeText(StartupActivity.this, "Fragment CHANGED", Toast.LENGTH_SHORT).show();
                         fabAddSubject.setVisibility(View.GONE);
                         setToolbarTitle(getResources().getString(R.string.shop));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ShopFragment(), "shopfrag").commit();
@@ -238,7 +392,7 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
 
                     f = getSupportFragmentManager().findFragmentByTag("preffrag");
                     if (f != null && f instanceof PreferenceFragment) {
-                        Toast.makeText(StartupActivity.this, "Fragment NOT Changed", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Drawer.closeDrawers();
                         if (toolbarScroll) {
@@ -249,7 +403,6 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
                         }
                         appBarLayout.expandToolbar();
                         tabLayout.setVisibility(View.GONE);
-                        Toast.makeText(StartupActivity.this, "Fragment CHANGED", Toast.LENGTH_SHORT).show();
                         fabAddSubject.setVisibility(View.GONE);
                         setToolbarTitle(getResources().getString(R.string.settings));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PreferenceFragment(), "preffrag").commit();
@@ -260,26 +413,10 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
         }
     };
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_startup, menu);
-        searchItem = menu.findItem(R.id.toolbar_search);
-        SearchManager searchManger = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        switch (SEARCH_VISIBILITY) {
-            case SEARCH_BAR_VISIBLE:
-                searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-                searchItem.setVisible(true);
-                searchView.setSearchableInfo(searchManger.getSearchableInfo(getComponentName()));
-                searchView.setIconifiedByDefault(true);
-                searchView.setOnQueryTextListener(this);
-                break;
-            case SEARCH_BAR_INVISIBLE:
-                searchItem.setVisible(false);
-                break;
-        }
-
 
         return true;
     }
@@ -292,61 +429,268 @@ public class StartupActivity extends ActionBarActivity implements SearchView.OnQ
     public void onStop() {
         super.onStop();
         dbs.close();
-    }
+        db.close();
 
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        Toast.makeText(this, query, Toast.LENGTH_SHORT).show();
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
+        if (!bp.handleActivityResult(requestCode, resultCode, intent)) {
+            super.onActivityResult(requestCode, resultCode, intent);
+
+            if (requestCode == 2) {
+                Log.i(TAG, "Inside RequestCode == 2");
+                if (resultCode == Activity.RESULT_OK) {
+                    String subjectname = intent.getStringExtra("subjectname");
+                    String gradename = intent.getStringExtra("gradename");
+                    String grade = intent.getStringExtra("grade");
+                    String gradefactor = intent.getStringExtra("gradefactor");
+                    String gradedate = intent.getStringExtra("gradedate");
+                    db.insertData(subjectname, gradename, grade, gradefactor, gradedate);
+                    db.close();
+                    runOnce = true;
+                }
+                if (resultCode == Activity.RESULT_CANCELED) {
+                /* No Result */
+                }
+
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
+
+            }
+        }
     }
 
     @Override
-    public void onDataPass(ViewPager viewPager, TabLayout tabLayout) {
-        this.viewPager = viewPager;
-        this.tabLayout = tabLayout;
-//        tabLayout.setupWithViewPager(viewPager);
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
+    public void onDataPass(ViewPager vp, TabLayout tl) {
+        this.viewPager = vp;
 
-                if (tab.getText().toString().equals("Verlauf")) {
+        this.tabLayout = tl;
+//        tabLayout.setupWithViewPager(viewPager);
+        this.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 1) {
                     appBarLayout.expandToolbar(true);
                     fabAddSubject.setVisibility(View.GONE);
-                    searchItem.setVisible(true);
-                    SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_VISIBLE;
-                    invalidateOptionsMenu();
                 } else {
                     appBarLayout.expandToolbar(true);
                     fabAddSubject.setVisibility(View.VISIBLE);
-                    SEARCH_VISIBILITY = SearchBarVisible.SEARCH_BAR_INVISIBLE;
-                    invalidateOptionsMenu();
-
-
                 }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(int state) {
 
             }
         });
+    }
 
+    public Bitmap fastblur(Bitmap sentBitmap, int radius) {
 
+        Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
+
+        if (radius < 1) {
+            return (null);
+        }
+
+        int w = bitmap.getWidth();
+        int h = bitmap.getHeight();
+
+        int[] pix = new int[w * h];
+        Log.e(TAG, w + " " + h + " " + pix.length);
+        bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+
+        int wm = w - 1;
+        int hm = h - 1;
+        int wh = w * h;
+        int div = radius + radius + 1;
+
+        int r[] = new int[wh];
+        int g[] = new int[wh];
+        int b[] = new int[wh];
+        int rsum, gsum, bsum, x, y, i, p, yp, yi, yw;
+        int vmin[] = new int[Math.max(w, h)];
+
+        int divsum = (div + 1) >> 1;
+        divsum *= divsum;
+        int dv[] = new int[256 * divsum];
+        for (i = 0; i < 256 * divsum; i++) {
+            dv[i] = (i / divsum);
+        }
+
+        yw = yi = 0;
+
+        int[][] stack = new int[div][3];
+        int stackpointer;
+        int stackstart;
+        int[] sir;
+        int rbs;
+        int r1 = radius + 1;
+        int routsum, goutsum, boutsum;
+        int rinsum, ginsum, binsum;
+
+        for (y = 0; y < h; y++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            for (i = -radius; i <= radius; i++) {
+                p = pix[yi + Math.min(wm, Math.max(i, 0))];
+                sir = stack[i + radius];
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+                rbs = r1 - Math.abs(i);
+                rsum += sir[0] * rbs;
+                gsum += sir[1] * rbs;
+                bsum += sir[2] * rbs;
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+            }
+            stackpointer = radius;
+
+            for (x = 0; x < w; x++) {
+
+                r[yi] = dv[rsum];
+                g[yi] = dv[gsum];
+                b[yi] = dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+
+                if (y == 0) {
+                    vmin[x] = Math.min(x + radius + 1, wm);
+                }
+                p = pix[yw + vmin[x]];
+
+                sir[0] = (p & 0xff0000) >> 16;
+                sir[1] = (p & 0x00ff00) >> 8;
+                sir[2] = (p & 0x0000ff);
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[(stackpointer) % div];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+
+                yi++;
+            }
+            yw += w;
+        }
+        for (x = 0; x < w; x++) {
+            rinsum = ginsum = binsum = routsum = goutsum = boutsum = rsum = gsum = bsum = 0;
+            yp = -radius * w;
+            for (i = -radius; i <= radius; i++) {
+                yi = Math.max(0, yp) + x;
+
+                sir = stack[i + radius];
+
+                sir[0] = r[yi];
+                sir[1] = g[yi];
+                sir[2] = b[yi];
+
+                rbs = r1 - Math.abs(i);
+
+                rsum += r[yi] * rbs;
+                gsum += g[yi] * rbs;
+                bsum += b[yi] * rbs;
+
+                if (i > 0) {
+                    rinsum += sir[0];
+                    ginsum += sir[1];
+                    binsum += sir[2];
+                } else {
+                    routsum += sir[0];
+                    goutsum += sir[1];
+                    boutsum += sir[2];
+                }
+
+                if (i < hm) {
+                    yp += w;
+                }
+            }
+            yi = x;
+            stackpointer = radius;
+            for (y = 0; y < h; y++) {
+                // Preserve alpha channel: ( 0xff000000 & pix[yi] )
+                pix[yi] = (0xff000000 & pix[yi]) | (dv[rsum] << 16) | (dv[gsum] << 8) | dv[bsum];
+
+                rsum -= routsum;
+                gsum -= goutsum;
+                bsum -= boutsum;
+
+                stackstart = stackpointer - radius + div;
+                sir = stack[stackstart % div];
+
+                routsum -= sir[0];
+                goutsum -= sir[1];
+                boutsum -= sir[2];
+
+                if (x == 0) {
+                    vmin[y] = Math.min(y + r1, hm) * w;
+                }
+                p = x + vmin[y];
+
+                sir[0] = r[p];
+                sir[1] = g[p];
+                sir[2] = b[p];
+
+                rinsum += sir[0];
+                ginsum += sir[1];
+                binsum += sir[2];
+
+                rsum += rinsum;
+                gsum += ginsum;
+                bsum += binsum;
+
+                stackpointer = (stackpointer + 1) % div;
+                sir = stack[stackpointer];
+
+                routsum += sir[0];
+                goutsum += sir[1];
+                boutsum += sir[2];
+
+                rinsum -= sir[0];
+                ginsum -= sir[1];
+                binsum -= sir[2];
+
+                yi += w;
+            }
+        }
+
+        Log.e(TAG, w + " " + h + " " + pix.length);
+        bitmap.setPixels(pix, 0, w, 0, 0, w, h);
+
+        return (bitmap);
     }
 }
