@@ -107,16 +107,16 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
         ArrayAdapter<String> spnrAdapter = new ArrayAdapter<String>(this, R.layout.centered_spinner, arr);
         spnrSubjectList.setAdapter(spnrAdapter);
 
-        snackbar = Snackbar.make(findViewById(android.R.id.content), "Had a Snackbar", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Submit Exam", clickListener);
+        snackbar = Snackbar.make(findViewById(android.R.id.content), "Alle felder Ausgefüllt", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Prüfung Eintragen", clickListener);
         snackbar.setActionTextColor(getResources().getColor(R.color.FlatOrange));
 
 
     }
 
     private void createSnackbar(){
-        snackbar = Snackbar.make(findViewById(android.R.id.content), "Had a Snackbar", Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction("Submit Exam", clickListener);
+        snackbar = Snackbar.make(findViewById(android.R.id.content), "Alle felder Ausgefüllt", Snackbar.LENGTH_INDEFINITE);
+        snackbar.setAction("Prüfung Eintragen", clickListener);
         snackbar.setActionTextColor(getResources().getColor(R.color.FlatOrange));
     }
 

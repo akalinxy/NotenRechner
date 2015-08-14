@@ -70,30 +70,31 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
     private FrameLayout container;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-    private LineChartView chart;
     private TextView navTitle;
-
-
     /* Database Helpers*/
     private DatabaseHelperSubjects dbs;
-    private DatabaseHelper db;
-    /* Navigation Drawer */
 
+
+    private DatabaseHelper db;
     private NavigationView mNavigationView;
+
     private DrawerLayout Drawer;
     private ActionBarDrawerToggle mDrawerToggle;
-
     /* Billing */
 //    IInAppBillingService mService;
 //    IabHelper mHelper;
     static final String ITEM_SKU = "purchase_premium";
-    BillingProcessor bp;
 
+    BillingProcessor bp;
     /* Ads */
     InterstitialAd mIntersitialAd;
 
     /* Debug */
     private static final String TAG = "StartupActivity";
+
+    /* Navigation Drawer */
+    private LineChartView chart;
+    private LineSet dataset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,14 +103,12 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
         Log.i(TAG, "OnCreate Called");
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         // Create the Toolbar and set it as the toolbar
+
+
+
         toolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
         toolbarScroll = true;
-
-//        tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-//        viewPager = (ViewPager) findViewById(R.id.viewpager);
-
-
         container = (FrameLayout) findViewById(R.id.fragment_container);
         db = new DatabaseHelper(this);
         dbs = new DatabaseHelperSubjects(this);
@@ -127,15 +126,11 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
                         startActivityForResult(intent, 2);
                     } else {
                         if (mIntersitialAd.isLoaded()) {
-
                             Intent intent = new Intent(StartupActivity.this, NewGradeActivity.class);
                             startActivityForResult(intent, 2);
                             mIntersitialAd.show();
-
                         }
-
                     }
-
                 }
                 dbs.close();
                 subjectCursor.close();
@@ -144,19 +139,10 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
 
         Drawer = (DrawerLayout) findViewById(R.id.drawerlayout);
         Drawer.setStatusBarBackgroundColor(getResources().getColor(R.color.ColorPrimaryDark));
-
-
         mDrawerToggle = new ActionBarDrawerToggle(this, Drawer, toolbar, R.string.yes, R.string.no) {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                Log.i(TAG, "Drawer Opened, runOnce is: " + runOnce);
-                if (runOnce) {
-                    createChart();
-                    blurChart();
-
-                    runOnce = false;
-                }
             }
 
             @Override
@@ -168,9 +154,17 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
         mDrawerToggle.syncState();
+
+        bp = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsijTNgztiarHDP9P1B42JqJQnnTeGxmAOSb7uE98thZk814I7VYJDwSqFlFIBMcdAZfmNXfQEXINLXgAARON4NB7qVwBh3FM/5RW0Xz1ptPkr9JWeb70pIfg3urJ6aWZtj826y8ebZ2AJSVtbD1m+5lfeGeOw03+NJYqLscKDkXJEYVTvDIByipgobgMdiHP9JNJdGLiP+9xxKxssXPLBuVjMYSOeLlda0/1mPkiXsG5RgJyhJJ/dTGqFSyErHs9+z6MJEQfU7JxxIvgRiKn5gArOdsqMJRczLewfI8HtXx68yGqp6qE9CxPVti0fBFXuk+kRhmwjWyelRBNKJnnuwIDAQAB", this);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
+        bp.loadOwnedPurchasesFromGoogle();
+        if (bp.isPurchased(ITEM_SKU)) {
+            PREMIUM = true;
+        }
+
         if (!PREMIUM) {
             mIntersitialAd = new InterstitialAd(this);
-            mIntersitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            mIntersitialAd.setAdUnitId(getResources().getString(R.string.intersitial_ad_unit_id));
             mIntersitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdClosed() {
@@ -181,12 +175,22 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
             requestNewIntersitial();
         }
 
-        bp = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsijTNgztiarHDP9P1B42JqJQnnTeGxmAOSb7uE98thZk814I7VYJDwSqFlFIBMcdAZfmNXfQEXINLXgAARON4NB7qVwBh3FM/5RW0Xz1ptPkr9JWeb70pIfg3urJ6aWZtj826y8ebZ2AJSVtbD1m+5lfeGeOw03+NJYqLscKDkXJEYVTvDIByipgobgMdiHP9JNJdGLiP+9xxKxssXPLBuVjMYSOeLlda0/1mPkiXsG5RgJyhJJ/dTGqFSyErHs9+z6MJEQfU7JxxIvgRiKn5gArOdsqMJRczLewfI8HtXx68yGqp6qE9CxPVti0fBFXuk+kRhmwjWyelRBNKJnnuwIDAQAB", this);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
-        bp.loadOwnedPurchasesFromGoogle();
-        if(bp.isPurchased(ITEM_SKU)){
-            PREMIUM = true;
+        navTitle = (TextView) findViewById(R.id.navTitle);
+        if(PREMIUM){
+            navTitle.setText("Notenrechner Premium");
+        } else {
+            navTitle.setText("Notenrechner Basic");
         }
+
+      //  dataset = new LineSet();
+      //  chart = (LineChartView) findViewById(R.id.linechart);
+
+        initDataset();
+        createChart();
+
+        chart.addData(dataset);
+
+        chart.show();
 
     }
 
@@ -210,8 +214,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
          */
         Toast.makeText(this, "Purchase Successful", Toast.LENGTH_SHORT).show();
         PREMIUM = true;
-        createChart();
-        blurChart();
+        navTitle.setText("Notenrechner Premium");
     }
 
     @Override
@@ -229,14 +232,14 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
          * Called when purchase history was restored and the list of all owned PRODUCT ID's
          * was loaded from Google Play
          */
-        if(bp.isPurchased(ITEM_SKU)){
+        if (bp.isPurchased(ITEM_SKU)) {
             PREMIUM = true;
         }
     }
 
 
     private void requestNewIntersitial() {
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("B2CAF611A47219282C0590A0804E1BEF").build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         mIntersitialAd.loadAd(adRequest);
     }
 
@@ -266,29 +269,19 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
         Log.i(TAG, "After BlurChart");
     }
 
-    private void createChart() {
-        Log.i(TAG, "CreateChart!");
-
-
-        DatabaseHelper db = new DatabaseHelper(this);
+    private void initDataset(){
+        dataset = new LineSet();
         Cursor c = db.getAllData();
-        if (c.getCount() == 0) {
-            c.close();
-            db.close();
-            Log.i(TAG, "GradeList is Empty, Closing Createchart");
-            return;
-        }
-        chart = (LineChartView) findViewById(R.id.linechart);
-        LineSet dataset = new LineSet();
-        while (c.moveToNext()) {
+        while(c.moveToNext()){
             dataset.addPoint(new Point("gradepoint", Float.valueOf(c.getString(3))));
         }
         c.close();
-        db.close();
-
         dataset.setColor(getResources().getColor(R.color.ColorYellow));
         dataset.setThickness(20);
-
+    }
+    private void createChart() {
+        chart = (LineChartView) findViewById(R.id.linechart);
+        chart.dismiss();
         Paint paint = new Paint();
         paint.setColor(getResources().getColor(R.color.ColorFlatRed));
         paint.setStrokeWidth(15);
@@ -298,12 +291,41 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
         chart.setXLabels(AxisController.LabelPosition.NONE);
         chart.setXAxis(false);
         chart.setYAxis(false);
-        chart.addData(dataset);
-
-        chart.show();
-        Log.i(TAG, "CreateChart, After Chart.SHOW");
+    }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (!bp.handleActivityResult(requestCode, resultCode, intent)) {
+            super.onActivityResult(requestCode, resultCode, intent);
+
+            if (requestCode == 2) {
+                Log.i(TAG, "Inside RequestCode == 2");
+                if (resultCode == Activity.RESULT_OK) {
+                    String subjectname = intent.getStringExtra("subjectname");
+                    String gradename = intent.getStringExtra("gradename");
+                    String grade = intent.getStringExtra("grade");
+                    String gradefactor = intent.getStringExtra("gradefactor");
+                    String gradedate = intent.getStringExtra("gradedate");
+                    db.insertData(subjectname, gradename, grade, gradefactor, gradedate);
+                    db.close();
+
+                    initDataset();
+                    createChart();
+                    chart.addData(dataset);
+                    chart.show();
+
+
+
+                    if (resultCode == Activity.RESULT_CANCELED) {
+                /* No Result */
+                    }
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
+
+                }
+            }
+        }
     }
 
 
@@ -323,7 +345,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
                         toolbarLayoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
                         toolbar.setLayoutParams(toolbarLayoutParams);
                         tabLayout.setVisibility(View.VISIBLE);
-                        setToolbarTitle(getResources().getString(R.string.app_name));
+                        setToolbarTitle(getResources().getString(R.string.fragmentGradeAverage));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer(), "viewpagerfrag").commit();
                         fabAddSubject.setVisibility(View.VISIBLE);
                     }
@@ -343,7 +365,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
                             }
                             appBarLayout.expandToolbar();
                             tabLayout.setVisibility(View.GONE);
-                            setToolbarTitle(getResources().getString(R.string.grade_calendar));
+                            setToolbarTitle(getResources().getString(R.string.fragmentGradeCalendar));
                             fabAddSubject.setVisibility(View.GONE);
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CalendarFragment(), "calefrag").commit();
                         }
@@ -365,7 +387,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
                         appBarLayout.expandToolbar();
                         tabLayout.setVisibility(View.GONE);
                         fabAddSubject.setVisibility(View.GONE);
-                        setToolbarTitle(getResources().getString(R.string.subject));
+                        setToolbarTitle(getResources().getString(R.string.fragmentSubjects));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new SubjectsFragment(), "subjfrag").commit();
                     }
                     break;
@@ -384,7 +406,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
                         appBarLayout.expandToolbar();
                         tabLayout.setVisibility(View.GONE);
                         fabAddSubject.setVisibility(View.GONE);
-                        setToolbarTitle(getResources().getString(R.string.shop));
+                        setToolbarTitle(getResources().getString(R.string.fragmentShop));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ShopFragment(), "shopfrag").commit();
                     }
                     break;
@@ -404,7 +426,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
                         appBarLayout.expandToolbar();
                         tabLayout.setVisibility(View.GONE);
                         fabAddSubject.setVisibility(View.GONE);
-                        setToolbarTitle(getResources().getString(R.string.settings));
+                        setToolbarTitle(getResources().getString(R.string.fragmentSettings));
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PreferenceFragment(), "preffrag").commit();
                     }
                     break;
@@ -433,32 +455,7 @@ public class StartupActivity extends ActionBarActivity implements ViewPagerConta
 
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (!bp.handleActivityResult(requestCode, resultCode, intent)) {
-            super.onActivityResult(requestCode, resultCode, intent);
 
-            if (requestCode == 2) {
-                Log.i(TAG, "Inside RequestCode == 2");
-                if (resultCode == Activity.RESULT_OK) {
-                    String subjectname = intent.getStringExtra("subjectname");
-                    String gradename = intent.getStringExtra("gradename");
-                    String grade = intent.getStringExtra("grade");
-                    String gradefactor = intent.getStringExtra("gradefactor");
-                    String gradedate = intent.getStringExtra("gradedate");
-                    db.insertData(subjectname, gradename, grade, gradefactor, gradedate);
-                    db.close();
-                    runOnce = true;
-                }
-                if (resultCode == Activity.RESULT_CANCELED) {
-                /* No Result */
-                }
-
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ViewPagerContainer()).commit();
-
-            }
-        }
-    }
 
     @Override
     public void onDataPass(ViewPager vp, TabLayout tl) {

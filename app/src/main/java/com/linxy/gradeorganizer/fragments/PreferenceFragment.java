@@ -69,7 +69,7 @@ import org.w3c.dom.Text;
 /**
  * Created by linxy on 7/26/15.
  */
-public class PreferenceFragment extends Fragment implements View.OnClickListener{
+public class PreferenceFragment extends Fragment{
 
     Spinner spinnerRoundTo;
     String arraySpinner[] = {"Nicht Runden", "Halbe Note" };
@@ -132,9 +132,9 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                 final TextView textView = new TextView(getActivity());
                 textView.setPadding(30, 30, textView.getPaddingRight(), textView.getPaddingBottom());
                 textView.setTextSize(20f);
-                textView.setText(getResources().getString(R.string.deleteSure));
+                textView.setText(getResources().getString(R.string.stringDeleteSure));
                 builder.setView(textView);
-                builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.stringYes), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         db.deleteAll();
@@ -142,7 +142,7 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
                     }
                 });
 
-                builder.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getResources().getString(R.string.stringNo), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -202,22 +202,13 @@ public class PreferenceFragment extends Fragment implements View.OnClickListener
 
         } else {
             mAdView.setVisibility(View.VISIBLE);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("B2CAF611A47219282C0590A0804E1BEF").build();
+            AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
 
         return  v;
     }
 
-    @Override /* TODO Create String References in strings.xml for these Strings! */
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.edit_subjects:
-                Intent intent = new Intent((StartupActivity)getActivity(), SubjectsFragment.class);
-                startActivity(intent);
-                break;
-        }
-    }
 
 
 }

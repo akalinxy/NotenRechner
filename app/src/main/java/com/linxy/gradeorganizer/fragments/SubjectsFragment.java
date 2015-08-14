@@ -128,7 +128,7 @@ public class SubjectsFragment extends Fragment {
 
         } else {
             mAdView.setVisibility(View.VISIBLE);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("B2CAF611A47219282C0590A0804E1BEF").build();
+            AdRequest adRequest = new AdRequest.Builder().build();
             mAdView.loadAd(adRequest);
         }
         return v;
@@ -157,7 +157,7 @@ public class SubjectsFragment extends Fragment {
                     /* First make sure that both fields have been filled in */
                         if (testFieldsNewSubject()) { /* Subject is not blank */
                             if (myDB.hasObject(etSubjectName.getText().toString())) { /* SubjectName already exists in Database */
-                                Toast.makeText((StartupActivity) getActivity(), "Subject Exists!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText((StartupActivity) getActivity(), getResources().getString(R.string.subjectExists), Toast.LENGTH_SHORT).show();
                             } else { /* SubjectName is unique. */
 
                                 ParseObject subjectObject = new ParseObject("Subjects");
@@ -166,14 +166,13 @@ public class SubjectsFragment extends Fragment {
                                 subjectObject.put("subjectfactor", etSubjectFactor.getText().toString());
                                 subjectObject.saveInBackground();
                                 myDB.insertData(etSubjectName.getText().toString(), etSubjectFactor.getText().toString());
-                                Toast.makeText((StartupActivity) getActivity(), "Subject inserted @ " + myDB.getDatabaseName(), Toast.LENGTH_SHORT).show();
                                 myDB.close();
                                 viewAll();
 
 
                             }
                         } else {
-                            Toast.makeText((StartupActivity) getActivity(), "Fill all Fields!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText((StartupActivity) getActivity(), getResources().getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -199,7 +198,7 @@ public class SubjectsFragment extends Fragment {
 
 
             } else {
-                Toast.makeText(v.getContext(), "Purchase Premium to add more subjects", Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE */
+                Toast.makeText(v.getContext(), getResources().getString(R.string.premiumForMoreSubjects), Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE */
             }
 
         }
@@ -310,8 +309,8 @@ public class SubjectsFragment extends Fragment {
                     case R.id.cv_subject_delete:
                         new AlertDialog.Builder(getActivity())
                                 .setTitle(R.string.delete)
-                                .setMessage("Sind sie sicher dass sie loschen willn?")// REMEMBER TO ADD A STRING XML FOR THIS
-                                .setPositiveButton("Ya", new DialogInterface.OnClickListener() // AD IN STRIGNS XML
+                                .setMessage(getResources().getString(R.string.deleteSure))// REMEMBER TO ADD A STRING XML FOR THIS
+                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() // AD IN STRIGNS XML
                                 {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -336,7 +335,7 @@ public class SubjectsFragment extends Fragment {
 
                                     }
                                 })
-                                .setNegativeButton("Nain", null) // ADD IN STRINGS XML
+                                .setNegativeButton(getResources().getString(R.string.no), null) // ADD IN STRINGS XML
                                 .show();
 
                         break;

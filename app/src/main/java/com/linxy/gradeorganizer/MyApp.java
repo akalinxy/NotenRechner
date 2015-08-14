@@ -1,8 +1,11 @@
 package com.linxy.gradeorganizer;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -33,7 +36,52 @@ public class MyApp extends Application {
     @Override
     public void onCreate(){
         super.onCreate();
-        Log.i("OnlyRunOnce", "RUONCE");
+
+        // register to be informed of activities starting up
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+
+                                               @Override
+                                               public void onActivityCreated(Activity activity,
+                                                                             Bundle savedInstanceState) {
+
+                                                   // new activity created; force its orientation to portrait
+                                                   activity.setRequestedOrientation(
+                                                           ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+                                               }
+
+                                               @Override
+                                               public void onActivityStarted(Activity activity) {
+
+                                               }
+
+                                               @Override
+                                               public void onActivityResumed(Activity activity) {
+
+                                               }
+
+                                               @Override
+                                               public void onActivityPaused(Activity activity) {
+
+                                               }
+
+                                               @Override
+                                               public void onActivityStopped(Activity activity) {
+
+                                               }
+
+                                               @Override
+                                               public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+                                               }
+
+                                               @Override
+                                               public void onActivityDestroyed(Activity activity) {
+
+                                               }
+                                           });
+
+            Log.i("OnlyRunOnce", "RUONCE");
 
         /* TODO FIX THIS */
             Parse.initialize(getBaseContext(), "tDb5Zw7Tvh7QxU5cU5AjulmP8Uk9NBgREYDaP41W", "KRVun9zyKtDOFaCLUsyEJ3Qofrg0t0OmsyebuCNi");
