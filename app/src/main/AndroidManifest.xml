@@ -10,90 +10,107 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="com.android.vending.BILLING"/>
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-feature android:name="android.hardware.faketouch"/>
+    <uses-feature android:name="android.hardware.touchscreen"/>
 
 
-    <permission android:protectionLevel="signature"
-        android:name="com.linxy.gradeorganizer.permission.C2D_MESSAGE" />
+    <permission
+        android:name="com.linxy.gradeorganizer.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
     <uses-permission android:name="com.linxy.gradeorganizer.permission.C2D_MESSAGE" />
+
     <application
-        android:name=".MyApp"
+        android:name=".activities.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Noten Rechner"
         android:theme="@style/AppTheme" >
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-        <receiver android:name=".NotificationPublisher"/>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <receiver android:name=".utility.NotificationPublisher" />
+
         <activity
-            android:name=".StartupActivity"
+            android:name=".activities.StartupActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".NewGradeActivity"
+            android:name=".activities.NewGradeActivity"
             android:label="@string/title_activity_new_grade" >
         </activity>
         <activity
             android:name=".tabs.Popup"
             android:theme="@style/AppTheme.CustomTheme" />
         <activity
-            android:name=".RegisterExamActivity"
+            android:name=".activities.RegisterExamActivity"
             android:label="@string/title_activity_register_exam" >
         </activity>
         <activity
-            android:name=".SplashActivity"
+            android:name=".activities.SplashActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".fragments.ScheduleNotificationActivity"
+            android:name=".ScheduleNotificationActivity"
             android:label="@string/title_activity_schedule_notification" >
         </activity>
+
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
+
+        <receiver android:name="com.parse.ParseBroadcastReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.ParsePushBroadcastReceiver"
-            android:exported="false">
+        <receiver
+            android:name="com.parse.ParsePushBroadcastReceiver"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.parse.push.intent.RECEIVE" />
                 <action android:name="com.parse.push.intent.DELETE" />
                 <action android:name="com.parse.push.intent.OPEN" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.GcmBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND">
+        <receiver
+            android:name="com.parse.GcmBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <!--
-                  IMPORTANT: Change "com.parse.starter" to match your app's package name.
-                -->
+<!--                   IMPORTANT: Change "com.parse.starter" to match your app's package name. -->
                 <category android:name="com.linxy.gradeorganizer" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".MyBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.HOME" />
-            </intent-filter>
-        </receiver>
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+        <!-- <receiver android:name=".MyBootReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- <category android:name="android.intent.category.HOME" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

@@ -12,7 +12,7 @@
         <item
             android:id="@+id/navitem_gradecalendar"
             android:icon="@drawable/icon_calendar"
-            android:title="@string/drawerGradeCalendar"/>
+            android:title="@string/drawerCalendar"/>
         <item
             android:id="@+id/navitem_subjects"
             android:icon="@drawable/icon_librarybooks"

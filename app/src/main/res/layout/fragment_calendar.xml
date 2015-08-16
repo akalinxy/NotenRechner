@@ -18,7 +18,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:id="@+id/fab_newtest"
-        app:layout_behavior="com.linxy.gradeorganizer.ScrollingFABBehavior"
+
         android:src="@drawable/icon_addcalendar"
         />
 

@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.utility;
 
 import android.content.Context;
 import android.support.design.widget.AppBarLayout;
@@ -7,7 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.linxy.gradeorganizer.utils.Utils;
+import com.linxy.gradeorganizer.utility.Utils;
 
 /**
  * Created by Linxy on 3/8/2015 at 13:59
@@ -24,12 +24,12 @@ public class ScrollingFABBehavior extends CoordinatorLayout.Behavior<FloatingAct
 
     @Override
     public boolean layoutDependsOn(CoordinatorLayout parent, FloatingActionButton fab, View dependency) {
-        return dependency instanceof AppBarLayout;
+        return dependency instanceof ControllableAppBarLayout;
     }
 
     @Override
     public boolean onDependentViewChanged(CoordinatorLayout parent, FloatingActionButton fab, View dependency) {
-        if(dependency instanceof AppBarLayout){
+        if(dependency instanceof ControllableAppBarLayout){
             CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
             int fabBottomMargin = lp.bottomMargin;
             int distanceToScroll = fab.getHeight() + fabBottomMargin;

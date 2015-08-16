@@ -1,61 +1,29 @@
 package com.linxy.gradeorganizer.fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.linxy.gradeorganizer.ControllableAppBarLayout;
+import com.linxy.gradeorganizer.utility.ControllableAppBarLayout;
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.ServerRequest;
-import com.linxy.gradeorganizer.StartupActivity;
-import com.linxy.gradeorganizer.ViewPageAdapter;
-import com.linxy.gradeorganizer.com.linxy.adapters.GetGradeCallback;
-import com.linxy.gradeorganizer.com.linxy.adapters.HRVAdapter;
+import com.linxy.gradeorganizer.adapters.HRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-import com.linxy.gradeorganizer.tabs.HidingScrollListener;
-import com.linxy.gradeorganizer.tabs.SlidingTabLayout;
-import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,31 +39,15 @@ import java.util.concurrent.TimeUnit;
 
 public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, RecyclerView.OnTouchListener {
 
-    ListView lvRecentGrades;
-    RecyclerView recyclerView;
-    LinearLayoutManager layoutManager;
+    public static final String TAG = Tab2.class.getSimpleName();
 
+    RecyclerView recyclerView;
     DatabaseHelper db;
     DatabaseHelperSubjects dbs;
-
     private List<Grade> grades;
-    private boolean inEdit = false;
-    static boolean scroll_down;
-
-    SearchView searchView;
-
-
     HRVAdapter adapter;
     ControllableAppBarLayout capl;
-
-
     TextView noGrades;
-
-    private static final int MAX_CLICK_DURATION = 200;
-    private long mStartClickTime;
-
-
-
 
     public class Grade {
 
@@ -114,6 +66,16 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
             this.gradeFactor = gradeFactor;
             this.gradeDate = gradeDate;
         }
+    }
+
+
+    public static Tab2 getInstance(){
+        return new Tab2();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
     }
 
 
@@ -217,6 +179,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
                     factor.setFocusable(false);
                     date.setFocusable(false);
                     edit.setChecked(false);
+                /* Must message Tab1 To also update! */
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -237,6 +200,8 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
                         }
                     });
 
+                    Fragment fragment = (TabbedFragment) getParentFragment();
+                    ((TabbedFragment) fragment).refreshFragment();
 
                 }
 
@@ -263,7 +228,7 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
                 Cursor c = db.getAllData();
                 if(c.getCount() == 6) capl.expandToolbar(true);
                 dialog.cancel();
-
+                /* Must message Tab1 To also update! */
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -271,6 +236,9 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
                         adapter.notifyItemRemoved(position);
                     }
                 });
+
+                Fragment fragment = (TabbedFragment) getParentFragment();
+                ((TabbedFragment) fragment).refreshFragment();
 
                // fillListView(v);
 

@@ -1,27 +1,19 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Vibrator;
-import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
-import android.util.Log;
-import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,22 +24,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-import com.linxy.gradeorganizer.fragments.Tab2;
-import com.parse.ParseObject;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class NewGradeActivity extends ActionBarActivity {
@@ -108,7 +94,6 @@ public class NewGradeActivity extends ActionBarActivity {
 
 
         prefs = getSharedPreferences(StartupActivity.PREFS, 0);
-        deviceId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         showTwoDigit = prefs.getBoolean("twodigit", false);
         myDb = new DatabaseHelper(this);
@@ -131,8 +116,6 @@ public class NewGradeActivity extends ActionBarActivity {
                 // Check that all fields are filled, if they all are, then input the data into the database and close the activity.
 
                 if (isValid()) {
-                    fillDatabase();
-
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("subjectname", inSubjectName.getSelectedItem().toString());
                     returnIntent.putExtra("gradename",  inGradeName.getText().toString());
@@ -502,19 +485,7 @@ public class NewGradeActivity extends ActionBarActivity {
         return true;
     }
 
-    private void fillDatabase() {
 
-        ParseObject gradeObject = new ParseObject("Grades");
-        Log.i("DEVICEID", deviceId);
-        gradeObject.put("deviceid", deviceId);
-        gradeObject.put("gradesubject", inSubjectName.getSelectedItem().toString());
-        gradeObject.put("gradename", inGradeName.getText().toString());
-        gradeObject.put("grade", inGrade.getText().toString());
-        gradeObject.put("gradefactor", inFactor.getText().toString());
-        gradeObject.put("gradedate", outDate);
-        gradeObject.saveInBackground();
-
-    }
 
     private DatePickerDialog.OnDateSetListener dpickerListner =
             new DatePickerDialog.OnDateSetListener() {

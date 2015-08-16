@@ -2,14 +2,14 @@
     <string name="app_name">Noten Rechner</string>
     <string name="title_activity_new_grade">Note eintragen</string>
 
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Dinstellungen</string>
     <string name="overview">Übersicht</string>
     <string name="history">Verlauf</string>
     <string name="edit">Bearbeiten</string>
     <string name="average">Durchschnitt</string>
     <string name="unsufficient">Mangelpunkte</string>
     <string name="newgrade_name">Name</string>
-    <string name="subject">Fach</string>
+    <string name="subject">Fächer</string>
     <string name="achieved_grade">Erreichte Note</string>
     <string name="factor">Faktor</string>
     <string name="date">Datum</string>
@@ -22,16 +22,16 @@
     <string name="doubledigitgrade">Note mit 2 Ziffern</string>
 
     <!-- TITLE OF DRAWER ITEMS -->
-    <string name="drawerGradeAverage">Notn Drschnitt</string>
-    <string name="drawerCalendar">Noten kalender</string>
-    <string name="drawerSubjects">Facher</string>
-    <string name="drawerShop">Shop</string>
+    <string name="drawerGradeAverage">Notenübersicht</string>
+    <string name="drawerCalendar">Prüfungskalender</string>
+    <string name="drawerSubjects">Fächer</string>
+    <string name="drawerShop">Premium</string>
     <string name="drawerSettings">Einstellungen</string>
 
     <!-- TITLE OF DRAWER FRAGMENTS -->
     <string name="fragmentGradeAverage">Notenrechner</string>
-    <string name="fragmentGradeCalendar">NotenKalender</string>
-    <string name="fragmentSubjects">Facher</string>
+    <string name="fragmentGradeCalendar">Prüfungserrinerung</string>
+    <string name="fragmentSubjects">Fächer</string>
     <string name="fragmentShop">Premium</string>
     <string name="fragmentSettings">Einstellungen</string>
 
@@ -62,25 +62,25 @@
     <string name="hyphen">-</string>
     <string name="triplehyphen">---</string>
     <string name="iconHome">Noten Durchschnitt</string>
-    <string name="iconCalendar">Noten Kalender</string>
-    <string name="iconSubjects">Facher</string>
-    <string name="iconShoppingcart">Shop</string>
+    <string name="iconCalendar">Prüfungserrinerung</string>
+    <string name="iconSubjects">Fächer</string>
+    <string name="iconShoppingcart">Premium</string>
     <string name="noGrades">Du hast noch keine Noten eingetragen.</string>
     <string name="iconSettings">Einstellungen</string>
-    <string name="addnewgrade">Neues Fach Eintragen</string>
-    <string name="subjectname">Fach Name</string>
+    <string name="addnewgrade">Neues Fach eintragen</string>
+    <string name="subjectname">Fachname</string>
     <string name="subjectfactor">Fach Faktor wie z.B. 100 = 1</string>
-    <string name="testfactor">Prufung Faktor wie z.B. 100 = 1</string>
+    <string name="testfactor">Prüfungsfaktor wie z.B. 100 = 1</string>
     <string name="testname">Prüfungsname</string>
     <string name="splash.text">Notenrechner</string>
-    <string name="premiumForCalendar">Für den Prüfungskalender brauchst du die Premium-Edition!</string>
+    <string name="premiumForCalendar">Für die Funktion Prüfungserrinerung brauchst du die Premium-Edition!</string>
     <string name="fillAllFields">Fülle bitte alle Felder aus!</string>
     <string name="premiumTitle">Premium</string>
     <string name="premiumSubtitle">1.50 CHF</string>
     <string name="premiumBuyNow">Jetzt kaufen</string>
     <string name="registerExam">Prüfung eintragen</string>
     <string name="subjectExists">Dieses Fach existiert bereits!</string>
-    <string name="premiumForMoreSubjects">Für mehr fächer brauchst du premium.</string>
+    <string name="premiumForMoreSubjects">Um mehr Fächer eintragen zu können, brauchst du die Premium-Edition.</string>
     <string name="search_hint">Suche nach Prüfungen oder Fächer</string>
     <string name="search_label">Prüfungen</string>
     <string name="number0">0</string>
@@ -95,7 +95,7 @@
     <string name="number9">9</string>
 
     <string name="gradecalculator">Notenrechner</string>
-    <string name="grade_calendar">Noten Kalender</string>
+    <string name="grade_calendar">Prüfungserinnerung</string>
     <string name="sAverages">Fächer</string>
     <string name="shop">Notenrechner Premium</string>
     <string name="settings">Einstellungen</string>
@@ -126,4 +126,9 @@
     <string name="title_activity_register_exam">RegisterExamActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_schedule_notification">ScheduleNotificationActivity</string>
+    <string name="title_activity_test">TestActivity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 </resources>

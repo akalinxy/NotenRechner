@@ -1,11 +1,11 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.activities;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import com.linxy.gradeorganizer.R;
 
 public class SplashActivity extends AppCompatActivity {
 

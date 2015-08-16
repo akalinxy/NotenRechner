@@ -2,18 +2,16 @@ package com.linxy.gradeorganizer.fragments;
 
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.StartupActivity;
+import com.linxy.gradeorganizer.activities.StartupActivity;
 
 
 /**
@@ -22,9 +20,7 @@ import com.linxy.gradeorganizer.StartupActivity;
 public class ShopFragment extends Fragment {
 
 
-    public ShopFragment() {
-        // Required empty public constructor
-    }
+    public static final String TAG = ShopFragment.class.getSimpleName();
 
 
     private CardView cvPremium;
@@ -34,6 +30,10 @@ public class ShopFragment extends Fragment {
 
     Activity activity;
     BuyPremiumButtonClick buyPremium;
+
+    public static ShopFragment getInstance(){
+        return new ShopFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

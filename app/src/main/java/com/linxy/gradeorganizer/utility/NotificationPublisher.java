@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.utility;
 
 import android.app.Notification;
 import android.app.NotificationManager;

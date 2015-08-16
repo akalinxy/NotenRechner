@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer.utils;
+package com.linxy.gradeorganizer.utility;
 
 import android.support.v7.widget.RecyclerView;
 

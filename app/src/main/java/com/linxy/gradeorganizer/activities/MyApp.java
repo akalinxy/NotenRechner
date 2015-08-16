@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.activities;
 
 import android.app.Activity;
 import android.app.Application;
@@ -37,7 +37,7 @@ public class MyApp extends Application {
     public void onCreate(){
         super.onCreate();
 
-        // register to be informed of activities starting up
+//        // register to be informed of activities starting up
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
 
                                                @Override
@@ -80,35 +80,34 @@ public class MyApp extends Application {
 
                                                }
                                            });
+//
+//            Log.i("OnlyRunOnce", "RUONCE");
+//
+//        /* TODO FIX THIS */
 
-            Log.i("OnlyRunOnce", "RUONCE");
-
-        /* TODO FIX THIS */
-            Parse.initialize(getBaseContext(), "tDb5Zw7Tvh7QxU5cU5AjulmP8Uk9NBgREYDaP41W", "KRVun9zyKtDOFaCLUsyEJ3Qofrg0t0OmsyebuCNi");
-            ParseInstallation.getCurrentInstallation().saveInBackground();
-
-        dbc = new DatabaseHelperCalendar(getApplicationContext());
-        SharedPreferences preferences = getSharedPreferences(StartupActivity.PREFS, 0);
-
-        if(preferences.getBoolean("pastgrades", true)){ /* TODO MAKE THIS TRUE FOR PREMIUM USERS ONLY */
-            Cursor cursor = dbc.getAllData();
-
-            while(cursor.moveToNext()) {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                Date convertedDate = new Date();
-                try{
-                    convertedDate = simpleDateFormat.parse(cursor.getString(4));
-                } catch (ParseException e){
-                    e.printStackTrace();
-                }
-                Date today = new Date();
-                today.setDate(today.getDate()-1); /* TODO TEST THIS FOR TOMORROW */
-                if(convertedDate.before(today)){
-                    dbc.deleteData(cursor.getString(0));
-                }
-            }
-            cursor.close();
-            dbc.close();
-        }
+//
+//        dbc = new DatabaseHelperCalendar(getApplicationContext());
+//        SharedPreferences preferences = getSharedPreferences(StartupActivity.PREFS, 0);
+//
+//        if(preferences.getBoolean("pastgrades", true)){ /* TODO MAKE THIS TRUE FOR PREMIUM USERS ONLY */
+//            Cursor cursor = dbc.getAllData();
+//
+//            while(cursor.moveToNext()) {
+//                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy");
+//                Date convertedDate = new Date();
+//                try{
+//                    convertedDate = simpleDateFormat.parse(cursor.getString(4));
+//                } catch (ParseException e){
+//                    e.printStackTrace();
+//                }
+//                Date today = new Date();
+//                today.setDate(today.getDate()-1); /* TODO TEST THIS FOR TOMORROW */
+//                if(convertedDate.before(today)){
+//                    dbc.deleteData(cursor.getString(0));
+//                }
+//            }
+//            cursor.close();
+//            dbc.close();
+//        }
     }
 }

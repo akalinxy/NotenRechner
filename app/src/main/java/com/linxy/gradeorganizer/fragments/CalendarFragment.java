@@ -8,50 +8,35 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.ResultReceiver;
 import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.linxy.gradeorganizer.NotificationPublisher;
+import com.linxy.gradeorganizer.utility.NotificationPublisher;
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.RegisterExamActivity;
-import com.linxy.gradeorganizer.StartupActivity;
-import com.linxy.gradeorganizer.com.linxy.adapters.CRVAdapter;
+import com.linxy.gradeorganizer.activities.RegisterExamActivity;
+import com.linxy.gradeorganizer.adapters.CRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperCalendar;
-import com.linxy.gradeorganizer.database_helpers.DatabaseHelperScheduled;
-import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-import com.linxy.gradeorganizer.utils.MyRecyclerScroll;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateChangedListener;
+import com.linxy.gradeorganizer.utility.MyRecyclerScroll;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class CalendarFragment extends Fragment implements View.OnClickListener, CRVAdapter.MyCalClickListener {
@@ -98,6 +83,8 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
+    public static final String TAG = CalendarFragment.class.getSimpleName();
+
     private List<Date> dates;
     CRVAdapter adapter;
 
@@ -111,8 +98,9 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     FloatingActionButton fabRegisterExam;
     DatabaseHelperCalendar dbc;
 
-    public CalendarFragment() {
-        // Required empty public constructor
+
+    public static CalendarFragment getInstance(){
+        return new CalendarFragment();
     }
 
     @Override
@@ -171,69 +159,70 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     public void onItemClick(final int position, View v) {
         switch (v.getId()) {
             case R.id.imgbtnAddNotification:
-                dateSelected = false;
-                LayoutInflater li = LayoutInflater.from(v.getContext());
-                View dialogView = li.inflate(R.layout.popup_schedulenotification, null);
-
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-                AlertDialog dialog1;
-                builder1.setView(dialogView);
-                builder1.setTitle("Errinerung Setzern"); /* TODO MAKE STRING REFERENCE FOR THIS */
-
-                final MaterialCalendarView mcvScheduledNotification = (MaterialCalendarView) dialogView.findViewById(R.id.scheduleCalendar);
-
-
-                final java.util.Date today = new java.util.Date();
-                today.setDate(today.getDate());
-                today.setHours(0);
-
-                java.util.Date dayofexam = dates.get(position).date;
-
-
-                mcvScheduledNotification.setMinimumDate(today);
-                mcvScheduledNotification.setMaximumDate(dayofexam);
-                mcvScheduledNotification.setOnDateChangedListener(new OnDateChangedListener() {
-                    @Override
-                    public void onDateChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
-                        dateSelected = true;
-                    }
-                });
-
-                builder1.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        /* Create the Notification */
-                        if (dateSelected) {
-                            Calendar startDate = Calendar.getInstance();
-                            Calendar endDate = mcvScheduledNotification.getSelectedDate().getCalendar();
-                            long days = daysBetween(startDate, endDate);
-                            Log.i("DAYS", String.valueOf(days));
-
-                            long millis = TimeUnit.DAYS.toMillis(days);
-
-                            scheduleNotification(getNotification(dates.get(position).dateSubjectName + "\n" + dates.get(position).dateGradeName), millis);  /* TODO MAKE THIS WORK */
-                            Log.i("TIMEDATE: ", String.valueOf(millis));
-                            DatabaseHelperScheduled db = new DatabaseHelperScheduled(getActivity().getBaseContext());
-                            db.insertData(endDate.get(Calendar.DAY_OF_WEEK)+"."+endDate.get(Calendar.MONTH) + 1+"."+endDate.get(Calendar.YEAR), dates.get(position).dateSubjectName, dates.get(position).dateGradeName);
-                            db.close();
-
-
-                        } else {
-                            Toast.makeText(getActivity().getBaseContext(), "Error, must select date!", Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE FOR ERROR MUST SELECT DATE */
-
-                        }
-                    }
-                });
-
-                builder1.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                dialog1 = builder1.create();
-                dialog1.show();
+                Toast.makeText(getActivity().getBaseContext(), "Diese feature ist noch nicht implementiert!", Toast.LENGTH_SHORT).show();
+//                dateSelected = false;
+//                LayoutInflater li = LayoutInflater.from(v.getContext());
+//                View dialogView = li.inflate(R.layout.popup_schedulenotification, null);
+//
+//                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
+//                AlertDialog dialog1;
+//                builder1.setView(dialogView);
+//                builder1.setTitle("Errinerung Setzern"); /* TODO MAKE STRING REFERENCE FOR THIS */
+//
+//                final MaterialCalendarView mcvScheduledNotification = (MaterialCalendarView) dialogView.findViewById(R.id.scheduleCalendar);
+//
+//
+//                final java.util.Date today = new java.util.Date();
+//                today.setDate(today.getDate());
+//                today.setHours(0);
+//
+//                java.util.Date dayofexam = dates.get(position).date;
+//
+//
+//                mcvScheduledNotification.setMinimumDate(today);
+//                mcvScheduledNotification.setMaximumDate(dayofexam);
+//                mcvScheduledNotification.setOnDateChangedListener(new OnDateChangedListener() {
+//                    @Override
+//                    public void onDateChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
+//                        dateSelected = true;
+//                    }
+//                });
+//
+//                builder1.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        /* Create the Notification */
+//                        if (dateSelected) {
+//                            Calendar startDate = Calendar.getInstance();
+//                            Calendar endDate = mcvScheduledNotification.getSelectedDate().getCalendar();
+//                            long days = daysBetween(startDate, endDate);
+//                            Log.i("DAYS", String.valueOf(days));
+//
+//                            long millis = TimeUnit.DAYS.toMillis(days);
+//
+//                            scheduleNotification(getNotification(dates.get(position).dateSubjectName + "\n" + dates.get(position).dateGradeName), millis);  /* TODO MAKE THIS WORK */
+//                            Log.i("TIMEDATE: ", String.valueOf(millis));
+//                            DatabaseHelperScheduled db = new DatabaseHelperScheduled(getActivity().getBaseContext());
+//                            db.insertData(endDate.get(Calendar.DAY_OF_WEEK)+"."+endDate.get(Calendar.MONTH) + 1+"."+endDate.get(Calendar.YEAR), dates.get(position).dateSubjectName, dates.get(position).dateGradeName);
+//                            db.close();
+//
+//
+//                        } else {
+//                            Toast.makeText(getActivity().getBaseContext(), "Error, must select date!", Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE FOR ERROR MUST SELECT DATE */
+//
+//                        }
+//                    }
+//                });
+//
+//                builder1.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                dialog1 = builder1.create();
+//                dialog1.show();
 
 
                 break;

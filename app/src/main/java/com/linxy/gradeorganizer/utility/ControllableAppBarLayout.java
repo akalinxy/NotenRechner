@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.utility;
 
 /**
  * Created by Linxy on 5/8/2015 at 14:49
@@ -9,8 +9,6 @@ import android.graphics.Canvas;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 

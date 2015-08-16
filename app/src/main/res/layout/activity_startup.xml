@@ -18,7 +18,7 @@
         tools:context=".StartupActivity">
 
 
-        <com.linxy.gradeorganizer.ControllableAppBarLayout
+        <com.linxy.gradeorganizer.utility.ControllableAppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -44,7 +44,7 @@
                 app:tabTextAppearance="?android:textAllCaps"
                 app:tabTextColor="@color/ColorPrimaryLight" />
 
-        </com.linxy.gradeorganizer.ControllableAppBarLayout>
+        </com.linxy.gradeorganizer.utility.ControllableAppBarLayout>
 
 
         <FrameLayout
@@ -52,6 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"></FrameLayout>
+
+
 
 
         <android.support.design.widget.FloatingActionButton
@@ -66,7 +68,7 @@
             android:src="@drawable/ic_add_white_48dp"
             app:backgroundTint="@color/ColorYellow"
             app:borderWidth="0dp"
-            app:layout_behavior="com.linxy.gradeorganizer.ScrollingFABBehavior" />
+            app:layout_behavior="com.linxy.gradeorganizer.utility.ScrollingFABBehavior" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -3,7 +3,6 @@ package com.linxy.gradeorganizer.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -16,60 +15,24 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.StartupActivity;
+import com.linxy.gradeorganizer.activities.StartupActivity;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-
-
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
-import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-import com.parse.ParseObject;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by linxy on 7/26/15.
  */
 public class PreferenceFragment extends Fragment{
+
+    public static final String TAG = PreferenceFragment.class.getSimpleName();
 
     Spinner spinnerRoundTo;
     String arraySpinner[] = {"Nicht Runden", "Halbe Note" };
@@ -95,6 +58,11 @@ public class PreferenceFragment extends Fragment{
 
 
     Switch swtTwoDigit;
+
+    public static PreferenceFragment getInstance(){
+        return new PreferenceFragment();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
 

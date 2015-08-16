@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer.com.linxy.adapters;
+package com.linxy.gradeorganizer.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 
 import java.util.List;
 

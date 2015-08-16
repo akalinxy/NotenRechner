@@ -1,6 +1,5 @@
-package com.linxy.gradeorganizer.com.linxy.adapters;
+package com.linxy.gradeorganizer.adapters;
 
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.fragments.SubjectsFragment;
 import com.linxy.gradeorganizer.fragments.Tab1;
+import com.linxy.gradeorganizer.objects.SubAvg;
 
 import java.util.List;
 
@@ -36,25 +35,17 @@ public class SRVAdapter extends RecyclerView.Adapter<SRVAdapter.AverageViewHolde
             subjectGradeIcon = (ImageView) v.findViewById(R.id.gl_image);
             subjectAverage = (TextView) v.findViewById(R.id.gl_subGrade);
         }
-
-
-
-
     }
 
-    List<Tab1.SAverage> sAverages;
-
-    public SRVAdapter(List<Tab1.SAverage> sAverages){
+    List<SubAvg> sAverages;
+    public SRVAdapter(List<SubAvg> sAverages){
         this.sAverages = sAverages;
     }
-
-
 
     @Override
     public int getItemCount(){
         return sAverages.size();
     }
-
 
     @Override
     public AverageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
@@ -65,9 +56,9 @@ public class SRVAdapter extends RecyclerView.Adapter<SRVAdapter.AverageViewHolde
 
     @Override
     public void onBindViewHolder(AverageViewHolder averageViewHolder, int i){
-        averageViewHolder.subjectName.setText(sAverages.get(i).sAverageName);
-        averageViewHolder.subjectAverage.setText(sAverages.get(i).sAverageAverage);
-        averageViewHolder.subjectGradeIcon.setColorFilter(sAverages.get(i).sAverageColor, PorterDuff.Mode.SRC_ATOP);
+        averageViewHolder.subjectName.setText(sAverages.get(i).subject);
+        averageViewHolder.subjectAverage.setText(sAverages.get(i).average);
+        averageViewHolder.subjectGradeIcon.setColorFilter(sAverages.get(i).color, PorterDuff.Mode.SRC_ATOP);
     }
 
     @Override

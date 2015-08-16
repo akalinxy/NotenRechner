@@ -22,27 +22,22 @@ import com.linxy.gradeorganizer.R;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.linxy.gradeorganizer.StartupActivity;
-import com.linxy.gradeorganizer.com.linxy.adapters.RVAdapter;
+import com.linxy.gradeorganizer.activities.StartupActivity;
+import com.linxy.gradeorganizer.adapters.RVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
-import com.linxy.gradeorganizer.utils.MyRecyclerScroll;
+import com.linxy.gradeorganizer.utility.MyRecyclerScroll;
 import com.parse.ParseObject;
 
 import java.util.ArrayList;
@@ -51,16 +46,13 @@ import java.util.List;
 
 public class SubjectsFragment extends Fragment {
 
+    public static final String TAG = SubjectsFragment.class.getSimpleName();
     RecyclerView recyclerView;
-    LinearLayoutManager layoutManager;
     DatabaseHelperSubjects myDB;
     DatabaseHelper db;
-    Toolbar toolbar;
     private FloatingActionButton fab;
     private String deviceId;
 
-    String clickedname;
-    String clickedID;
 
     private String m_text;
 
@@ -81,6 +73,9 @@ public class SubjectsFragment extends Fragment {
 
     RVAdapter adapter;
 
+    public static SubjectsFragment getInstance(){
+        return new SubjectsFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

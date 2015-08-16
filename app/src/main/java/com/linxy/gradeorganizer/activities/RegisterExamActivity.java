@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer;
+package com.linxy.gradeorganizer.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperCalendar;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.fragments.CalendarFragment;

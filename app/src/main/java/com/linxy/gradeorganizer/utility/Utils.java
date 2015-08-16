@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer.utils;
+package com.linxy.gradeorganizer.utility;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -6,8 +6,8 @@ import android.content.res.TypedArray;
 import com.linxy.gradeorganizer.R;
 
 /**
- * Created by Linxy on 2/8/2015 at 20:15
- * Working on Grade Organizer in com.linxy.gradeorganizer
+ * Created by Linxy on 16/8/2015 at 09:45
+ * Working on Grade Organizer in com.linxy.gradeorganizer.utility
  */
 public class Utils {
 
@@ -23,5 +23,4 @@ public class Utils {
     public static int getTabsHeight(Context context) {
         return (int) context.getResources().getDimension(R.dimen.tabsHeight);
     }
-
 }

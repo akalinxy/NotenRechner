@@ -8,12 +8,12 @@ android {
         applicationId "com.linxy.gradeorganizer"
         minSdkVersion 17
         targetSdkVersion 22
-        versionCode 6
-        versionName "1.0"
+        versionCode 8
+        versionName "1.1"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

@@ -1,4 +1,4 @@
-package com.linxy.gradeorganizer.com.linxy.adapters;
+package com.linxy.gradeorganizer.adapters;
 
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
@@ -9,21 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.linxy.gradeorganizer.R;
-import com.linxy.gradeorganizer.StartupActivity;
 import com.linxy.gradeorganizer.fragments.CalendarFragment;
-import com.linxy.gradeorganizer.fragments.Tab2;
 
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Linxy on 7/8/2015 at 10:38
