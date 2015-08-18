@@ -28,7 +28,7 @@ public class GradeMath {
     /* Instance Variables */
     private boolean roundGrades;
     private boolean insufficient;
-    private double insufficientGrade;
+    private double insufficientGrade = 0;
     private double numerator = 0;
     private double denominator = 0;
 
@@ -72,6 +72,12 @@ public class GradeMath {
         cursorSubjects.close();
         dbs.close();
         return averages;
+    }
+
+    public void Reset(){
+        numerator = 0;
+        denominator = 0;
+        insufficientGrade = 0;
     }
 
     public double getInsufficientGrade(){

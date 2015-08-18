@@ -20,6 +20,7 @@ import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.activities.StartupActivity;
 import com.linxy.gradeorganizer.adapters.SRVAdapter;
 import com.linxy.gradeorganizer.objects.SubAvg;
+import com.linxy.gradeorganizer.objects.Subject;
 import com.linxy.gradeorganizer.utility.GradeMath;
 
 import java.util.ArrayList;
@@ -34,11 +35,11 @@ public class Tab1 extends Fragment implements Handler.Callback {
 
     /* Constants */
     public static final String TAG = Tab1.class.getSimpleName();
-    public static final int REFRESH_DATA = 5;
-    public static final int CREATE_DATA = 10;
-    public static final int UI_UPDATE_GLOBAL = 15;
-    public static final int UI_REFRESH = 20;
-    public static final int INIT_PREFS = 30;
+    public static final int INITIALIZE_DATA = 10; /* Not on main thread */
+    public static final int UPDATE_GUI = 20; /* On main thread */
+    public static final int UPDATE_DATA = 30; /* On seperate thread */
+
+
 
 
 
@@ -46,7 +47,7 @@ public class Tab1 extends Fragment implements Handler.Callback {
     private TextView tvGlobalAverage;
     private TextView tvInsufficient;
     private CardView cvInsufficientHolder;
-    private RecyclerView rvSubjectAverages;
+    private RecyclerView recyclerView;
 
     /* Multithreading */
     Handler mHandler;
@@ -61,10 +62,10 @@ public class Tab1 extends Fragment implements Handler.Callback {
 
     /* Adapter Components */
     SRVAdapter mAdapter;
-    ArrayList<SubAvg> averages;
+    ArrayList<SubAvg> averages; /* Guidline: Create list and declare it globally */
 
-    /* Objects GradeMath gradeMath; */
-     /* We are allowed to create a instance grademath component, because it relies on
+    /* Objects */
+    GradeMath gradeMath;  /* We are allowed to create a instance grademath component, because it relies on
                           * prefrences which cannot be changed directly without having to change tabs and
                           * thus recreate this view.
                           */
@@ -82,14 +83,6 @@ public class Tab1 extends Fragment implements Handler.Callback {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.tab_1, container, false);
-        tvGlobalAverage = (TextView) v.findViewById(R.id.average_grade);
-        tvInsufficient = (TextView) v.findViewById(R.id.insuff_marks);
-        cvInsufficientHolder = (CardView) v.findViewById(R.id.cardview_insufficient);
-
-        rvSubjectAverages = (RecyclerView) v.findViewById(R.id.avg_recycler);
-        rvSubjectAverages.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
-        rvSubjectAverages.setLayoutManager(linearLayoutManager);
 
 
         mHandlerMain = new Handler(getActivity().getMainLooper(), this);
@@ -97,15 +90,13 @@ public class Tab1 extends Fragment implements Handler.Callback {
         handlerThread.start();
         mHandler = new Handler(handlerThread.getLooper(), this);
 
-        sendMessage(mHandler, INIT_PREFS, null); /* We must initialize the preferences before we can create a GradeMath object */
+        SetupPrefs(); /* Creates a preference object, and assigns their values to our instance preference values */
 
-        Log.i(TAG, "Prefs Initialized. RoundGrades : ShowInsufficient " + roundGrades + " : " + showInsufficient);
-        sendMessage(mHandler, CREATE_DATA, null);
-        sendMessage(mHandlerMain, UI_UPDATE_GLOBAL, null);
+        /* We must create mAdapter before SetupGui(v); */
+        /* INITIALIZE_DATA creates mAdapter */
+        sendMessage(mHandler, INITIALIZE_DATA, null);
 
-        rvSubjectAverages.setAdapter(mAdapter);
-
-
+       // SetupGui(v);
 
 
         return v;
@@ -113,9 +104,9 @@ public class Tab1 extends Fragment implements Handler.Callback {
 
     /* This method will be called after the dataset has changed after adding a new grade. */
     public void refreshData(){
-        Log.i(TAG, "inside RefreshData");
-        sendMessage(mHandler, REFRESH_DATA, null);
-        //sendMessage(mHandlerMain, UI_UPDATE_GLOBAL, null);
+        Log.i(TAG, "refreshData()");
+        /* UPDATE_DATA will call UPDATE_GUI */
+        sendMessage(mHandler, UPDATE_DATA, null);
     }
 
     @Override
@@ -123,92 +114,65 @@ public class Tab1 extends Fragment implements Handler.Callback {
         GradeMath gradeMath = null;
         switch (msg.what){
 
-            case REFRESH_DATA:
-                /* Recalculate the adapter and global values, then notify datasetchanged on the adapter.*/
-                /* We are on a seperate thread */
+            case INITIALIZE_DATA:
+                Log.i(TAG, "INITIALIZE_DATA");
+                /* We must get the preferences before this is executed! */
+                /* This will 1. Create our data 2. Initialize our Adapter */
                 gradeMath = new GradeMath(getActivity().getBaseContext(), roundGrades, showInsufficient);
-                averages.clear();
+                averages = new ArrayList<>(); /*  We create an ArrayList of SubAvg objects, it is empty. */
                 averages = gradeMath.getAdapter();
-                mAdapter = new SRVAdapter(averages);
+                mAdapter = new SRVAdapter(averages); /* mAdapter is Initialized */
+
+                /* We get our values, and assign them to our instance variables */
+                globalAverage = gradeMath.getGlobalAverage();
+                globalInsufficient = gradeMath.getInsufficientGrade();
+
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        rvSubjectAverages.setAdapter(mAdapter);
+                        SetupGui(getView());
+                    }
+                });
+
+                break;
+
+            case UPDATE_GUI:
+                Log.i(TAG, "UPDATE_GUI");
+                /* Update the TextView's with the current values */
+                /* This gets called AFTER we updated the data on a seperate thread */
+                if(!(Double.isNaN(globalAverage))) {
+                    tvGlobalAverage.setText(String.format("%.2f", globalAverage));
+                    tvGlobalAverage.setTextColor(Subject.getColor(globalAverage, getActivity().getBaseContext()));
+                } else {
+                    tvGlobalAverage.setText(getResources().getString(R.string.triplehyphen));
+                }
+                if(showInsufficient) {
+                    tvInsufficient.setText(String.format("%.2f", globalInsufficient));
+                }
+
+                break;
+
+            case UPDATE_DATA:
+                Log.i(TAG, "UPDATE_DATA");
+                /* This Thread will 1. Update our values 2. Update the recycler 3. Call UPDATE_GUI */
+                gradeMath = new GradeMath(getActivity().getBaseContext(), roundGrades, showInsufficient);
+                /* We reassign a new ArrayList to averages */
+                averages.clear();
+                ArrayList<SubAvg> tempList = gradeMath.getAdapter();
+                for(int i = 0; i < tempList.size(); i++){
+                    averages.add(tempList.get(i));
+                }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                         mAdapter.notifyDataSetChanged();
                     }
                 });
-                Log.i(TAG, "REFRESH_DATA");
                 globalAverage = gradeMath.getGlobalAverage();
-                if(showInsufficient) globalInsufficient = gradeMath.getInsufficientGrade();
-                Log.i(TAG, "Inside REFRESH DATA WITH " + globalAverage + "  " + globalInsufficient);
-
-                HashMap<String, Double> obj = new HashMap<>();
-                obj.put("average", gradeMath.getGlobalAverage());
-                obj.put("insufficient", gradeMath.getInsufficientGrade());
-
-                sendMessage(mHandlerMain, UI_REFRESH, obj);
-
-
-                break;
-            case CREATE_DATA:
-                /* Calculate our Data on seperate thread */ /* This gets Called when the user reigsters a new Grade */
-                gradeMath = new GradeMath(getActivity().getBaseContext(), roundGrades, showInsufficient);
-                averages = gradeMath.getAdapter();
-                mAdapter = new SRVAdapter(averages);
-                globalAverage = gradeMath.getGlobalAverage();
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        rvSubjectAverages.setAdapter(mAdapter);
-                    }
-                });
-                if(showInsufficient) globalInsufficient = gradeMath.getInsufficientGrade();
-                Log.i(TAG, "Inside CREATEDATA with Values: " + globalAverage + " " + globalInsufficient);
-
-
-                break;
-            case UI_UPDATE_GLOBAL:
-
-                Log.i(TAG, "Inside UIUPDATEGLOBAL with Values: " + globalAverage + " " + globalInsufficient);
-
-                tvGlobalAverage.setText(String.format("%.2f", globalAverage));
-                if(showInsufficient){
-                    cvInsufficientHolder.setVisibility(View.VISIBLE);
-                    tvInsufficient.setText(String.format("%.2f", globalInsufficient));
-                } else {
-                    cvInsufficientHolder.setVisibility(View.GONE);
-                }
-
+                globalInsufficient = gradeMath.getInsufficientGrade();
+                sendMessage(mHandlerMain, UPDATE_GUI, null);
                 break;
 
-            case UI_REFRESH:
-                HashMap<String, Double> data = (HashMap<String, Double>) msg.obj;
-                tvGlobalAverage.setText(String.format("%.2f", data.get("average")));
-                if(showInsufficient){
-                    cvInsufficientHolder.setVisibility(View.VISIBLE);
-                    tvInsufficient.setText(String.format("%.2f", data.get("insufficient")));
-                } else {
-                    cvInsufficientHolder.setVisibility(View.GONE);
-                }
-
-
-
-                break;
-            case INIT_PREFS:
-                /* Initialize our Prefrences */
-                SharedPreferences preferences = getActivity().getSharedPreferences(StartupActivity.PREFS, 0);
-                showInsufficient = preferences.getBoolean("insufficient", true);
-
-                //roundGrades = preferences.getInt("roundGrade", 0) == 0 ? roundGrades = false : roundGrades == true;
-                if(preferences.getInt("roundGrade", 0) == 0)
-                    roundGrades = false;
-                else
-                    roundGrades = true;
-
-                Log.i(TAG, "Inside INIT_PREFS : showInsufficient : roundGrades -> " + showInsufficient + ":" + roundGrades);
-                gradeMath = new GradeMath(getActivity().getBaseContext(), roundGrades, showInsufficient);
-
-                break;
         }
         return true;
     }
@@ -217,6 +181,37 @@ public class Tab1 extends Fragment implements Handler.Callback {
         Message.obtain(handler, where, data).sendToTarget();
 
     }
+
+    private void SetupPrefs(){
+        /* Initialize our Prefrences */
+        SharedPreferences preferences = getActivity().getSharedPreferences(StartupActivity.PREFS, 0);
+        showInsufficient = preferences.getBoolean("insufficient", true);
+        //roundGrades = preferences.getInt("roundGrade", 0) == 0 ? roundGrades = false : roundGrades == true;
+        if(preferences.getInt("roundGrade", 0) == 0)
+            roundGrades = false;
+        else
+            roundGrades = true;
+    }
+
+    private void SetupGui(View v){
+        tvGlobalAverage = (TextView) v.findViewById(R.id.average_grade);
+        tvInsufficient = (TextView) v.findViewById(R.id.insuff_marks);
+        cvInsufficientHolder = (CardView) v.findViewById(R.id.cardview_insufficient);
+        recyclerView = (RecyclerView) v.findViewById(R.id.avg_recycler);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(mAdapter);
+
+        if(showInsufficient) {
+            cvInsufficientHolder.setVisibility(View.VISIBLE);
+        } else {
+            cvInsufficientHolder.setVisibility(View.GONE);
+        }
+
+        sendMessage(mHandlerMain, UPDATE_GUI, null);
+    }
+
 
 
     @Override

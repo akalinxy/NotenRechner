@@ -47,6 +47,7 @@ public class TabbedFragment extends Fragment {
         mViewPager = (ViewPager) v.findViewById(R.id.viewpager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOnPageChangeListener(onPageChangeListener);
+        mViewPager.setOffscreenPageLimit(2);
         tabLayout = (TabLayout) getActivity().findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
 

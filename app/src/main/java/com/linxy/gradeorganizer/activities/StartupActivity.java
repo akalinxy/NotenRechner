@@ -370,14 +370,17 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
                     sendMessage(null, DATABASE_CREATE_CHART);
                     Message.obtain(mHandlerMain, UI_DRAW_CHART).sendToTarget();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Fragment fragmentTabbed = (TabbedFragment) getSupportFragmentManager().findFragmentByTag(TabbedFragment.TAG);
-                            Log.i(TAG, "Fragment F assigned: " + fragmentTabbed.getTag());
-                            ((TabbedFragment) fragmentTabbed).refreshFragment();
-                        }
-                    }, 1000);
+
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            Fragment fragmentTabbed = (TabbedFragment) getSupportFragmentManager().findFragmentByTag(TabbedFragment.TAG);
+//                            Log.i(TAG, "Fragment F assigned: " + fragmentTabbed.getTag());
+//                            ((TabbedFragment) fragmentTabbed).refreshFragment();
+//                        }
+//                    }, 500);
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, TabbedFragment.getInstance(), TabbedFragment.TAG).commit();
 
 
 
