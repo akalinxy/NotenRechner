@@ -227,6 +227,7 @@ public class Tab1 extends Fragment implements Handler.Callback {
     @Override
     public void onDestroy(){
         super.onDestroy();
+
         mHandler.getLooper().quit();
     }
 

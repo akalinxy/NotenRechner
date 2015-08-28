@@ -17,8 +17,10 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.linxy.gradeorganizer.exceptions.InvalidEditGradeException;
 import com.linxy.gradeorganizer.utility.ControllableAppBarLayout;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.adapters.HRVAdapter;
@@ -26,6 +28,7 @@ import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +41,9 @@ import java.util.concurrent.TimeUnit;
 // This is the history of grades.
 
 public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, RecyclerView.OnTouchListener {
+
+    /* This whole fucking class is garbage, TODO have to create seperate threads for grade saving, uploading to online database, save to local database, network checks and more .. */
+    /* Pure shit is what this class is, however it works for now... -> USE HANDLER */
 
     public static final String TAG = Tab2.class.getSimpleName();
 
@@ -164,48 +170,58 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
 
                 } else {
                     // Clicking save
-                    db.updateData(String.valueOf(
-                                    grades.get(position).gradeId),
-                            grades.get(position).gradeSubject,
-                            examName.getText().toString(),
-                            grade.getText().toString(),
-                            factor.getText().toString(),
-                            date.getText().toString()
-                    );
+                    /* Before we save the data, we must make sure that the entered input is valid .. */
+                    if(validateInput(grade.getText().toString(), factor.getText().toString())){
+
+                        /* Exception not thrown, we can save */
+                        Toast.makeText(getActivity().getBaseContext(), "Eingabe ist Gespeichert.", Toast.LENGTH_SHORT).show();
+
+                        db.updateData(String.valueOf(
+                                        grades.get(position).gradeId),
+                                grades.get(position).gradeSubject,
+                                examName.getText().toString(),
+                                grade.getText().toString(),
+                                factor.getText().toString(),
+                                date.getText().toString()
+                        );
 
 
-                    examName.setFocusable(false);
-                    grade.setFocusable(false);
-                    factor.setFocusable(false);
-                    date.setFocusable(false);
-                    edit.setChecked(false);
+                        examName.setFocusable(false);
+                        grade.setFocusable(false);
+                        factor.setFocusable(false);
+                        date.setFocusable(false);
+                        edit.setChecked(false);
                 /* Must message Tab1 To also update! */
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Grade g = new Grade(grades.get(position).gradeId,
-                                    grades.get(position).gradeSubject,
-                                    examName.getText().toString(),
-                                    grade.getText().toString(),
-                                    factor.getText().toString(),
-                                    date.getText().toString());
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Grade g = new Grade(grades.get(position).gradeId,
+                                        grades.get(position).gradeSubject,
+                                        examName.getText().toString(),
+                                        grade.getText().toString(),
+                                        factor.getText().toString(),
+                                        date.getText().toString());
 
                             /* TODO REPLACE THIS */
 
 
 
-                            grades.set(position, g);
-                            adapter.notifyItemChanged(position);
-                        }
-                    });
+                                grades.set(position, g);
+                                adapter.notifyItemChanged(position);
+                            }
+                        });
 
-                    Fragment fragment = (TabbedFragment) getParentFragment();
-                    ((TabbedFragment) fragment).refreshFragment();
+                        Fragment fragment = (TabbedFragment) getParentFragment();
+                        ((TabbedFragment) fragment).refreshFragment();
+
+                    } else {
+                        Toast.makeText(getActivity().getBaseContext(), "Ein Feld hatte ungültige Eingabe! Nicht gespeichert...", Toast.LENGTH_SHORT).show();
+
+                    }
+
 
                 }
-
-
             }
         });
 
@@ -291,7 +307,19 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
 
     }
 
+    private boolean validateInput(String grade, String factor)  {
+        /* Dont give a rats ass about what date/name they give the grade, not using date implementation here ... */
+        /* Make sure that the input isnt empty in the first place */
+        if(grade == null || grade.isEmpty() || grade.equals("")) return false;
+        /* We dont have to check that it isnt a number, as we only allow number input */
+        /* However, it cannot be 0, as that fucks with the system */
+        if(Double.parseDouble(grade) == 0.0) return false;
+        /* Rinse and repear for factor */
+        if(factor == null || factor.isEmpty() || factor.equals("")) return false;
+        if(Double.parseDouble(factor) == 0.0) return false;
 
+        return true;
+    }
 
 
 
@@ -300,6 +328,12 @@ public class Tab2 extends Fragment implements HRVAdapter.MyHisClickListener, Rec
         while (cdb.moveToNext()) {
             grades.add(new Grade(cdb.getString(0), cdb.getString(1), cdb.getString(2), cdb.getString(3), cdb.getString(4), cdb.getString(5)));
         }
+
+        /* Reverse Arraz Elements */
+        int N = grades.size();
+        Collections.reverse(grades);
+
+
         cdb.close();
         if(adapter.getItemCount() == 0){
             noGrades.setVisibility(View.VISIBLE);

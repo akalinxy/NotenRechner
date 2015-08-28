@@ -20,15 +20,17 @@
 
         <com.linxy.gradeorganizer.utility.ControllableAppBarLayout
             android:id="@+id/appBarLayout"
+            app:layout_behavior="com.linxy.gradeorganizer.utility.AppBarLayoutSnapBehavior"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/app_bar"
+                app:layout_behavior="com.linxy.gradeorganizer.utility.AppBarLayoutSnapBehavior"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="4dp"
-                app:layout_scrollFlags="scroll|enterAlways"
                 app:theme="@style/Theme.AppCompat.NoActionBar"></android.support.v7.widget.Toolbar>
 
 

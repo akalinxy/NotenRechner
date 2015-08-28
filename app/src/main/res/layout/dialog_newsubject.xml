@@ -35,6 +35,7 @@
         android:theme="@style/TextLabel">
 
         <EditText
+            android:text="100"
             android:id="@+id/factor_new_grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

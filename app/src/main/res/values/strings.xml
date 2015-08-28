@@ -11,7 +11,7 @@
     <string name="newgrade_name">Name</string>
     <string name="subject">Fächer</string>
     <string name="achieved_grade">Erreichte Note</string>
-    <string name="factor">Faktor</string>
+    <string name="factor">Gewichtung</string>
     <string name="date">Datum</string>
     <string name="save">Speichern</string>
     <string name="round">Runden auf</string>
@@ -69,8 +69,8 @@
     <string name="iconSettings">Einstellungen</string>
     <string name="addnewgrade">Neues Fach eintragen</string>
     <string name="subjectname">Fachname</string>
-    <string name="subjectfactor">Fach Faktor wie z.B. 100 = 1</string>
-    <string name="testfactor">Prüfungsfaktor wie z.B. 100 = 1</string>
+    <string name="subjectfactor">Wie viel % zählt dieses Fach? Standard: 100%</string>
+    <string name="testfactor">Wie viel % zählt diese Prüfung? Standard: 100%</string>
     <string name="testname">Prüfungsname</string>
     <string name="splash.text">Notenrechner</string>
     <string name="premiumForCalendar">Für die Funktion Prüfungserrinerung brauchst du die Premium-Edition!</string>

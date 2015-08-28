@@ -101,8 +101,6 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        Parse.initialize(getBaseContext(), "tDb5Zw7Tvh7QxU5cU5AjulmP8Uk9NBgREYDaP41W", "KRVun9zyKtDOFaCLUsyEJ3Qofrg0t0OmsyebuCNi");
-        ParseInstallation.getCurrentInstallation().saveInBackground();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         deviceId = Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         toolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -206,8 +204,9 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
             bp.release();
 
         super.onDestroy();
+        db.close();
+        dbs.close();
         mHandler.getLooper().quit();
-        mHandlerMain.getLooper().quit();
     }
 
 
