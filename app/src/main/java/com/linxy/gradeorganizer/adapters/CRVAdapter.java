@@ -1,5 +1,6 @@
 package com.linxy.gradeorganizer.adapters;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -28,30 +29,27 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
 
     public static class CalendarViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         CardView cvMain;
-        CardView cvIcon;
         CardView cvDelete;
         TextView tvSubjectName;
         TextView tvExamName;
         TextView tvDateDay;
         TextView tvDateMonth;
         TextView tvWeekDay;
-        ImageButton imgbtnAlarm;
         ImageButton imgbtnDelete;
+
+        Context mContext;
 
         public CalendarViewHolder(View v) {
             super(v);
 
             cvMain = (CardView) v.findViewById(R.id.cvMain);
-            cvIcon = (CardView) v.findViewById(R.id.cvAlarm);
             cvDelete = (CardView) v.findViewById(R.id.cvDelete);
             tvSubjectName = (TextView) v.findViewById(R.id.tvSubjectname);
             tvExamName = (TextView) v.findViewById(R.id.tvGradename);
             tvDateDay = (TextView) v.findViewById(R.id.tvDateDay);
             tvDateMonth = (TextView) v.findViewById(R.id.tvDateMonth);
             tvWeekDay = (TextView) v.findViewById(R.id.tvWeekday);
-            imgbtnAlarm = (ImageButton) v.findViewById(R.id.imgbtnAddNotification);
             imgbtnDelete = (ImageButton) v.findViewById(R.id.imgbtnDeleteSceduledExam);
-            imgbtnAlarm.setOnClickListener(this);
             imgbtnDelete.setOnClickListener(this);
         }
 
@@ -62,9 +60,10 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
     }
 
     List<CalendarFragment.Date> dates;
-
-    public CRVAdapter(List<CalendarFragment.Date> dates) {
+    Context mContext;
+    public CRVAdapter(List<CalendarFragment.Date> dates, Context context) {
         this.dates = dates;
+        mContext = context;
     }
 
     public void setOnItemClickListener(MyCalClickListener myCalClickListener) {
@@ -124,32 +123,17 @@ public class CRVAdapter extends RecyclerView.Adapter<CRVAdapter.CalendarViewHold
 
 
 
-        String color = monthBackground(convertedDate.getMonth());
-        calendarViewHolder.cvIcon.setCardBackgroundColor(Color.parseColor(color));
-        calendarViewHolder.cvMain.setCardBackgroundColor(Color.parseColor(color));
-        calendarViewHolder.cvDelete.setCardBackgroundColor(Color.parseColor(color));
+        int color = monthBackground(monthInt);
+        calendarViewHolder.cvMain.setCardBackgroundColor(color);
+        calendarViewHolder.cvDelete.setCardBackgroundColor(color);
 
     }
 
-    private String monthBackground(int month) {
-        Log.i("DEBUG", "MonthBackground"); // Doesnt Happen
+    private int monthBackground(int month) {
 
-        String colors[] =  {
-                    "#2196F3", // January
-                    "#00BCD4", // Febuary
-                    "#009688", // March
-                    "#8BC34A", // April
-                    "#4CAF50", // May
-                    "#FFEB3B", // June
-                    "#FFA000", // July
-                    "#FF5722", // August
-                    "#FBC02D", // September
-                    "#FFE0B2", // October
-                    "#607D8B", // November
-                    "#673AB7" // December
-        };
+        int[] calendar_colors = mContext.getResources().getIntArray(R.array.calendar_colors);
 
-        return colors[month];
+        return calendar_colors[month];
     }
 
 

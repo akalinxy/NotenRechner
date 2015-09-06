@@ -25,14 +25,14 @@
     <string name="drawerGradeAverage">Notenübersicht</string>
     <string name="drawerCalendar">Prüfungskalender</string>
     <string name="drawerSubjects">Fächer</string>
-    <string name="drawerShop">Premium</string>
+    <string name="drawerShop">Keine Werbung</string>
     <string name="drawerSettings">Einstellungen</string>
 
     <!-- TITLE OF DRAWER FRAGMENTS -->
     <string name="fragmentGradeAverage">Notenrechner</string>
-    <string name="fragmentGradeCalendar">Prüfungserrinerung</string>
+    <string name="fragmentGradeCalendar">Prüfungskalender</string>
     <string name="fragmentSubjects">Fächer</string>
-    <string name="fragmentShop">Premium</string>
+    <string name="fragmentShop">Shop</string>
     <string name="fragmentSettings">Einstellungen</string>
 
 
@@ -75,7 +75,7 @@
     <string name="splash.text">Notenrechner</string>
     <string name="premiumForCalendar">Für die Funktion Prüfungserrinerung brauchst du die Premium-Edition!</string>
     <string name="fillAllFields">Fülle bitte alle Felder aus!</string>
-    <string name="premiumTitle">Premium</string>
+    <string name="premiumTitle">Keine Werbung</string>
     <string name="premiumSubtitle">1.50 CHF</string>
     <string name="premiumBuyNow">Jetzt kaufen</string>
     <string name="registerExam">Prüfung eintragen</string>
@@ -93,6 +93,7 @@
     <string name="number7">7</string>
     <string name="number8">8</string>
     <string name="number9">9</string>
+    <string name="faction_in_percent">Gewichtung in %</string>
 
     <string name="gradecalculator">Notenrechner</string>
     <string name="grade_calendar">Prüfungserinnerung</string>
@@ -131,4 +132,9 @@
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
+    <string name="text_premium_price">0.99 CHF</string>
+    <string name="billing_success">Einkauf Erfolgreich</string>
+    <string name="billing_fail">Einkauf Fehlgeschlagen</string>
+    <string name="dlg_new_subject">Neues Fach Eintragen</string>
+    <string name="dlg_add_subject">Fach Hinzufügen</string>
 </resources>

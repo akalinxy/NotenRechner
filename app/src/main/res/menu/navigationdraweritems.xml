@@ -2,9 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.hmkcode.mongoz.MainActivity" >
+    tools:context="com.hmkcode.mongoz.MainActivity"
+    >
 
-    <group android:checkableBehavior="all">
+    <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/navitem_gradeaverage"
             android:icon="@drawable/icon_home"
@@ -25,8 +27,5 @@
             android:id="@+id/navitem_settings"
             android:icon="@drawable/icon_setting"
             android:title="@string/drawerSettings"/>
-
-
-
     </group>
 </menu>

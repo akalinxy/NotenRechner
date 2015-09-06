@@ -132,7 +132,6 @@ public class SubjectsFragment extends Fragment {
     final View.OnClickListener FabClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (StartupActivity.PREMIUM == true || basicCount()) {
 
                 LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
                 View dialogView = layoutInflater.inflate(R.layout.dialog_newsubject, null);
@@ -144,8 +143,8 @@ public class SubjectsFragment extends Fragment {
                 final EditText etSubjectName = (EditText) dialogView.findViewById(R.id.add_new_grade_name);
                 final EditText etSubjectFactor = (EditText) dialogView.findViewById(R.id.factor_new_grade);
 
-                builder.setTitle("Neues Fach Eintragen"); // TODO MAKE STRING REFERENCE
-                builder.setPositiveButton("Add Subject", new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
+                builder.setTitle(R.string.dlg_new_subject); // TODO MAKE STRING REFERENCE
+                builder.setPositiveButton(R.string.dlg_add_subject, new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -181,7 +180,7 @@ public class SubjectsFragment extends Fragment {
 
                 });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -191,20 +190,10 @@ public class SubjectsFragment extends Fragment {
                 dialog = builder.create();
                 dialog.show();
 
-
-            } else {
-                Toast.makeText(v.getContext(), getResources().getString(R.string.premiumForMoreSubjects), Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE */
-            }
-
         }
 
 
     };
-
-    private boolean basicCount(){
-        Cursor cursor = myDB.getAllData();
-        return (cursor.getCount() < 12);
-    }
 
 
     public void viewAll() {

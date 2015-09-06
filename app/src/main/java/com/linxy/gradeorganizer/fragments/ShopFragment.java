@@ -23,13 +23,11 @@ public class ShopFragment extends Fragment {
     public static final String TAG = ShopFragment.class.getSimpleName();
 
 
-    private CardView cvPremium;
     private CardView cvNotPremium;
     private Button buttonBuy;
     private boolean hasPremium = false;
 
     Activity activity;
-    BuyPremiumButtonClick buyPremium;
 
     public static ShopFragment getInstance(){
         return new ShopFragment();
@@ -39,7 +37,6 @@ public class ShopFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_shop, container, false);
-        cvPremium = (CardView) v.findViewById(R.id.cardview_premiumpurchased);
         cvNotPremium = (CardView) v.findViewById(R.id.cardview_premiumunpurchased);
         buttonBuy = (Button) v.findViewById(R.id.buyPremium);
 
@@ -55,11 +52,8 @@ public class ShopFragment extends Fragment {
 
         if(hasPremium){
             cvNotPremium.setVisibility(View.GONE);
-            cvPremium.setVisibility(View.VISIBLE);
-
         } else {
             cvNotPremium.setVisibility(View.VISIBLE);
-            cvPremium.setVisibility(View.GONE);
         }
         return v;
     }
@@ -71,7 +65,7 @@ public class ShopFragment extends Fragment {
     }
 
     public interface BuyPremiumButtonClick {
-        public void OnPremiumClick();
+         void OnPremiumClick();
     }
 
 }

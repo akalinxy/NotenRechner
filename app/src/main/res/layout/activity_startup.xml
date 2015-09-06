@@ -77,12 +77,13 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"
+        android:background="#455A64"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
+        android:layout_gravity="left"
         app:headerLayout="@layout/nav_header"
-        app:itemIconTint="#3f4448"
-        app:itemTextColor="#82888c"
+        app:itemIconTint="@color/state_list"
+        app:itemTextColor="@color/state_list"
         app:menu="@menu/navigationdraweritems" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -58,7 +58,7 @@
         android:layout_weight="1"
         card_view:cardBackgroundColor="@color/ColorPrimary"
         card_view:cardCornerRadius="2dp"
-        card_view:cardElevation="0dp">
+        card_view:cardElevation="4dp">
 
         <LinearLayout
             android:id="@+id/cv_BackgroundCard"
@@ -116,40 +116,36 @@
             android:background="@android:color/transparent"
             />
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/cvAlarm"
-            android:layout_alignParentBottom="true"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="0"
-            android:layout_gravity="bottom"
-            card_view:cardBackgroundColor="@color/ColorPrimary"
-            card_view:cardCornerRadius="4dp"
-            card_view:cardElevation="0dp">
+        <!--<android.support.v7.widget.CardView-->
+            <!--android:id="@+id/cvAlarm"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:layout_width="30dp"-->
+            <!--android:layout_height="30dp"-->
+            <!--android:layout_marginBottom="8dp"-->
+            <!--android:layout_marginLeft="4dp"-->
+            <!--android:layout_marginRight="8dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:layout_weight="0"-->
+            <!--android:layout_gravity="bottom"-->
+            <!--card_view:cardBackgroundColor="@color/ColorPrimary"-->
+            <!--card_view:cardCornerRadius="4dp"-->
+            <!--card_view:cardElevation="3dp">-->
 
-            <ImageButton
-                android:padding="4dp"
-                android:id="@+id/imgbtnAddNotification"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:scaleType="centerInside"
-                android:background="@null"
-                android:src="@drawable/icon_whitealarm" />
-
-
-
-
-        </android.support.v7.widget.CardView>
+            <!--<ImageButton-->
+                <!--android:padding="4dp"-->
+                <!--android:id="@+id/imgbtnAddNotification"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_weight="1"-->
+                <!--android:scaleType="centerInside"-->
+                <!--android:background="@null"-->
+                <!--android:src="@drawable/icon_whitealarm" />-->
+        <!--</android.support.v7.widget.CardView>-->
 
         <android.support.v7.widget.CardView
             android:id="@+id/cvDelete"
-            android:layout_above="@+id/cvAlarm"
+            android:layout_centerInParent="true"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="0dp"

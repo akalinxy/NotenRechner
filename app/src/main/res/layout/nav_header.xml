@@ -2,35 +2,22 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header_view"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
-    android:background="#455A64"
-    android:gravity="top"
-    android:orientation="vertical"
-    android:paddingTop="0dp">
+    android:layout_height="150dp"
+    android:background="@color/ColorYellow"
+    >
 
-
-    <com.db.chart.view.LineChartView
-        xmlns:chart="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/linechart"
-        android:layout_width="match_parent"
-        android:layout_height="124dp"
-        android:layout_marginTop="24dp" />
-
-    <ImageView
-        android:id="@+id/overlay_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
     <TextView
+        android:paddingTop="20dp"
+        android:layout_centerVertical="true"
         android:id="@+id/navTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linechart"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:text=""
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="@color/WhiteColor"
-        android:textStyle="bold" />
+        android:textSize="24sp"
+        android:textColor="#212121"
+        android:text="Notenrechner"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textStyle="normal" />
 
 </RelativeLayout>

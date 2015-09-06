@@ -51,19 +51,17 @@ import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 
 
-public class StartupActivity extends ActionBarActivity implements ShopFragment.BuyPremiumButtonClick,TabbedFragment.OnTabChange, BillingProcessor.IBillingHandler, Handler.Callback {
+public class StartupActivity extends ActionBarActivity implements ShopFragment.BuyPremiumButtonClick, TabbedFragment.OnTabChange, BillingProcessor.IBillingHandler, Handler.Callback {
 
     /* Constants */
     public static final int DATABASE_UPLOAD_GRADE = 1;
-    public static final int DATABASE_CREATE_CHART = 2;
-    public static final int UI_DRAW_CHART = 3;
     private static final String TAG = "StartupActivity";
     private static final String ITEM_SKU = "purchase_premium";
     public static final String PREFS = "PrefFile";
 
     /* Instance Variables*/
     private boolean toolbarScroll;
-    private String deviceId;
+    public static  String deviceId;
     public static boolean PREMIUM;
 
     /* View Components */
@@ -87,14 +85,11 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
     InterstitialAd mIntersitialAd;
 
     /* Navigation Drawer */
-    private LineChartView chart;
-    private LineSet dataset;
+
 
     /* Multithreading */
     private Handler mHandler;
     private Handler mHandlerMain;
-
-
 
 
     @Override
@@ -118,23 +113,11 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
         mNavigationView.setNavigationItemSelectedListener(navigationListener);
 
-
-        navTitle = (TextView) findViewById(R.id.navTitle);
-        if (PREMIUM) {
-            navTitle.setText("Notenrechner Premium");
-        } else {
-            navTitle.setText("Notenrechner Basic");
-        }
-
         mHandlerMain = new Handler(getMainLooper(), this);
 
         HandlerThread handlerThread = new HandlerThread("Background Thread");
         handlerThread.start();
         mHandler = new Handler(handlerThread.getLooper(), this);
-
-
-        sendMessage(null, DATABASE_CREATE_CHART);
-        Message.obtain(mHandlerMain, UI_DRAW_CHART).sendToTarget();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, TabbedFragment.getInstance(), TabbedFragment.TAG).commit();
 
@@ -148,27 +131,15 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
             case DATABASE_UPLOAD_GRADE:
                 Log.i(TAG, "Uploading Grade on Seperate Thread");
                 uploadGradeToDatabase((Grade) msg.obj);
-
-                break;
-            case DATABASE_CREATE_CHART:
-                Log.i(TAG, "Creating Chart on Seperate Thread");
-                initDataset();
-                break;
-            case UI_DRAW_CHART:
-                createChart();
-                chart.addData(dataset);
-                chart.show();
                 break;
         }
 
-        // Recycle the object
 //        msg.recycle();
         return true;
     }
 
     private void uploadGradeToDatabase(Grade grade) {
         db.insertData(grade.getSubject(), grade.getName(), String.valueOf(grade.getGrade()), String.valueOf(grade.getFactor()), grade.getDate());
-
         ParseObject gradeObject = new ParseObject("Grades");
         gradeObject.put("deviceid", deviceId);
         gradeObject.put("gradesubject", grade.getSubject());
@@ -222,9 +193,8 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
         /*
          * Called when requested PRODUCT ID was successfully purchased
          */
-        Toast.makeText(this, "Purchase Successful", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.billing_success, Toast.LENGTH_SHORT).show();
         PREMIUM = true;
-        navTitle.setText("Notenrechner Premium");
     }
 
     @Override
@@ -232,7 +202,7 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
         /*
          * Called when some error occurred. See Constants class for more details
          */
-        Toast.makeText(this, "Purchase Fail", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.billing_fail, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -324,40 +294,11 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
     }
 
 
-    private void initDataset() {
-        dataset = new LineSet();
-        Cursor c = db.getAllData();
-        while (c.moveToNext()) {
-            dataset.addPoint(new Point("gradepoint", Float.valueOf(c.getString(3))));
-        }
-        c.close();
-        dataset.setColor(getResources().getColor(R.color.ColorYellow));
-        dataset.setThickness(20);
-    }
-
-    private void createChart() {
-        chart = (LineChartView) findViewById(R.id.linechart);
-        chart.dismiss();
-        Paint paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.ColorFlatRed));
-        paint.setStrokeWidth(15);
-        chart.setThresholdLine(4, paint);
-
-        chart.setYLabels(AxisController.LabelPosition.NONE);
-        chart.setXLabels(AxisController.LabelPosition.NONE);
-        chart.setXAxis(false);
-        chart.setYAxis(false);
-        Log.i(TAG, "FIX");
-
-    }
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (!bp.handleActivityResult(requestCode, resultCode, intent)) {
             super.onActivityResult(requestCode, resultCode, intent);
             if (requestCode == 2) {
-                Log.i(TAG, "Inside RequestCode == 2");
                 if (resultCode == Activity.RESULT_OK) {
                     String subjectname = intent.getStringExtra("subjectname");
                     String gradename = intent.getStringExtra("gradename");
@@ -366,21 +307,8 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
                     String gradedate = intent.getStringExtra("gradedate");
 
                     sendMessage(new Grade(subjectname, gradename, Double.valueOf(grade), Integer.valueOf(gradefactor), gradedate), DATABASE_UPLOAD_GRADE);
-                    sendMessage(null, DATABASE_CREATE_CHART);
-                    Message.obtain(mHandlerMain, UI_DRAW_CHART).sendToTarget();
-
-
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Fragment fragmentTabbed = (TabbedFragment) getSupportFragmentManager().findFragmentByTag(TabbedFragment.TAG);
-//                            Log.i(TAG, "Fragment F assigned: " + fragmentTabbed.getTag());
-//                            ((TabbedFragment) fragmentTabbed).refreshFragment();
-//                        }
-//                    }, 500);
 
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, TabbedFragment.getInstance(), TabbedFragment.TAG).commit();
-
 
 
                     if (resultCode == Activity.RESULT_CANCELED) {
@@ -396,8 +324,10 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
         @Override
         public boolean onNavigationItemSelected(MenuItem menuItem) {
             Fragment f;
+            menuItem.setChecked(true);
             switch (menuItem.getItemId()) {
                 case R.id.navitem_gradeaverage:
+
                     f = getSupportFragmentManager().findFragmentByTag(TabbedFragment.TAG);
                     if (!(f != null && f instanceof TabbedFragment)) {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, TabbedFragment.getInstance(), TabbedFragment.TAG).commit();
@@ -412,7 +342,8 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
                     Drawer.closeDrawers();
                     break;
                 case R.id.navitem_gradecalendar:
-                    if (PREMIUM) {
+
+
                         f = getSupportFragmentManager().findFragmentByTag(CalendarFragment.TAG);
                         if (!(f != null && f instanceof CalendarFragment)) {
                             if (toolbarScroll) {
@@ -426,13 +357,14 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
                             fabAddSubject.setVisibility(View.GONE);
                             appBarLayout.expandToolbar();
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, CalendarFragment.getInstance(), CalendarFragment.TAG).commit();
-                        }
+
                         Drawer.closeDrawers();
                     } else {
                         Toast.makeText(StartupActivity.this, getResources().getString(R.string.premiumForCalendar), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.navitem_subjects:
+
                     f = getSupportFragmentManager().findFragmentByTag(SubjectsFragment.TAG);
                     if (!(f != null && f instanceof SubjectsFragment)) {
                         if (toolbarScroll) {
@@ -450,6 +382,7 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
                     Drawer.closeDrawers();
                     break;
                 case R.id.navitem_shop:
+
                     f = getSupportFragmentManager().findFragmentByTag(ShopFragment.TAG);
                     if (!(f != null && f instanceof ShopFragment)) {
                         if (toolbarScroll) {
@@ -467,6 +400,7 @@ public class StartupActivity extends ActionBarActivity implements ShopFragment.B
                     Drawer.closeDrawers();
                     break;
                 case R.id.navitem_settings:
+
                     f = getSupportFragmentManager().findFragmentByTag(PreferenceFragment.TAG);
                     if (!(f != null && f instanceof PreferenceFragment)) {
                         if (toolbarScroll) {

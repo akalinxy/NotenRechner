@@ -1,16 +1,11 @@
 package com.linxy.gradeorganizer.fragments;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,14 +17,14 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.linxy.gradeorganizer.utility.NotificationPublisher;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.activities.RegisterExamActivity;
+import com.linxy.gradeorganizer.activities.StartupActivity;
 import com.linxy.gradeorganizer.adapters.CRVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperCalendar;
 import com.linxy.gradeorganizer.utility.MyRecyclerScroll;
+import com.parse.ParseObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -124,7 +119,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         rvCalDates.setLayoutManager(linearLayoutManager);
 
         dates = new ArrayList<>();
-        adapter = new CRVAdapter(dates);
+        adapter = new CRVAdapter(dates, getActivity().getBaseContext());
         adapter.setOnItemClickListener(this);
         fillDates();
         Collections.sort(dates);
@@ -158,74 +153,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onItemClick(final int position, View v) {
         switch (v.getId()) {
-            case R.id.imgbtnAddNotification:
-                Toast.makeText(getActivity().getBaseContext(), "Diese feature ist noch nicht implementiert!", Toast.LENGTH_SHORT).show();
-//                dateSelected = false;
-//                LayoutInflater li = LayoutInflater.from(v.getContext());
-//                View dialogView = li.inflate(R.layout.popup_schedulenotification, null);
-//
-//                AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-//                AlertDialog dialog1;
-//                builder1.setView(dialogView);
-//                builder1.setTitle("Errinerung Setzern"); /* TODO MAKE STRING REFERENCE FOR THIS */
-//
-//                final MaterialCalendarView mcvScheduledNotification = (MaterialCalendarView) dialogView.findViewById(R.id.scheduleCalendar);
-//
-//
-//                final java.util.Date today = new java.util.Date();
-//                today.setDate(today.getDate());
-//                today.setHours(0);
-//
-//                java.util.Date dayofexam = dates.get(position).date;
-//
-//
-//                mcvScheduledNotification.setMinimumDate(today);
-//                mcvScheduledNotification.setMaximumDate(dayofexam);
-//                mcvScheduledNotification.setOnDateChangedListener(new OnDateChangedListener() {
-//                    @Override
-//                    public void onDateChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
-//                        dateSelected = true;
-//                    }
-//                });
-//
-//                builder1.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        /* Create the Notification */
-//                        if (dateSelected) {
-//                            Calendar startDate = Calendar.getInstance();
-//                            Calendar endDate = mcvScheduledNotification.getSelectedDate().getCalendar();
-//                            long days = daysBetween(startDate, endDate);
-//                            Log.i("DAYS", String.valueOf(days));
-//
-//                            long millis = TimeUnit.DAYS.toMillis(days);
-//
-//                            scheduleNotification(getNotification(dates.get(position).dateSubjectName + "\n" + dates.get(position).dateGradeName), millis);  /* TODO MAKE THIS WORK */
-//                            Log.i("TIMEDATE: ", String.valueOf(millis));
-//                            DatabaseHelperScheduled db = new DatabaseHelperScheduled(getActivity().getBaseContext());
-//                            db.insertData(endDate.get(Calendar.DAY_OF_WEEK)+"."+endDate.get(Calendar.MONTH) + 1+"."+endDate.get(Calendar.YEAR), dates.get(position).dateSubjectName, dates.get(position).dateGradeName);
-//                            db.close();
-//
-//
-//                        } else {
-//                            Toast.makeText(getActivity().getBaseContext(), "Error, must select date!", Toast.LENGTH_SHORT).show(); /* TODO MAKE STRING REFERENCE FOR ERROR MUST SELECT DATE */
-//
-//                        }
-//                    }
-//                });
-//
-//                builder1.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.cancel();
-//                    }
-//                });
-//
-//                dialog1 = builder1.create();
-//                dialog1.show();
 
-
-                break;
             case R.id.imgbtnDeleteSceduledExam:
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -276,25 +204,7 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
         return daysBetween;
     }
 
-    private void scheduleNotification(Notification notification, long delay) {
-        Intent notificationIntent = new Intent(getActivity().getBaseContext(), NotificationPublisher.class);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
-        notificationIntent.putExtra(NotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity().getBaseContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
-
-    }
-
-    private Notification getNotification(String content) {
-        Notification.Builder builder = new Notification.Builder(getActivity().getBaseContext());
-        builder.setContentTitle("Prufing Errinerung"); /* TODO MAKE STRING REFERENCE FOR REMEMBER TEST */
-        builder.setContentTitle(content);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
-        return builder.build();
-    }
 
     @Override
     public void onAttach(Activity activity) {
@@ -312,6 +222,14 @@ public class CalendarFragment extends Fragment implements View.OnClickListener, 
                 String examfactor = data.getStringExtra("examfactor");
                 String examdate = data.getStringExtra("examdate");
                 Log.i("DebugResult", "Data inserted :" + subjectname + examname + examfactor + examdate);
+
+                ParseObject calOb = new ParseObject("TestCalendar");
+                calOb.put("deviceId", StartupActivity.deviceId);
+                calOb.put("subjectName", subjectname);
+                calOb.put("examName", examname);
+                calOb.put("examfactor", examfactor);
+                calOb.put("ExamDate", examdate);
+                calOb.saveInBackground();
 
                 dbc.insertData(subjectname, examname, examfactor, examdate);
                 dbc.close();

@@ -19,4 +19,36 @@
     <color name="mdtp_accent_color">#F44336</color>
     <color name="mdtp_accent_color_dark">#F44336</color>
 
+    <!-- Calendar Colors -->
+    <color name="color_jan">#3F51B5</color>
+    <color name="color_feb">#00BCD4</color>
+    <color name="color_mar">#009688</color>
+    <color name="color_apr">#8BC34A</color>
+    <color name="color_may">#FF9800</color>
+    <color name="color_jun">#FF5722</color>
+    <color name="color_jul">#F44336</color>
+    <color name="color_aug">#4CAF50</color>
+    <color name="color_sep">#673AB7</color>
+    <color name="color_oct">#9C27B0</color>
+    <color name="color_nov">#3F51B5</color>
+    <color name="color_dec">#2196F3</color>
+    
+    <array name="calendar_colors">
+        <item>@color/color_jan</item>
+        <item>@color/color_feb</item>
+        <item>@color/color_mar</item>
+        <item>@color/color_apr</item>
+        <item>@color/color_may</item>
+        <item>@color/color_jun</item>
+        <item>@color/color_jul</item>
+        <item>@color/color_aug</item>
+        <item>@color/color_sep</item>
+        <item>@color/color_oct</item>
+        <item>@color/color_nov</item>
+        <item>@color/color_dec</item>
+
+    </array>
+
+
+
 </resources>
