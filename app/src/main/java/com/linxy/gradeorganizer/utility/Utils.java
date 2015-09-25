@@ -21,6 +21,6 @@ public class Utils {
     }
 
     public static int getTabsHeight(Context context) {
-        return (int) context.getResources().getDimension(R.dimen.tabsHeight);
+        return (int) context.getResources().getDimension(R.dimen.tab_max_width);
     }
 }

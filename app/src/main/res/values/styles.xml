@@ -1,19 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorControlHighlight">@color/ColorYellow</item>
-        <item name="colorPrimary">@color/ColorPrimary</item>
-        <item name="colorPrimaryDark">@color/ColorPrimaryDark</item>
-        <item name="android:textColorPrimary">@color/WhiteColor</item>
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
-
-    </style>
-
-    <style name="AppTheme.CustomTheme">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="colorPrimary">@color/color.primary</item>
+        <item name="colorPrimaryDark">@color/color.primary.dark</item>
 
     </style>
 
@@ -22,15 +13,17 @@
         <item name="android:textColorHint">#9E9E9E</item>
         <item name="android:textSize">20sp</item>
         //Label color in True State And Bar Color False And True State
-        <item name="colorAccent">@color/ColorYellow</item>
+        <item name="colorAccent">@color/color.accent.yellow</item>
         <item name="colorControlNormal">#616161</item>
-        <item name="colorControlActivated">@color/ColorYellow</item>
+        <item name="colorControlActivated">@color/color.accent</item>
     </style>
 
-    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabSelectedTextColor">@color/WhiteColor</item>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
-
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

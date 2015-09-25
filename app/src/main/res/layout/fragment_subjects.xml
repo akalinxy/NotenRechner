@@ -9,66 +9,9 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    android:fitsSystemWindows="true"
 
     tools:context="com.linxy.gradeorganizer.EditSubjectsActivity">
 
-    <!--<android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        />-->
-
-    <!--<ListView-->
-    <!--android:id="@+id/edit_subjects_list_view"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent" />-->
-
-
-    <!--<LinearLayout-->
-        <!-- -->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:columnCount="3"-->
-        <!--android:padding="8dp"-->
-        <!--android:elevation="4dp"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:useDefaultMargins="true"-->
-        <!--android:layout_marginBottom="4dp"-->
-        <!--android:rowCount="1"-->
-        <!-- -->
-        <!-->-->
-
-        <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="fill"-->
-            <!--android:layout_weight="1"-->
-            <!--/>-->
-
-        <!--<TextView-->
-            <!--android:layout_width="0dp"-->
-            <!--android:gravity="center"-->
-            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-            <!--android:textStyle="bold"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="fill"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="@string/factor" />-->
-
-        <!--<TextView-->
-            <!--android:layout_gravity="fill"-->
-            <!--android:gravity="center"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
-            <!--android:textStyle="bold"-->
-            <!--android:layout_weight="1"-->
-            <!--android:text="@string/delete" />-->
-
-
-    <!--</LinearLayout>-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view2"
@@ -99,7 +42,7 @@
         android:layout_marginRight="16dp"
         android:elevation="8dp"
         android:src="@drawable/ic_add_white_48dp"
-        app:backgroundTint="@color/ColorYellow"
+        app:backgroundTint="@color/color.accent"
         app:borderWidth="0dp"
          />
 

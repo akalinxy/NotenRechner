@@ -1,17 +1,18 @@
 package com.linxy.gradeorganizer.fragments;
 
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+
 import com.linxy.gradeorganizer.R;
 
 
@@ -24,19 +25,17 @@ import android.content.DialogInterface;
 import android.database.Cursor;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.view.MenuItem;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.linxy.gradeorganizer.activities.StartupActivity;
+import com.linxy.gradeorganizer.activities.SubjectDetailActivity;
 import com.linxy.gradeorganizer.adapters.RVAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.objects.Subject;
 import com.linxy.gradeorganizer.utility.MyRecyclerScroll;
 import com.parse.ParseObject;
 
@@ -46,86 +45,57 @@ import java.util.List;
 
 public class SubjectsFragment extends Fragment {
 
+    public static final String GRADE_OBJECT_TAG = "gradeobj";
     public static final String TAG = SubjectsFragment.class.getSimpleName();
-    RecyclerView recyclerView;
-    DatabaseHelperSubjects myDB;
-    DatabaseHelper db;
-    private FloatingActionButton fab;
+    RecyclerView mRecyclerView;
+    private FloatingActionButton mNewSubject;
     private String deviceId;
+    private DatabaseHelperSubjects mDatabaseHelperSubjects;
+    RVAdapter mAdapter;
 
+    private ArrayList<Subject> mSubjects;
 
-    private String m_text;
-
-    private List<Subject> subjects;
-
-
-    public class Subject {
-        public String subjectid;
-        public String subjectname;
-        public String subjectfactor;
-
-        Subject(String subjectid, String subjectname, String subjectfactor) {
-            this.subjectid = subjectid;
-            this.subjectname = subjectname;
-            this.subjectfactor = subjectfactor;
-        }
-    }
-
-    RVAdapter adapter;
-
-    public static SubjectsFragment getInstance(){
+    public static SubjectsFragment getInstance() {
         return new SubjectsFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_subjects, container, false);
-
-//        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-//        recyclerView.setHasFixedSize(true);
-//
-//        layoutManager = new LinearLayoutManager(this);
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setItemAnimator(new DefaultItemAnimator());
-//
-//        recyclerView.setAdapter(adapter);
-
-        myDB = new DatabaseHelperSubjects(getActivity().getBaseContext());
-        db = new DatabaseHelper(getActivity().getBaseContext());
-
-        fab = (FloatingActionButton) v.findViewById(R.id.fabaddsubject);
-        recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view2);
-        recyclerView.setHasFixedSize(true);
         deviceId = Settings.Secure.getString(getActivity().getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(llm);
+        mNewSubject = (FloatingActionButton) v.findViewById(R.id.fabaddsubject);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.recycler_view2);
+        mRecyclerView.setHasFixedSize(true);
 
-        recyclerView.setOnScrollListener(new MyRecyclerScroll() {
+        mSubjects = new ArrayList<>();
+
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(llm);
+        mAdapter = new RVAdapter(getActivity(), mSubjects);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mDatabaseHelperSubjects = new DatabaseHelperSubjects(getActivity());
+
+        mRecyclerView.setOnScrollListener(new MyRecyclerScroll() {
             @Override
             public void show() {
-                fab.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+                mNewSubject.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
 
             }
 
             @Override
             public void hide() {
-                fab.animate().translationY(fab.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
+                mNewSubject.animate().translationY(mNewSubject.getHeight() + 48).setInterpolator(new AccelerateInterpolator(2)).start();
 
             }
         });
-        viewAll();
-        fab.setOnClickListener(FabClickListener);
+        mNewSubject.setOnClickListener(FabClickListener);
+        mAdapter.setOnItemClickListener(mClickListener);
 
-        AdView mAdView = (AdView) v.findViewById(R.id.AdView);
-        if(StartupActivity.PREMIUM){
-            mAdView.setVisibility(View.GONE);
+        LoadSubjectsTask lst = new LoadSubjectsTask();
+        lst.execute();
 
-        } else {
-            mAdView.setVisibility(View.VISIBLE);
-            AdRequest adRequest = new AdRequest.Builder().build();
-            mAdView.loadAd(adRequest);
-        }
         return v;
     }
 
@@ -133,62 +103,69 @@ public class SubjectsFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
-                LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
-                View dialogView = layoutInflater.inflate(R.layout.dialog_newsubject, null);
+            LayoutInflater layoutInflater = LayoutInflater.from(v.getContext());
+            View dialogView = layoutInflater.inflate(R.layout.dialog_newsubject, null);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                AlertDialog dialog;
-                builder.setView(dialogView);
+            AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            AlertDialog dialog;
+            builder.setView(dialogView);
 
-                final EditText etSubjectName = (EditText) dialogView.findViewById(R.id.add_new_grade_name);
-                final EditText etSubjectFactor = (EditText) dialogView.findViewById(R.id.factor_new_grade);
+            final EditText etSubjectName = (EditText) dialogView.findViewById(R.id.add_new_grade_name);
+            final EditText etSubjectFactor = (EditText) dialogView.findViewById(R.id.factor_new_grade);
 
-                builder.setTitle(R.string.dlg_new_subject); // TODO MAKE STRING REFERENCE
-                builder.setPositiveButton(R.string.dlg_add_subject, new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+
+
+            builder.setTitle(R.string.dlg_new_subject); // TODO MAKE STRING REFERENCE
+            builder.setPositiveButton(R.string.dlg_add_subject, new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
                     /* First make sure that both fields have been filled in */
-                        if (testFieldsNewSubject()) { /* Subject is not blank */
-                            if (myDB.hasObject(etSubjectName.getText().toString())) { /* SubjectName already exists in Database */
-                                Toast.makeText((StartupActivity) getActivity(), getResources().getString(R.string.subjectExists), Toast.LENGTH_SHORT).show();
-                            } else { /* SubjectName is unique. */
+                    if (testFieldsNewSubject()) { /* Subject is not blank */
+                        if (mDatabaseHelperSubjects.hasObject(etSubjectName.getText().toString())) { /* SubjectName already exists in Database */
+                            Toast.makeText((StartupActivity) getActivity(), getResources().getString(R.string.subjectExists), Toast.LENGTH_SHORT).show();
+                        } else { /* SubjectName is unique. */
 
-                                ParseObject subjectObject = new ParseObject("Subjects");
-                                subjectObject.put("deviceId", deviceId);
-                                subjectObject.put("subjectname", etSubjectName.getText().toString());
-                                subjectObject.put("subjectfactor", etSubjectFactor.getText().toString());
-                                subjectObject.saveInBackground();
-                                myDB.insertData(etSubjectName.getText().toString(), etSubjectFactor.getText().toString());
-                                myDB.close();
-                                viewAll();
+                            ParseObject subjectObject = new ParseObject("Subjects");
+                            subjectObject.put("deviceId", deviceId);
+                            subjectObject.put("subjectname", etSubjectName.getText().toString());
+                            subjectObject.put("subjectfactor", etSubjectFactor.getText().toString());
+                            subjectObject.saveInBackground();
 
+                            Subject subject = new Subject(etSubjectName.getText().toString(), Integer.valueOf(etSubjectFactor.getText().toString()), false, getActivity());
 
-                            }
-                        } else {
-                            Toast.makeText((StartupActivity) getActivity(), getResources().getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
+                            InsertSubjectTask insertSubjectTask = new InsertSubjectTask();
+                            insertSubjectTask.execute(subject); // This inserts the subject into the local device database
+
+                            mSubjects.add(subject); // This inserts it directly into the adapter
+                            mAdapter.notifyItemInserted(mSubjects.size());
+
                         }
+                    } else {
+                        Toast.makeText((StartupActivity) getActivity(), getResources().getString(R.string.fillAllFields), Toast.LENGTH_SHORT).show();
                     }
+                    mDatabaseHelperSubjects.close();
+                }
 
-                    private boolean testFieldsNewSubject() {
-                        if (etSubjectName.getText().toString().equals("") | etSubjectName.getText().toString() == null)
-                            return false;
-                        if (etSubjectFactor.getText().toString().equals("") | etSubjectFactor.getText().toString() == null)
-                            return false;
-                        return true;
-                    }
+                private boolean testFieldsNewSubject() {
+                    if (etSubjectName.getText().toString().equals("") | etSubjectName.getText().toString() == null)
+                        return false;
+                    if (etSubjectFactor.getText().toString().equals("") | etSubjectFactor.getText().toString() == null)
+                        return false;
+                    return true;
+                }
 
-                });
+            });
 
-                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() { // TODO MAKE STRING REFERENCE
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
 
-                dialog = builder.create();
-                dialog.show();
+            dialog = builder.create();
+            dialog.show();
 
         }
 
@@ -196,191 +173,62 @@ public class SubjectsFragment extends Fragment {
     };
 
 
-    public void viewAll() {
-
-        Cursor res = myDB.getAllData();
-
-        subjects = new ArrayList<>();
 
 
-        final int selSubIds[] = new int[res.getCount()];
-        final String selSubNames[] = new String[res.getCount()];
-        final int selSubFactors[] = new int[res.getCount()];
-
-
-        int i = 0;
-        while (res.moveToNext()) {
-            subjects.add(new Subject(res.getString(0), res.getString(1), res.getString(2)));
-            selSubIds[i] = Integer.parseInt(res.getString(0));
-            selSubNames[i] = res.getString(1);
-
-            if (res.getString(2).equals("") || res.getString(2) == null) selSubFactors[i] = 0;
-            else
-                selSubFactors[i] = Integer.parseInt(res.getString(2));
-            i++;
+    final RVAdapter.MyClickListener mClickListener = new RVAdapter.MyClickListener() {
+        @Override
+        public void onItemClick(int position, View v) {
+            Log.i(TAG, "ONCLICK");
+            // Launch the Detail Subject Activity
+            Intent intent = new Intent(getActivity(), SubjectDetailActivity.class);
+            intent.putExtra(GRADE_OBJECT_TAG, mSubjects.get(position));
+            startActivity(intent);
         }
-
-        adapter = new RVAdapter(subjects);
-
-//                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.list_view_items, arrayList);
-        recyclerView.setAdapter(adapter);
-
-//                myList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//
-//                        Intent intent = new Intent(getBaseContext(), Popup.class);
-//                        intent.putExtra(Popup.IDX, selSubIds[position]);
-//                        intent.putExtra(Popup.NAMEX, selSubNames[position]);
-//                        intent.putExtra(Popup.FACTORX, selSubFactors[position]);
-//                        startActivity(intent);
-//                    }
-//                });
-
-        ((RVAdapter) adapter).setOnItemClickListener(new RVAdapter.MyClickListener() {
-
-            @Override
-            public void onItemClick(final int position, View view) {
-
-                switch (view.getId()) {
-
-                    case R.id.cv_subject_factor:
+    };
 
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle(R.string.factor);
-                        // Set up the intput
-                        final EditText input = new EditText(getActivity());
-                        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                        input.setMaxLines(1);
-                        input.setText(String.valueOf(selSubFactors[position]));
-                        input.append("");
+    private class LoadSubjectsTask extends AsyncTask<Void, Void, ArrayList<Subject>> {
 
-                        input.setSelection(input.getText().length());
-                        input.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+        @Override
+        protected ArrayList<Subject> doInBackground(Void... params) {
+            ArrayList<Subject> subjects = new ArrayList<>();
 
-                        builder.setView(input);
+            DatabaseHelperSubjects dbHelperSubjects = new DatabaseHelperSubjects(getActivity());
+            Cursor subjectCursor = dbHelperSubjects.getAllData();
 
-                        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                m_text = input.getText().toString();
-
-                                if (!input.getText().toString().equals("") || input.getText().toString() == null) {
-                                    myDB.updateData(String.valueOf(selSubIds[position]), selSubNames[position], input.getText().toString());
-                                    dialog.cancel();
-                                    viewAll();
-                                } else {
-
-                                    showMessage(getResources().getString(R.string.error), getResources().getString(R.string.errorMsgWrongInputNumerical));
-                                }
-
-
-                            }
-                        });
-                        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-
-                        builder.show();
-
-
-                        break;
-                    case R.id.cv_subject_delete:
-                        new AlertDialog.Builder(getActivity())
-                                .setTitle(R.string.delete)
-                                .setMessage(getResources().getString(R.string.deleteSure))// REMEMBER TO ADD A STRING XML FOR THIS
-                                .setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() // AD IN STRIGNS XML
-                                {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        ArrayList<Integer> deleteList = new ArrayList<Integer>();
-                                        Cursor cursor = db.getAllData();
-                                        int i = 0;
-                                        while (cursor.moveToNext()) {
-                                            if (cursor.getString(1).equals(selSubNames[position])) {
-                                                deleteList.add(i, Integer.parseInt(cursor.getString(0)));
-                                            }
-                                        }
-
-                                        for (int s = 0; s < deleteList.size(); s++) {
-                                            db.deleteData(String.valueOf(deleteList.get(s)));
-                                        }
-
-                                        myDB.deleteData(String.valueOf(selSubIds[position]));
-                                        cursor.close();
-                                        viewAll();
-
-
-                                    }
-                                })
-                                .setNegativeButton(getResources().getString(R.string.no), null) // ADD IN STRINGS XML
-                                .show();
-
-                        break;
-
-
-                }
-
+            int i = 0;
+            while (subjectCursor.moveToNext()) {
+                subjects.add(i, new Subject(subjectCursor.getString(1), Integer.parseInt(subjectCursor.getString(2)), false, getActivity()));
+                i++;
             }
-        });
 
-        res.close();
+            dbHelperSubjects.close();
+            subjectCursor.close();
 
-    }
+            return subjects;
+        }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+        @Override
+        protected void onPostExecute(ArrayList<Subject> subjects) {
+            // We have the list of subjects, now we need to update our adapter.
+            mSubjects.clear();
+            for (Subject subject : subjects) {
+                mSubjects.add(subject);
+            }
+            mAdapter.notifyDataSetChanged();
 
-        viewAll();
-
-
-    }
-
-    public static void setMargins(View v, int l, int t, int r, int b) {
-        if (v.getLayoutParams() instanceof RelativeLayout.MarginLayoutParams) {
-            RelativeLayout.MarginLayoutParams p = (RelativeLayout.MarginLayoutParams) v.getLayoutParams();
-            p.setMargins(l, t, r, b);
-            v.requestLayout();
         }
     }
 
-    public void showMessage(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setCancelable(true);
-        builder.setTitle(title);
-        builder.setMessage(message);
-        builder.show();
 
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private class InsertSubjectTask extends AsyncTask<Subject, Void, Void> {
+        @Override
+        protected Void doInBackground(Subject... params) {
+            DatabaseHelperSubjects dbHelperSubjects = new DatabaseHelperSubjects(getActivity());
+            dbHelperSubjects.insertData(params[0].getName(), String.valueOf(params[0].getFactor()));
+            dbHelperSubjects.close();
+            return null;
         }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        myDB.close();
-        myDB.close();
-
     }
 
 

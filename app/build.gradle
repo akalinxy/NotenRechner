@@ -25,16 +25,15 @@ repositories {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.diogobernardino:williamchart:2.0.1'
+    compile 'com.kobakei:ratethisapp:0.0.3'
+    compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
     compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'it.neokree:MaterialTabs:0.11'
     compile 'com.android.support:recyclerview-v7:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.prolificinteractive:material-calendarview:0.7.0'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile fileTree(include: 'Parse-1.9.4.jar', dir: 'libs')
-    compile 'com.google.android.gms:play-services-ads:7.5.0'
     compile files('C:/Users/minel_000/Desktop/a_workspace/NotenRechner/libs/Parse-1.9.4.jar')
 }

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="16dp"
+    card_view:cardElevation="8dp"
+    card_view:cardCornerRadius="2dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/subjectdetail_name"
+            android:text="Prungungsname"
+            android:paddingLeft="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="6dp"
+            android:textSize="24sp"
+            android:textColor="@color/color.black"
+            android:gravity="center_vertical|left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:text="vom 14.2.4"
+            android:id="@+id/subjectdetail_date"
+            android:textColor="@color/color.gray.verymedium"
+            android:paddingLeft="16dp"
+            android:textSize="14sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color.gray.light" />
+
+        <LinearLayout
+            android:layout_marginBottom="4dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:text="@string/grade"
+                android:layout_weight="1"
+                android:textColor="@color/color.gray.verymedium"
+                android:paddingLeft="16dp"
+                android:textSize="14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="4.4"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:id="@+id/subjectdetail_grade"
+                android:gravity="right|center_vertical"
+                android:paddingRight="16dp"
+                android:textColor="@color/color.gray.verymedium"
+                android:paddingLeft="16dp"
+                android:textSize="14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:text="@string/factor"
+                android:layout_weight="1"
+                android:textColor="@color/color.gray.verymedium"
+                android:paddingLeft="16dp"
+                android:textSize="14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:textStyle="bold"
+                android:text="100"
+                android:layout_weight="1"
+                android:id="@+id/subjectdetail_factor"
+                android:gravity="right|center_vertical"
+                android:paddingRight="16dp"
+                android:textColor="@color/color.gray.verymedium"
+                android:paddingLeft="16dp"
+                android:textSize="14sp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color.gray.light" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_weight="1"
+                android:text="@string/edit"
+                android:padding="8dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="@color/color.accent"
+                android:id="@+id/subjectdetail_editgrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_weight="1"
+                android:text="@string/delete"
+                android:padding="8dp"
+                style="?android:attr/borderlessButtonStyle"
+                android:textColor="@color/color.accent"
+                android:id="@+id/subjectdetail_deletegrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+</android.support.v7.widget.CardView>

@@ -77,8 +77,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:mcv_showOtherDates="false"
         app:mcv_tileSize="35dp"
-        app:mcv_arrowColor="@color/ColorPrimaryDark"
-        app:mcv_selectionColor="@color/ColorYellow"
+        app:mcv_arrowColor="@color/color.primary.dark"
+        app:mcv_selectionColor="@color/color.accent.yellow"
         />
 
 

@@ -1,10 +1,12 @@
 package com.linxy.gradeorganizer.objects;
 
+import java.io.Serializable;
+
 /**
  * Created by Linxy on 14/8/2015 at 15:02
  * Working on Grade Organizer in com.linxy.gradeorganizer.objects
  */
-public class Grade {
+public class Grade  { // TODO make this implement parcelable for better performance
     private String subject;
     private String name;
     private double grade;

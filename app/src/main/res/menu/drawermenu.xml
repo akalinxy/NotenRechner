@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+
+            android:checked="false"
+            android:id="@+id/navitem_gradeaverage"
+            android:icon="@drawable/icon_home"
+            android:title="@string/drawerGradeAverage"/>
+        <item
+            android:checked="false"
+
+            android:id="@+id/navitem_gradecalendar"
+            android:icon="@drawable/icon_calendar"
+            android:title="@string/drawerCalendar"/>
+        <item
+            android:checked="false"
+            android:id="@+id/navitem_subjects"
+            android:icon="@drawable/icon_librarybooks"
+            android:title="@string/drawerSubjects"/>
+    </group>
+
+    <group android:checkableBehavior="single"
+        >
+        <item
+            android:checked="false"
+            android:id="@+id/navitem_settings"
+            android:icon="@drawable/icon_setting"
+            android:title="@string/drawerSettings"/>
+    </group>
+</menu>

@@ -13,7 +13,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         app:mcv_showOtherDates="false"
         app:mcv_tileSize="40dp"
-        app:mcv_arrowColor="@color/ColorPrimaryDark"
-        app:mcv_selectionColor="@color/ColorFlatGreen"
+        app:mcv_arrowColor="@color/color.primary.dark"
+        app:mcv_selectionColor="@color/color.green"
         />
 </LinearLayout>

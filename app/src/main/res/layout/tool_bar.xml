@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:elevation="4dp"
     android:id="@+id/app_bar"
-    android:background="@color/ColorPrimary"
+    android:background="@color/color.primary"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 

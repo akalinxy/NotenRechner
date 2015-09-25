@@ -29,7 +29,7 @@
     <string name="drawerSettings">Einstellungen</string>
 
     <!-- TITLE OF DRAWER FRAGMENTS -->
-    <string name="fragmentGradeAverage">Notenrechner</string>
+    <string name="fragmentGradeAverage">Noten Rechner</string>
     <string name="fragmentGradeCalendar">Prüfungskalender</string>
     <string name="fragmentSubjects">Fächer</string>
     <string name="fragmentShop">Shop</string>
@@ -137,4 +137,30 @@
     <string name="billing_fail">Einkauf Fehlgeschlagen</string>
     <string name="dlg_new_subject">Neues Fach Eintragen</string>
     <string name="dlg_add_subject">Fach Hinzufügen</string>
+    <string name="text.navigation">Navigation</string>
+    <string name="rate.message">Wenn euch diese app gefaelt bitte bewertet sie!</string>
+    <string name="rate.title">Bewerte diese App!</string>
+    <string name="title_activity_subject_detail">SubjectDetailActivity</string>
+    <string name="average.card.title">Durchschnitt</string>
+    <string name="average.card.subtitle">Angepasst auf das Schweizer Schulsystem</string>
+
+    <!-- Preference Title -->
+    <string name="pref_tit_roundgrades">Runden</string>
+    <string name="pref_tit_twodigitgrades">2 Stellige Maximalnote</string>
+    <string name="pref_tit_showinsufficient">Mangelpunktee</string>
+
+    <!-- Preference Summary -->
+    <string name="pref_sum_roundgrades">Sollen die noten gerundet werden</string>
+    <string name="pref_sum_twodigitgrades">Ist die note uber 9? dann das anklicken</string>
+    <string name="pref_sum_showinsufficient">Mangelpunkte anzeigen?</string>
+
+    <!-- Preference Key -->
+    <string name="pref_key_roundgrades">key_preference_roundgrades</string>
+    <string name="pref_key_twodigitgrades">key_preference_twodigitgrades</string>
+    <string name="pref_key_showinsufficient">key_preference_showinsufficient</string>
+    <string name="title_activity_preference">PreferenceActivity</string>
+    <string name="text.roundsubjects.true">Facher werdern gerundet</string>
+    <string name="text.roundsubjects.false">Facher werden nicht gerundet</string>
+    <string name="date.from">"vom "</string>
+
 </resources>

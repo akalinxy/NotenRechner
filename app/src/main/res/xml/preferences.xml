@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference
+        android:key="@string/pref_key_roundgrades"
+        android:title="@string/pref_tit_roundgrades"
+        android:summary="@string/pref_sum_roundgrades"
+        />
+
+    <CheckBoxPreference
+        android:key="@string/pref_key_twodigitgrades"
+        android:title="@string/pref_tit_twodigitgrades"
+        android:summary="@string/pref_sum_twodigitgrades"
+        />
+
+    <CheckBoxPreference
+        android:key="@string/pref_key_showinsufficient"
+        android:title="@string/pref_tit_showinsufficient"
+        android:summary="@string/pref_sum_showinsufficient"
+        />
+
+    <!-- TODO add slider for insufficient grades -->
+
+</PreferenceScreen>

@@ -11,6 +11,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -46,7 +47,6 @@ public class NewGradeActivity extends ActionBarActivity {
     EditText inGradeName;
     Spinner inSubjectName;
     EditText inFactor;
-    private String deviceId;
     Button btnCancel;
 
     String grade = "";
@@ -66,7 +66,6 @@ public class NewGradeActivity extends ActionBarActivity {
     Button btnSetGrade;
     private boolean showTwoDigit;
 
-    SharedPreferences prefs;
 
     // Handle Date
     Button btnPickDate;
@@ -89,13 +88,14 @@ public class NewGradeActivity extends ActionBarActivity {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getResources().getColor(R.color.ColorPrimaryDark));
+            window.setStatusBarColor(getResources().getColor(R.color.color_primary));
         }
 
 
-        prefs = getSharedPreferences(StartupActivity.PREFS, 0);
 
-        showTwoDigit = prefs.getBoolean("twodigit", false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        showTwoDigit  = sharedPreferences.getBoolean(getString(R.string.pref_key_twodigitgrades), false);
+
         myDb = new DatabaseHelper(this);
         btnCancel = (Button) findViewById(R.id.ang_cancel);
         mySDb = new DatabaseHelperSubjects(this);
@@ -237,11 +237,11 @@ public class NewGradeActivity extends ActionBarActivity {
 
                 if(!showTwoDigit) {
                     tvBeforeBeforeDecimal.setVisibility(View.GONE);
-                    tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                    tvBeforeDecimal.setTextColor(getResources().getColor(R.color.color_white));
                 }
                 else {
                     tvBeforeBeforeDecimal.setVisibility(View.VISIBLE);
-                    tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                    tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.color_white));
 
                 }
 
@@ -249,7 +249,7 @@ public class NewGradeActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         pos  = 1;
-                        tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                        tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.color_white));
                         tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                         tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                         tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
@@ -262,7 +262,7 @@ public class NewGradeActivity extends ActionBarActivity {
                     public void onClick(View v) {
                         pos = 2;
                         tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
-                        tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                        tvBeforeDecimal.setTextColor(getResources().getColor(R.color.color_white));
                         tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                         tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
 
@@ -275,7 +275,7 @@ public class NewGradeActivity extends ActionBarActivity {
                         pos = 3;
                         tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                         tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
-                        tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                        tvAfteDecimal.setTextColor(getResources().getColor(R.color.color_white));
                         tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                     }
                 });
@@ -287,7 +287,7 @@ public class NewGradeActivity extends ActionBarActivity {
                         tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                         tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                         tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
-                        tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                        tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.color_white));
                     }
                 });
 
@@ -303,7 +303,7 @@ public class NewGradeActivity extends ActionBarActivity {
 
                                 case 1:
                                     tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
-                                    tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                                    tvBeforeDecimal.setTextColor(getResources().getColor(R.color.color_white));
                                     tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                                     tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                                     break;
@@ -311,7 +311,7 @@ public class NewGradeActivity extends ActionBarActivity {
                                 case 2:
                                     tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                                     tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
-                                    tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                                    tvAfteDecimal.setTextColor(getResources().getColor(R.color.color_white));
                                     tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
 
                                     break;
@@ -319,7 +319,7 @@ public class NewGradeActivity extends ActionBarActivity {
                                     tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                                     tvBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
                                     tvAfteDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
-                                    tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.WhiteColor));
+                                    tvAfterAfterDecimal.setTextColor(getResources().getColor(R.color.color_white));
                                     break;
                                 case 4:
                                     tvBeforeBeforeDecimal.setTextColor(getResources().getColor(R.color.WhiteCyan));
@@ -335,9 +335,9 @@ public class NewGradeActivity extends ActionBarActivity {
                                     inGrade.setText(grade);
                                     double d = Double.parseDouble(inGrade.getText().toString());
                                     if(d<4)
-                                        inGrade.setTextColor(getResources().getColor(R.color.ColorFlatRed));
+                                        inGrade.setTextColor(getResources().getColor(R.color.color_red));
                                     else
-                                        inGrade.setTextColor(getResources().getColor(R.color.ColorFlatGreen));
+                                        inGrade.setTextColor(getResources().getColor(R.color.color_green));
                                     dialog.cancel();
 
 
@@ -472,7 +472,7 @@ public class NewGradeActivity extends ActionBarActivity {
         }
 
 
-        if (inGradeName.getText().toString() == null || inGradeName.toString().isEmpty())
+        if (inGradeName.getText().toString() == null || inGradeName.getText().toString().isEmpty())
             return false;
         if (inSubjectName.getSelectedItem().toString() == null || inSubjectName.getSelectedItem().toString().isEmpty())
             return false;

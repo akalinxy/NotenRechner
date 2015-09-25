@@ -94,7 +94,7 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getResources().getColor(R.color.ColorPrimaryDark));
+            window.setStatusBarColor(getResources().getColor(R.color.color_primary_dark));
         }
 
         ArrayList<String> arr = new ArrayList<>();
@@ -110,7 +110,7 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
 
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Alle felder Ausgefüllt", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("Prüfung Eintragen", clickListener);
-        snackbar.setActionTextColor(getResources().getColor(R.color.FlatOrange));
+        snackbar.setActionTextColor(getResources().getColor(R.color.color_orange));
 
 
     }
@@ -118,7 +118,7 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
     private void createSnackbar(){
         snackbar = Snackbar.make(findViewById(android.R.id.content), "Alle felder Ausgefüllt", Snackbar.LENGTH_INDEFINITE);
         snackbar.setAction("Prüfung Eintragen", clickListener);
-        snackbar.setActionTextColor(getResources().getColor(R.color.FlatOrange));
+        snackbar.setActionTextColor(getResources().getColor(R.color.color_orange));
     }
 
     private TextWatcher twTest = new TextWatcher() {
@@ -177,12 +177,6 @@ public class RegisterExamActivity extends ActionBarActivity implements  OnDateCh
         }
     };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_register_exam, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

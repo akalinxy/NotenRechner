@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativelayout_subjectaverage_layout"
+   android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/textview_subjectaverage_name"
+        android:layout_alignParentLeft="true"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/color.gray.verymedium"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/imageview_subjectaverage_icon"
+        android:layout_toLeftOf="@+id/textview_subjectaverage_grade"
+        android:src="@drawable/icon_average"
+        android:scaleType="fitCenter"
+        android:layout_centerVertical="true"
+
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
+
+    <TextView
+        android:textStyle="bold"
+        android:id="@+id/textview_subjectaverage_grade"
+        android:layout_alignParentRight="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="@color/color.gray.verymedium"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:layout_alignBottom="@id/textview_subjectaverage_name"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color.gray.verylight"/>
+
+
+
+</RelativeLayout>

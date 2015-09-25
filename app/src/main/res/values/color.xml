@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ColorPrimary">#2196F3</color>
-    <color name="ColorPrimaryDark">#1976D2</color>
-    <color name="ColorPrimaryLight">#BBDEFB</color>
-    <color name="tabsScrolColor">#FFEB3B</color>
-    <color name="ColorYellow">#FFC107</color>
-    <color name="GrayColor">#B0BEC5</color>
-    <color name="ColorFlatRed">#F44336</color>
-    <color name="ColorFlatGreen">#4CAF50</color>
+
+    <!-- Style Colors -->
+    <color name="color.primary">#2196F3</color>
+    <color name="color.primary.dark">#1976D2</color>
+    <color name="color.primary.light">#B3E5FC</color>
+    <color name="color.accent">#7C4DFF</color>
+    <color name="color.accent.yellow">#FFAB00</color>
+    <color name="color.gray.dark">#212121</color>
+    <color name="color.gray.verymedium">#767676</color>
+    <color name="color.gray.medium">#727272</color>
+    <color name="color.gray.light">#B6B6B6</color>
+    <color name="color.gray.verylight">#E0E0E0</color>
+
+    <!-- Generic Colors -->
+    <color name="color.black">#000000</color>
+    <color name="color.white">#ffffff</color>
+    <color name="color.red">#F44336</color>
+    <color name="color.green">#4CAF50</color>
+    <color name="color.orange">#FF5722</color>
+    <color name="color.yellow.dark">#FFA000</color>
+
+    <!-- Miscellaneous -->
     <color name="Circlebutton">#4503a9f4</color>
     <color name="Cyan">#00BCD4</color>
-    <color name="WhiteColor">@android:color/white</color>
-    <color name="WhiteCyan">#9cdbff</color>
-    <color name="LighGray">#F5F5F5</color>
-    <color name="FlatOrange">#FF5722</color>
-    <color name="DarkOrange">#FFA000</color>
-
     <color name="mdtp_accent_color">#F44336</color>
     <color name="mdtp_accent_color_dark">#F44336</color>
+    <color name="WhiteCyan">#9cdbff</color>
 
     <!-- Calendar Colors -->
     <color name="color_jan">#3F51B5</color>
@@ -46,9 +55,6 @@
         <item>@color/color_oct</item>
         <item>@color/color_nov</item>
         <item>@color/color_dec</item>
-
     </array>
-
-
 
 </resources>
