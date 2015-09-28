@@ -162,5 +162,11 @@
     <string name="text.roundsubjects.true">Facher werdern gerundet</string>
     <string name="text.roundsubjects.false">Facher werden nicht gerundet</string>
     <string name="date.from">"vom "</string>
+    <string name="subject_no_grades_yet">Keine Noten</string>
+    <string name="selected_count">"Anzahl Ausgewaehlt "</string>
+    <string name="subject.factor">Fach Gewichtung</string>
+    <string name="subject.singular">Fach</string>
+    <string name="input.saved">Eingabe Gespeichert.</string>
+    <string name="input.error">Ein Fehler ist Aufgetreten.</string>
 
 </resources>

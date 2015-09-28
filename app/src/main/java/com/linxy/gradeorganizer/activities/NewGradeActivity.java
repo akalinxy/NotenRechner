@@ -14,6 +14,7 @@ import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
+import com.linxy.gradeorganizer.utility.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -66,6 +68,10 @@ public class NewGradeActivity extends ActionBarActivity {
     Button btnSetGrade;
     private boolean showTwoDigit;
 
+    private String mSubjectName = "";
+    private CardView mSubjectSelectCardView;
+
+
 
     // Handle Date
     Button btnPickDate;
@@ -78,11 +84,26 @@ public class NewGradeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_grade);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        mSubjectSelectCardView = (CardView) findViewById(R.id.newgrade_cardview_subjectselect);
 
         mToolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(getResources().getString(R.string.registerExam));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Intent intent = getIntent();
+        if(intent.getStringExtra(Constants.NEWGRADE_SUBJECTSELECT).equals(Constants.ALL_SUBJECTS)){
+            // In this case we want the user to have a selecton of which subject he wants a
+            // grade added.
+            mSubjectSelectCardView.setVisibility(View.VISIBLE);
+            getSupportActionBar().setTitle(getResources().getString(R.string.registerExam));
+        } else {
+            mSubjectName = intent.getStringExtra(Constants.NEWGRADE_SUBJECTSELECT);
+            getSupportActionBar().setTitle(mSubjectName + " " + getString(R.string.registerExam));
+            mSubjectSelectCardView.setVisibility(View.GONE);
+        }
+
+
+
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -117,7 +138,11 @@ public class NewGradeActivity extends ActionBarActivity {
 
                 if (isValid()) {
                     Intent returnIntent = new Intent();
-                    returnIntent.putExtra("subjectname", inSubjectName.getSelectedItem().toString());
+                    if(mSubjectSelectCardView.getVisibility() == View.VISIBLE) {
+                        returnIntent.putExtra("subjectname", inSubjectName.getSelectedItem().toString());
+                    } else {
+                        returnIntent.putExtra("subjectname", mSubjectName);
+                    }
                     returnIntent.putExtra("gradename",  inGradeName.getText().toString());
                     returnIntent.putExtra("grade", inGrade.getText().toString());
                     returnIntent.putExtra("gradefactor", inFactor.getText().toString());
@@ -474,8 +499,11 @@ public class NewGradeActivity extends ActionBarActivity {
 
         if (inGradeName.getText().toString() == null || inGradeName.getText().toString().isEmpty())
             return false;
-        if (inSubjectName.getSelectedItem().toString() == null || inSubjectName.getSelectedItem().toString().isEmpty())
-            return false;
+        if(mSubjectSelectCardView.getVisibility() == View.VISIBLE) {
+            if (inSubjectName.getSelectedItem().toString() == null || inSubjectName.getSelectedItem().toString().isEmpty())
+                return false;
+        }
+
         if (inGrade.getText().toString() == null || inGrade.getText().toString().isEmpty())
             return false;
         if (inFactor.getText().toString() == null || inFactor.getText().toString().isEmpty())

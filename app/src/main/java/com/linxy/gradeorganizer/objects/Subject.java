@@ -58,6 +58,11 @@ public class Subject implements Serializable { // TODO MAKE implement parcelable
 
     public double getInsufficient() {
         if (subjectAverage >= 4) return SUFFICIENT;
+
+        // else
+        if(subjectAverage == NO_AVERAGE) {
+            return -1;
+        }
         return 4.0 - subjectAverage;
     }
 

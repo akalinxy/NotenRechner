@@ -22,6 +22,15 @@ import java.util.List;
 public class AverageAdapter extends RecyclerView.Adapter<AverageAdapter.AverageViewHolder> {
     private List<SubjectGrade> mGrades;
 
+    public interface MySubjectDetailClickListener {
+        public abstract void onClick(int position, View view);
+    }
+    public MySubjectDetailClickListener mClickListener;
+
+    public void setOnClickListener(MySubjectDetailClickListener listener) {
+        mClickListener = listener;
+    }
+
     public AverageAdapter(List<SubjectGrade> grades) {
         mGrades = grades;
     }
@@ -44,7 +53,7 @@ public class AverageAdapter extends RecyclerView.Adapter<AverageAdapter.AverageV
         return mGrades.size();
     }
 
-    public class AverageViewHolder extends RecyclerView.ViewHolder {
+    public class AverageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public RelativeLayout mLayout;
         public TextView mSubjectName;
@@ -58,6 +67,7 @@ public class AverageAdapter extends RecyclerView.Adapter<AverageAdapter.AverageV
             mSubjectName = (TextView) itemView.findViewById(R.id.textview_subjectaverage_name);
             mSubjectAverage = (TextView) itemView.findViewById(R.id.textview_subjectaverage_grade);
             mAverageIcon = (ImageView) itemView.findViewById(R.id.imageview_subjectaverage_icon);
+            mLayout.setOnClickListener(this);
         }
 
         public void bindGrade(SubjectGrade grade) {
@@ -68,6 +78,11 @@ public class AverageAdapter extends RecyclerView.Adapter<AverageAdapter.AverageV
                 mSubjectAverage.setText(String.format("%.2f",grade.getGrade())); // TODO Format This
             }
             mAverageIcon.setImageResource(grade.getIconId());
+        }
+
+        @Override
+        public void onClick(View v) {
+            mClickListener.onClick(getPosition(), v);
         }
     }
 }

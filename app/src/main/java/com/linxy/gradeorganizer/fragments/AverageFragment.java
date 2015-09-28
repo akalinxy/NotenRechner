@@ -21,12 +21,15 @@ import android.widget.TextView;
 
 import com.linxy.gradeorganizer.R;
 import com.linxy.gradeorganizer.activities.NewGradeActivity;
+import com.linxy.gradeorganizer.activities.SubjectDetailActivity;
 import com.linxy.gradeorganizer.adapters.AverageAdapter;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelper;
 import com.linxy.gradeorganizer.database_helpers.DatabaseHelperSubjects;
 import com.linxy.gradeorganizer.objects.Grade;
 import com.linxy.gradeorganizer.objects.Subject;
 import com.linxy.gradeorganizer.objects.SubjectGrade;
+import com.linxy.gradeorganizer.utility.Constants;
+import com.parse.ParseObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +83,7 @@ public class AverageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NewGradeActivity.class);
-
+                intent.putExtra(Constants.NEWGRADE_SUBJECTSELECT, Constants.ALL_SUBJECTS);
                 startActivityForResult(intent, 0);
             }
         });
@@ -93,6 +96,13 @@ public class AverageFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
+
+        mAdapter.setOnClickListener(new AverageAdapter.MySubjectDetailClickListener() {
+            @Override
+            public void onClick(int position, View view) {
+                // TODO make this link to the subject page
+            }
+        });
 
         return rootView;
     }
@@ -112,6 +122,13 @@ public class AverageFragment extends Fragment {
                 String grade = data.getStringExtra("grade");
                 String gradefactor = data.getStringExtra("gradefactor");
                 String gradedate = data.getStringExtra("gradedate");
+
+                ParseObject gradeob = new ParseObject("GRADE");
+                gradeob.put("SUBJECT", subjectname);
+                gradeob.put("NAME", gradename);
+                gradeob.put("GRADE", grade);
+                gradeob.put("FACTOR", gradefactor);
+                gradeob.put("DATE", gradedate);
 
                 UploadGradeTask task = new UploadGradeTask();
                 task.execute(new Grade(subjectname, gradename, Double.parseDouble(grade), Integer.parseInt(gradefactor), gradedate));
@@ -147,6 +164,7 @@ public class AverageFragment extends Fragment {
             mInsufficientLayout.setVisibility(View.GONE);
         }
     }
+
 
     private class UploadGradeTask extends AsyncTask<Grade, Void, Void> {
 

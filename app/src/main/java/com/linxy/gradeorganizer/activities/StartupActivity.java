@@ -26,9 +26,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.kobakei.ratethisapp.RateThisApp;
 import com.linxy.gradeorganizer.BuildConfig;
 import com.linxy.gradeorganizer.fragments.AverageFragment;
@@ -46,6 +43,7 @@ public class StartupActivity extends AppCompatActivity  {
 
     /* Constants */
     private static final String TAG = StartupActivity.class.getSimpleName();
+    public static String mCurrentPageName = "Noten Rechner";
 //    private static final String ITEM_SKU = "purchase_premium";
 //    public static final String PREFS = "PrefFile";
 
@@ -117,26 +115,27 @@ public class StartupActivity extends AppCompatActivity  {
                         Log.i(TAG, "navItem gradeaverage");
 
                         getSupportActionBar().setTitle(getString(R.string.fragmentGradeAverage));
+                        mCurrentPageName = getString(R.string.fragmentGradeAverage);
                         FragmentTransaction transaction = mFragmentManager.beginTransaction();
                         transaction.replace(R.id.fragment_container, new AverageFragment(), AverageFragment.TAG).commit();
                         break;
                     case R.id.navitem_gradecalendar:
                         getSupportActionBar().setTitle(getString(R.string.fragmentGradeCalendar));
-
+                        mCurrentPageName = getString(R.string.fragmentGradeCalendar);
                         Log.i(TAG, "navItem greadecalendar");
                         FragmentTransaction xtransaction = mFragmentManager.beginTransaction();
                         xtransaction.replace(R.id.fragment_container, new CalendarFragment(), CalendarFragment.TAG).commit();
                         break;
                     case R.id.navitem_subjects:
                         getSupportActionBar().setTitle(getString(R.string.fragmentSubjects));
-
+                        mCurrentPageName = getString(R.string.fragmentSubjects);
                         FragmentTransaction xxtransaction = mFragmentManager.beginTransaction();
                         xxtransaction.replace(R.id.fragment_container, new SubjectsFragment()).commit();
                         break;
 
                     case R.id.navitem_settings:
                         getSupportActionBar().setTitle(getString(R.string.fragmentSettings));
-
+                        mCurrentPageName = getString(R.string.fragmentSettings);
                         FragmentTransaction xxxxtransaction = mFragmentManager.beginTransaction();
                         xxxxtransaction.replace(R.id.fragment_container, new SettingsFragment()).commit();
                         break;
@@ -154,6 +153,7 @@ public class StartupActivity extends AppCompatActivity  {
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.cancel, R.string.cancel){
             @Override
             public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mCurrentPageName);
             }
 
             @Override
@@ -186,125 +186,9 @@ public class StartupActivity extends AppCompatActivity  {
         }
     }
 
-
-//    @Override
-//    public boolean handleMessage(Message msg) {
-//        // Process incomming messages here
-//        switch (msg.what) {
-//            case DATABASE_UPLOAD_GRADE:
-//                Log.i(TAG, "Uploading Grade on Seperate Thread");
-//                uploadGradeToDatabase((Grade) msg.obj);
-//                break;
-//        }
-//        return true;
-//    }
-//
-//    private void uploadGradeToDatabase(Grade grade) {
-//        db.insertData(grade.getSubject(), grade.getName(), String.valueOf(grade.getGrade()), String.valueOf(grade.getFactor()), grade.getDate());
-//        ParseObject gradeObject = new ParseObject("Grades");
-//        gradeObject.put("deviceid", deviceId);
-//        gradeObject.put("gradesubject", grade.getSubject());
-//        gradeObject.put("gradename", grade.getName());
-//        gradeObject.put("grade", String.valueOf(grade.getGrade()));
-//        gradeObject.put("gradefactor", String.valueOf(grade.getFactor()));
-//        gradeObject.put("gradedate", grade.getDate());
-//        gradeObject.saveInBackground();
-//
-//        db.close();
-//    }
-//
-//    public void sendMessage(Object data, int where) {
-//        // Create new Message with data as parameter
-//        // and send it for execution on the handler immediateely;
-//        Message.obtain(mHandler, where, data).sendToTarget();
-//    }
-
-
-//    @Override
-//    public void OnPremiumClick() {
-//        bp.purchase(this, ITEM_SKU);
-//    }
-//
-//
-//    @Override
-//    public void onDestroy() {
-//        if (bp != null)
-//            bp.release();
-//
-//        super.onDestroy();
-//    }
-//
-//
-//    @Override
-//    public void onBillingInitialized() {
-//        /*
-//         * Called when BillingProcessor was initialized and it's ready to purchase
-//         */
-//    }
-//
-//    @Override
-//    public void onProductPurchased(String productId, TransactionDetails details) {
-//        /*
-//         * Called when requested PRODUCT ID was successfully purchased
-//         */
-//        Toast.makeText(this, R.string.billing_success, Toast.LENGTH_SHORT).show();
-//        PREMIUM = true;
-//    }
-//
-//    @Override
-//    public void onBillingError(int errorCode, Throwable error) {
-//        /*
-//         * Called when some error occurred. See Constants class for more details
-//         */
-//        Toast.makeText(this, R.string.billing_fail, Toast.LENGTH_SHORT).show();
-//
-//    }
-//
-//    @Override
-//    public void onPurchaseHistoryRestored() {
-//        /*
-//         * Called when purchase history was restored and the list of all owned PRODUCT ID's
-//         * was loaded from Google Play
-//         */
-//        if (bp.isPurchased(ITEM_SKU)) {
-//            PREMIUM = true;
-//        }
-//    }
-//
-//    private void initBilling() {
-//        bp = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsijTNgztiarHDP9P1B42JqJQnnTeGxmAOSb7uE98thZk814I7VYJDwSqFlFIBMcdAZfmNXfQEXINLXgAARON4NB7qVwBh3FM/5RW0Xz1ptPkr9JWeb70pIfg3urJ6aWZtj826y8ebZ2AJSVtbD1m+5lfeGeOw03+NJYqLscKDkXJEYVTvDIByipgobgMdiHP9JNJdGLiP+9xxKxssXPLBuVjMYSOeLlda0/1mPkiXsG5RgJyhJJ/dTGqFSyErHs9+z6MJEQfU7JxxIvgRiKn5gArOdsqMJRczLewfI8HtXx68yGqp6qE9CxPVti0fBFXuk+kRhmwjWyelRBNKJnnuwIDAQAB", this);
-//        bp.loadOwnedPurchasesFromGoogle();
-//        if (bp.isPurchased(ITEM_SKU)) {
-//            PREMIUM = true;
-//        }
-//    }
-
-
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
             super.onActivityResult(requestCode, resultCode, intent);
-//            if (requestCode == 2) {
-//                if (resultCode == Activity.RESULT_OK) {
-//                    String subjectname = intent.getStringExtra("subjectname");
-//                    String gradename = intent.getStringExtra("gradename");
-//                    String grade = intent.getStringExtra("grade");
-//                    String gradefactor = intent.getStringExtra("gradefactor");
-//                    String gradedate = intent.getStringExtra("gradedate");
-//
-//                    //sendMessage(new Grade(subjectname, gradename, Double.valueOf(grade), Integer.valueOf(gradefactor), gradedate), DATABASE_UPLOAD_GRADE);
-//
-////                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, TabbedFragment.getInstance(), TabbedFragment.TAG).commit();
-//
-//
-//                    if (resultCode == Activity.RESULT_CANCELED) {
-//                /* No Result */
-//                    }
-//                }
-//            }
-//        }
     }
 
 

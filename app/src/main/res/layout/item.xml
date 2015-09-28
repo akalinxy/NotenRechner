@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="56dp">
 
+    <Button
+        android:background="@drawable/statelist_item_drawable"
+        android:id="@+id/subjectlist_button"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 
     <TextView

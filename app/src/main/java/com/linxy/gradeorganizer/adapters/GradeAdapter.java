@@ -19,12 +19,14 @@ import java.util.ArrayList;
  */
 public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHolder> {
 
-    public Context mContext;
-    public static MyGradeClickListener mGradeClickListener;
-
     public interface MyGradeClickListener {
         public void onGradeItemClick(int position, View view);
     }
+
+    public Context mContext;
+    public static MyGradeClickListener mGradeClickListener;
+
+
 
     private ArrayList<Grade> mGrades;
     public GradeAdapter(Context context, ArrayList<Grade> mAdapter) {
@@ -86,9 +88,15 @@ public class GradeAdapter extends RecyclerView.Adapter<GradeAdapter.GradeViewHol
             mDeleteGrade.setOnClickListener(this);
         }
 
+
+
+
+
         @Override
         public void onClick(View v) {
             mGradeClickListener.onGradeItemClick(getPosition(), v);
         }
     }
+
+
 }

@@ -6,6 +6,7 @@
 
     android:orientation="vertical">
     <LinearLayout
+        android:layout_marginBottom="8dp"
         android:padding="8dp"
         android:background="@color/color.primary"
         android:gravity="center"
@@ -85,7 +86,6 @@
 
 
     <RelativeLayout
-        android:paddingTop="10dp"
         android:id="@+id/mgp_relview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -103,6 +103,7 @@
             android:layout_marginBottom="20dp"
 
             android:background="@drawable/gray_circleshape"
+            android:backgroundTint="@color/color.gray.verylight"
              />
 
 

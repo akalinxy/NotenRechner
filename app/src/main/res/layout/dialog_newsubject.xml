@@ -21,7 +21,7 @@
             android:hint="@string/subjectname"
             android:imeOptions="actionDone"
             android:inputType="text"
-            android:maxLength="14"
+            android:maxLength="@integer/gradename_max_length"
             android:maxLines="1"
             />
     </android.support.design.widget.TextInputLayout>

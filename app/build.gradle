@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.linxy.gradeorganizer"
-        minSdkVersion 17
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 12
         versionName "1.4"
@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.kobakei:ratethisapp:0.0.3'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.+@aar'
@@ -34,6 +34,6 @@ dependencies {
     compile 'com.android.support:design:22.2.1'
     compile 'com.prolificinteractive:material-calendarview:0.7.0'
     compile 'com.parse.bolts:bolts-android:1.+'
-    compile fileTree(include: 'Parse-1.9.4.jar', dir: 'libs')
-    compile files('C:/Users/minel_000/Desktop/a_workspace/NotenRechner/libs/Parse-1.9.4.jar')
+    compile fileTree(dir: 'libs', include: 'Parse-1.9.4.jar')
+    compile files('/Users/linxy/AndroidStudioProjects/Notenrechner/libs/Parse-1.9.4.jar')
 }
