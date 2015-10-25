@@ -2,7 +2,7 @@
     <string name="app_name">Noten Rechner</string>
     <string name="title_activity_new_grade">Note eintragen</string>
 
-    <string name="action_settings">Dinstellungen</string>
+    <string name="action_settings">Einstellungen</string>
     <string name="overview">Übersicht</string>
     <string name="history">Verlauf</string>
     <string name="edit">Bearbeiten</string>
